@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.MenuMapper">
+
+  <select id="getMenuList" resultMap="menuList">
+    SELECT
+        *
+    FROM
+        menu
+    WHERE
+        pid = 0 AND
+        type = #{roleId} AND
+        is_delete = 0
+    ORDER BY order_value DESC
+  </select>
+
+  <resultMap id="menuList" type="chnytrcy.xyz.campusepidemicsystem.model.entity.Menu">
+    <result column="id" property="id"/>
+    <result column="title" property="title" javaType="java.lang.String"/>
+    <result column="icon" property="icon" javaType="java.lang.String"/>
+    <result column="path" property="path" javaType="java.lang.String"/>
+    <collection column="id" property="children" ofType="chnytrcy.xyz.campusepidemicsystem.model.entity.Menu"
+      select="findChild" javaType="java.util.ArrayList"/>
+  </resultMap>
+
+  <select id="findChild" resultMap="menuList">
+    SELECT
+        *
+    FROM
+        menu
+    WHERE
+        pid = #{id}
+  </select>
+</mapper>

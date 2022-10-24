@@ -1,0 +1,52 @@
+package chnytrcy.xyz.campusepidemicsystem.model.enums.entity;
+
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.EnumKey;
+import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BaseEnum;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.EnumsEntityType;
+import cn.hutool.core.util.PinyinUtil;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * @ProjectName: campus-epidemic-system
+ * @Package: chnytrcy.xyz.campusepidemicsystem.model.enums.entity
+ * @EnumName: UserRoleEnums
+ * @Author: ChnyTrcy
+ * @Description: 角色枚举
+ * @Date: 2022/8/31 2:45 PM
+ * @Version: 1.0
+ */
+@Getter
+@AllArgsConstructor
+@EnumKey(name = "角色枚举类",type = EnumsEntityType.ROLE)
+public enum RoleEnums implements BaseEnum {
+  ADMIN(1,"管理员"),
+  TEACHER(2,"教职工"),
+  EPIDEMIC_PREVENTION(3,"防疫人员"),
+  STUDENT(4,"学生"),
+  QUARANTINE(5,"隔离人员")
+  ;
+  private Integer code;
+
+  private String desc;
+
+  @Override
+  public Integer getNumber() {
+    return getCode();
+  }
+
+  @Override
+  public String getName() {
+    return getDesc();
+  }
+
+  @Override
+  public String getSimplePinYin() {
+    return PinyinUtil.getAllFirstLetter(getDesc());
+  }
+
+  @Override
+  public String getFullPinYin() {
+    return PinyinUtil.getPinYin(getDesc());
+  }
+}

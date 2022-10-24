@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.UserMapper">
+
+  <insert id="addUserRole">
+    INSERT INTO user_role(user_id, role_id) VALUES (#{id},#{i})
+  </insert>
+
+  <update id="updateRoleByUserId">
+    UPDATE user_role SET role_id = #{i} WHERE user_id = #{userId}
+  </update>
+
+  <delete id="deleteUserToRole">
+    DELETE FROM user_role WHERE user_id = #{id}
+  </delete>
+
+  <select id="selectAutoIdByName" resultType="string" parameterType="string">
+    SELECT
+      t.id
+    FROM user t
+    WHERE t.name = #{name}
+  </select>
+
+  <select id="getInformation" resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.user.User">
+    SELECT
+      u.birthday AS birthday,
+      u.education AS education,
+      u.icon AS icon,
+      u.`name` AS name,
+            u.sex AS sex,
+            u.signature AS signature
+    FROM
+      `user` u
+    WHERE
+      u.id = #{id}
+  </select>
+
+  <select id="findUserByName" resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.user.User">
+    SELECT
+      id,account,password,phone
+    FROM
+      user
+    WHERE
+      account = #{account} AND
+      is_delete = 0
+  </select>
+
+  <select id="findRoleListByUserId" resultMap="demo">
+    SELECT
+      *
+    FROM
+      (user u INNER JOIN user_role ur ON ur.user_id = u.id)
+          INNER JOIN role r ON ur.role_id = r.role_id
+    WHERE
+      u.id = #{id} AND
+      u.is_delete = 0
+  </select>
+
+  <resultMap id="demo" type="chnytrcy.xyz.campusepidemicsystem.model.entity.user.Role">
+    <id property="roleId" column="role_id"/>
+    <result property="roleName" column="role_name"/>
+    <collection property="permissions" ofType="chnytrcy.xyz.campusepidemicsystem.model.entity.user.Permission" select="findPermissions" column="role_id"/>
+  </resultMap>
+
+  <select id="findPermissions" resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.user.Permission">
+    SELECT
+      p.permission_id AS permissionId,
+      p.permission AS permission,
+      p.permission_name AS permissionName
+    FROM
+      (role r INNER JOIN role_permission rp ON r.role_id = rp.role_id)
+          INNER JOIN permission p ON rp.permission_id = p.permission_id
+    WHERE
+      r.role_id = #{role_id}
+  </select>
+
+  <select id="findUserByUserId" resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.user.User">
+    SELECT
+      *
+    FROM
+      user
+    WHERE
+      id = #{id} AND
+      is_delete = 0
+  </select>
+  <select id="getRoleByUserId"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.user.Role">
+    SELECT
+        *
+    FROM
+        user_role ur INNER JOIN role r on r.role_id = ur.role_id
+    WHERE
+        ur.user_id = #{userId}
+  </select>
+  <select id="queryAdminInformation"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.dto.AdminInformationDTO">
+    SELECT
+        u.id AS id,
+        u.account AS account,
+        u.phone AS phone,
+        d.name AS deptName
+    FROM
+        user u LEFT JOIN admin a ON u.id = a.user_id LEFT JOIN dept d ON d.code = a.dept_code
+    WHERE
+        u.is_delete = 0 AND d.is_delete = 0 AND u.id = #{id}
+  </select>
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.FeedbackAcceptanceMapper">
+
+  <select id="queryPageAdminFeedbackAcceptance"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance">
+    SELECT
+        id,
+        producer_code AS producerCode,
+        producer_name AS producerName,
+        producer_type AS producerType,
+        type,
+        message,
+        message_return AS messageReturn,
+        result
+    FROM
+        feedback_acceptance
+    WHERE
+        is_delete = 0 AND admin_code = #{code}
+        <if test="feedbackType != 0">
+          AND type = #{feedbackType}
+        </if>
+        <choose>
+          <when test="queryType == 1">
+            AND producer_type = 1 AND result = 3
+          </when>
+          <when test="queryType == 2">
+            AND producer_type = 2 AND result = 0
+          </when>
+        </choose>
+    ORDER BY is_end
+  </select>
+  <select id="queryPageEpidemicFeedbackAcceptance"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.vo.pc.feedbackacceptance.QueryPageEpidemicFeedbackAcceptanceVO">
+    SELECT
+      fa.id AS id,
+      fa.producer_code AS producerCode,
+      fa.producer_name AS producerName,
+      fa.type AS type,
+      fa.message AS message,
+      fa.message_return AS messageReturn,
+      fa.result AS result,
+      fa.admin_code AS adminCode,
+      fa.producer_type AS feedbackAcceptanceType
+    FROM
+      feedback_acceptance fa LEFT JOIN student s ON fa.producer_code = s.code
+          LEFT JOIN teacher t ON t.dept_code = s.dept_code
+    WHERE
+      fa.is_delete = 0 AND s.is_delete = 0 AND t.is_delete = 0 AND t.code = #{account}
+    <if test="feedbackType != 0">
+      <choose>
+        <when test="feedbackType == 1">
+          AND fa.type = #{feedbackType}
+        </when>
+        <when test="feedbackType == 2">
+          AND fa.type = #{feedbackType}
+        </when>
+      </choose>
+    </if>
+    <if test="sponsor != 0">
+      <choose>
+        <when test="sponsor == 1">
+          AND fa.producer_type = 1
+        </when>
+        <when test="sponsor == 2">
+          AND fa.producer_type = 2
+        </when>
+      </choose>
+    </if>
+
+  </select>
+  <select id="analyzeEpidemicFeedbackAcceptance"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance">
+    SELECT
+        fa.result AS result
+    FROM
+        feedback_acceptance fa LEFT JOIN student s ON fa.producer_code = s.code
+    WHERE
+        fa.is_delete = 0 AND s.is_delete = 0 AND s.dept_code = #{deptCode}
+  </select>
+</mapper>

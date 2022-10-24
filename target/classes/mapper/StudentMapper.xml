@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.StudentMapper">
+
+  <sql id="queryStudentByKeywordFiled">
+    id,
+    code,
+    name,
+    dept_name AS deptName,
+    major_name AS majorName,
+    class_name AS className,
+    phone,
+    emergency_contact AS emergencyContact,
+    emergency_phone AS emergencyPhone,
+    sex,
+    id_card AS idCard,
+    address
+  </sql>
+
+  <sql id="queryStudentByKeywordWrapper">
+    <if test="keyword != null and keyword != ''">
+      <choose>
+        <when test="wordType == 0">
+          AND code LIKE CONCAT(#{keyword},'%')
+        </when>
+        <when test="wordType == 1">
+          AND name LIKE CONCAT(#{keyword},'%')
+        </when>
+        <when test="wordType == 2">
+          AND class_name LIKE CONCAT(#{keyword},'%')
+        </when>
+        <when test="wordType == 3">
+          AND major_name LIKE CONCAT(#{keyword},'%')
+        </when>
+        <when test="wordType == 4">
+          AND dept_name LIKE CONCAT(#{keyword},'%')
+        </when>
+      </choose>
+    </if>
+  </sql>
+
+  <select id="queryStudentByKeyword"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.Student">
+    SELECT
+        <include refid="queryStudentByKeywordFiled"/>
+    FROM
+        student
+    WHERE
+        is_delete = 0
+        <include refid="queryStudentByKeywordWrapper"/>
+  </select>
+
+</mapper>

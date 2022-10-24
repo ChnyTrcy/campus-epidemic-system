@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.LeaveMapper">
+
+  <resultMap id="resultListMap" type="chnytrcy.xyz.campusepidemicsystem.model.dto.QueryPageLeaveDTO">
+    <id property="id" column="id"/>
+    <result property="code" column="code"/>
+    <result property="name" column="name"/>
+    <result property="type" column="type"/>
+    <result property="estimateStartTime" column="estimateStartTime"/>
+    <result property="estimateEndTime" column="estimateEndTime"/>
+    <result property="actualStartTime" column="actualStartTime"/>
+    <result property="actualEndTime" column="actualEndTime"/>
+    <result property="isStrideCounty" column="isStrideCounty"/>
+    <result property="isStrideDay" column="isStrideDay"/>
+    <result property="isReturn" column="isReturn"/>
+    <result property="reason" column="reason"/>
+    <result property="target" column="target"/>
+    <result property="approvalResult" column="approvalResult"/>
+    <result property="reputation" column="reputation"/>
+    <collection property="complex" ofType="chnytrcy.xyz.campusepidemicsystem.model.dto.LeaveDetailDTO"
+      column="id" select="queryComplex"/>
+  </resultMap>
+
+  <select id="queryComplex" resultType="chnytrcy.xyz.campusepidemicsystem.model.dto.LeaveDetailDTO">
+    SELECT
+        id,
+        type,
+        message,
+        create_time AS time
+    FROM
+        leave_detail
+    WHERE
+        is_delete = 0 AND rel_id = #{id}
+    ORDER BY create_time
+  </select>
+
+  <select id="queryPageLeaveList"
+          resultMap="resultListMap">
+    SELECT
+      l.id AS id,
+      l.code AS code,
+      l.name AS name,
+      l.type AS type,
+      l.estimate_start_time AS estimateStartTime,
+      l.estimate_end_time AS estimateEndTime,
+      l.actual_start_time AS actualStartTime,
+      l.actual_end_time AS actualEndTime,
+      l.is_stride_county AS isStrideCounty,
+      l.is_stride_day AS isStrideDay,
+      l.is_return AS isReturn,
+      l.reason AS reason,
+      st.full_name AS target,
+      l.approval_result AS approvalResult,
+      s.reputation AS reputation
+    FROM
+      leave_daily l INNER JOIN student s ON l.code = s.code INNER JOIN street st ON l.target = st.code
+    WHERE
+      l.is_delete = 0 AND l.admin_id = #{adminCode}
+      <choose>
+        <when test="command.typeFilter == 1">
+          AND l.approval_result = 3
+        </when>
+        <when test="command.typeFilter == 2">
+          AND l.approval_result != 0
+        </when>
+      </choose>
+      <if test="command.startTime != null">
+        AND l.create_time <![CDATA[ > ]]> #{command.startTime}
+      </if>
+      <if test="command.endTime != null">
+        AND l.create_time <![CDATA[ < ]]> #{command.endTime}
+      </if>
+      <if test="command.keyword != null and command.keyword != ''">
+        <choose>
+          <when test="command.wordType == 1">
+            AND l.code LIKE CONCAT(#{command.keyword},'%')
+          </when>
+          <when test="command.wordType == 2">
+            AND l.name LIKE CONCAT(#{command.keyword},'%')
+          </when>
+          <when test="command.wordType == 3">
+            AND s.class_name LIKE CONCAT(#{command.keyword},'%')
+          </when>
+        </choose>
+      </if>
+      <if test="command.isStrideCounty != -1">
+        AND l.is_stride_county = #{command.isStrideCounty}
+      </if>
+      <if test="command.isStrideDay != -1">
+        AND l.is_stride_day = #{command.isStrideDay}
+      </if>
+      <if test="command.isReturn != -1">
+        AND l.is_return = #{command.isReturn}
+      </if>
+  </select>
+
+  <select id="queryUnfinishedLeave"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.Leave">
+    SELECT
+        id,
+        is_return AS isReturn,
+        approval_result AS approvalResult,
+        is_start AS isStart,
+        estimate_end_time AS estimateEndTime
+    FROM
+        leave_daily
+    WHERE
+        is_delete = 0 AND code = #{code} AND is_overdue = 0
+    ORDER BY update_time DESC
+    LIMIT 1
+  </select>
+
+</mapper>

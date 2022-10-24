@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.HolidayStreetMapper">
+
+  <select id="queryHolidayToRiskLevel"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.dto.HolidayStreetRiskLevelDTO">
+    SELECT
+      hs.name AS name,
+      hs.code AS code,
+      s.phone AS phone
+    FROM
+      holiday_street hs INNER JOIN student s ON hs.code = s.code
+    WHERE
+      hs.is_delete = 0 AND
+      #{streetCode} IN (
+        SELECT
+        SUBSTRING_INDEX(SUBSTRING_INDEX(hs.street_list,',',b.help_topic_id + 1), ',', - 1)
+        FROM
+        holiday_street hs INNER JOIN mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (LENGTH(hs.street_list) - LENGTH(REPLACE(hs.street_list, ',', '')) + 1)
+        )
+      AND TIMESTAMPDIFF(DAY ,now(),hs.create_time) <![CDATA[ < ]]> 14
+    UNION
+    SELECT
+        l.code AS code,
+        l.name AS name,
+        s.phone AS phone
+    FROM
+        leave_daily l INNER JOIN student s ON s.code = l.code
+    WHERE
+        l.target = #{streetCode} AND
+        l.approval_result = 1 AND
+        l.is_return = 1 AND
+        l.is_delete = 0 AND
+        TIMESTAMPDIFF(DAY ,now(),l.actual_end_time) <![CDATA[ < ]]> 14
+  </select>
+</mapper>

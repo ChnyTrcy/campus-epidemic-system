@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.IsolationPersonMapper">
+
+  <select id="queryStudentIsolationList" resultType="java.lang.String">
+    SELECT
+        code
+    FROM
+        isolation_person
+    WHERE
+        is_delete = 0 AND
+        state != 3 AND
+        code IN
+        <foreach collection="list" close=")" index="index" item="item" open="(" separator=",">
+          #{item.code}
+        </foreach>
+  </select>
+
+  <select id="queryPageIsolationPersonByAdmin"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationPerson">
+    SELECT
+        id,
+        code,
+        name,
+        dept_name AS deptName,
+        major_name AS majorName,
+        class_name AS className,
+        state,
+        start_time AS startTime,
+        end_time AS endTime,
+        prevention_personnel_code AS preventionPersonnelCode,
+        prevention_personnel_name AS preventionPersonnelName,
+        quarantine_location AS quarantineLocation
+    FROM
+        isolation_person
+    WHERE
+        is_delete = 0 AND dept_code = #{deptCode}
+        <if test="state != -1">
+          AND state = #{state}
+        </if>
+        <if test="keyword != null and keyword != ''">
+          <choose>
+            <when test="wordType == 0">
+              AND name LIKE CONCAT(#{keyword},'%')
+            </when>
+            <when test="wordType == 1">
+              AND code LIKE CONCAT(#{keyword},'%')
+            </when>
+            <when test="wordType == 2">
+              AND class_code LIKE CONCAT(#{keyword},'%')
+            </when>
+          </choose>
+        </if>
+  </select>
+
+  <select id="queryPageToBeIsolationPerson"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationPerson">
+    SELECT
+      id,
+      code,
+      name,
+      class_name AS className,
+      state
+    FROM
+      isolation_person
+    WHERE
+      is_delete = 0 AND dept_code = #{deptCode} AND state = 0
+      <if test="command.keyword != null and command.keyword != ''">
+        <choose>
+          <when test="command.wordType == 1">
+            AND major_name LIKE CONCAT(#{command.keyword},'%')
+          </when>
+          <when test="command.wordType == 2">
+            AND class_name LIKE CONCAT(#{command.keyword},'%')
+          </when>
+        </choose>
+      </if>
+  </select>
+  <select id="queryPageIsolationPerson"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.vo.pc.isolationperson.QueryPageIsolationPersonVO">
+    SELECT
+      ip.id AS id,
+      ip.code AS code,
+      ip.name AS name,
+      ip.class_name AS className,
+      ip.major_name AS majorName,
+      ip.state AS state,
+      ip.start_time AS startTime,
+      ip.end_time AS endTime,
+      ip.quarantine_location AS quarantineLocation,
+      idl.temperature AS temperature,
+      idl.create_time AS time
+    FROM
+      isolation_person ip LEFT JOIN isolation_detail idl ON ip.id = idl.rel_id
+    WHERE
+      ip.is_delete = 0 AND ip.dept_code = #{deptCode} AND ip.state = 1 AND idl.is_delete = 0
+      <if test="command.keyword != null and command.keyword != ''">
+        <choose>
+          <when test="command.wordType == 1">
+            AND ip.name LIKE CONCAT(#{command.keyword},'%')
+          </when>
+          <when test="command.wordType == 2">
+            AND ip.code LIKE CONCAT(#{command.keyword},'%')
+          </when>
+          <when test="command.wordType == 3">
+            AND ip.class_name LIKE CONCAT(#{command.keyword},'%')
+          </when>
+          <when test="command.wordType == 4">
+            AND ip.major_name LIKE CONCAT(#{command.keyword},'%')
+          </when>
+        </choose>
+      </if>
+  </select>
+  <select id="queryPageIsolationPersonByEpidemic"
+          resultMap="queryPageIsolationPersonByEpidemicMap">
+    SELECT
+      ip.id AS id,
+      ip.code AS code,
+      ip.name AS name,
+      ip.dept_name AS deptName,
+      ip.major_name AS majorName,
+      ip.class_name AS className,
+      ip.state AS state,
+      ip.start_time AS startTime,
+      ip.end_time AS endTime,
+      ip.quarantine_location AS quarantineLocation
+    FROM
+        isolation_person ip
+    WHERE
+        ip.prevention_personnel_code = #{code} AND ip.is_delete = 0
+  </select>
+
+  <select id="queryFeedbackList" resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance">
+    SELECT
+      id,
+      type,
+      message,
+      message_return AS messageReturn,
+      result,
+      is_end AS isEnd
+    FROM
+      feedback_acceptance
+    WHERE
+      is_delete = 0 AND producer_code = #{code} AND producer_type = 1
+  </select>
+  
+  <resultMap id="queryPageIsolationPersonByEpidemicMap" type="chnytrcy.xyz.campusepidemicsystem.model.dto.QueryPageIsolationPersonByEpidemicDTO">
+    <id property="id" column="id"/>
+    <result property="code" column="code"/>
+    <result property="name" column="name"/>
+    <result property="deptName" column="deptName"/>
+    <result property="majorName" column="najorName"/>
+    <result property="className" column="className"/>
+    <result property="state" column="state"/>
+    <result property="startTime" column="startTime"/>
+    <result property="endTime" column="endTime"/>
+    <result property="quarantineLocation" column="quarantineLocation"/>
+    <collection property="list" ofType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance"
+      select="queryFeedbackList" column="code"/>
+  </resultMap>
+  
+</mapper>

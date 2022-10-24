@@ -1,0 +1,25 @@
+package chnytrcy.xyz.campusepidemicsystem.service.pc;
+
+import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
+import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.MajorListVO;
+import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
+import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
+
+/**
+ * @ProjectName: campus-epidemic-system
+ * @Package: chnytrcy.xyz.campusepidemicsystem.service.pc
+ * @InterfaceName: MajorService
+ * @Author: ChnyTrcy
+ * @Description: 专业服务接口
+ * @Date: 2022/8/24 8:27 PM
+ * @Version: 1.0
+ */
+public interface MajorService extends IService<Major> {
+
+  /**
+   * 根据院系编号获取对应的专业列表
+   */
+  Result<List<MajorListVO>> getMajorListByDept();
+
+}

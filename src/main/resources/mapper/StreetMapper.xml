@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.StreetMapper">
+
+  <select id="queryPageStreet"
+          parameterType="chnytrcy.xyz.campusepidemicsystem.model.command.pc.street.QueryPageStreetCommand"
+          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.Street">
+    SELECT
+        code,full_name AS fullName,risk_level AS riskLevel,update_time AS updateTime
+    FROM
+        street
+    WHERE
+        is_delete = 0
+        <choose>
+          <when test="length == 2">
+            AND province_code = #{command.code}
+          </when>
+          <when test="length == 4">
+            AND city_code = #{command.code}
+          </when>
+          <when test="length == 6">
+            AND county_code = #{command.code}
+          </when>
+        </choose>
+        <if test="command.riskLevel != 0">
+          AND risk_level = #{command.riskLevel}
+        </if>
+  </select>
+  <select id="countHighStreet" resultType="java.lang.Integer">
+    SELECT
+      count(id)
+    FROM
+      street
+    WHERE
+      is_delete = 0 AND risk_level = 2
+  </select>
+
+  <select id="countMidStreet" resultType="java.lang.Integer">
+    SELECT
+      count(id)
+    FROM
+      street
+    WHERE
+      is_delete = 0 AND risk_level = 1
+  </select>
+</mapper>
