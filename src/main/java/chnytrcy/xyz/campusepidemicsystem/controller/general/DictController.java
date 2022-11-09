@@ -78,5 +78,12 @@ public class DictController {
     return dictService.getDictErrorDescByAppKeyComplex(appKeyComplex);
   }
 
+  @ApiOperation("根据错误代码获得描述值")
+  @GetMapping("/getDictErrorDescByCode")
+  public Result<String> getDictErrorDescByCode(String code)
+      throws IOException, ClassNotFoundException {
+    return dictService.getDictErrorDescByCode(code);
+  }
+
 
 }

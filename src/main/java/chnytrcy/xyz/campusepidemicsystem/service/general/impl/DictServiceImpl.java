@@ -107,6 +107,26 @@ public class DictServiceImpl implements DictService {
     return ResultFactory.successResult(key.get(0));
   }
 
+  @Override
+  public Result<String> getDictErrorDescByCode(String code)
+      throws IOException, ClassNotFoundException {
+    Set<DictEnumsEntityDTO> set = registrar.initError();
+    List<String> collect = Lists.newArrayList();
+    for (DictEnumsEntityDTO entityDTO : set) {
+      collect = entityDTO.getValueDTOSet().stream()
+          .filter(e -> e.getCode().equals(code))
+          .map(DictEnumsValueDTO::getDesc)
+          .collect(Collectors.toList());
+      if(!collect.isEmpty()){
+        break;
+      }
+    }
+    if(collect.isEmpty()){
+      return ResultFactory.errorResultBusiness("找不到对应错误描述",-1);
+    }
+    return ResultFactory.successResult(collect.get(0));
+  }
+
 
   public Map<String,DictEnumsValueDTO> map() throws IOException, ClassNotFoundException {
     Set<DictEnumsEntityDTO> init = registrar.initEnums();

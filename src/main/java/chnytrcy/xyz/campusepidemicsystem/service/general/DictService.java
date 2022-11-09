@@ -56,4 +56,9 @@ public interface DictService {
    */
   Result<String> getAppKeyTypeDescByAppKeyTypeCode(String appKeyTypeCode)
       throws IOException, ClassNotFoundException;
+
+  /**
+   * 根据错误代码获得描述值
+   */
+  Result<String> getDictErrorDescByCode(String code) throws IOException, ClassNotFoundException;
 }
