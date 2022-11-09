@@ -20,13 +20,17 @@ import lombok.Getter;
 @AllArgsConstructor
 @EnumKey(name = "请假健康枚举类",type = EnumsEntityType.LEAVE_HEALTH)
 public enum LeaveHealthEnums  implements BaseEnum {
-  NUCLEIC_ACID_FEMININE(0,"阴性"),
-  NUCLEIC_ACID_POSITIVE(1,"阳性")
+  NUCLEIC_ACID_FEMININE(0,"阴性","NUCLEIC_ACID","核酸结果"),
+  NUCLEIC_ACID_POSITIVE(1,"阳性","NUCLEIC_ACID","核酸结果")
 
   ;
   private Integer code;
 
   private String desc;
+
+  private String typeCode;
+
+  private String type;
 
   @Override
   public Integer getNumber() {

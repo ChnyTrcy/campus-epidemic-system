@@ -1,4 +1,4 @@
-package chnytrcy.xyz.campusepidemicsystem.config.shiro.auto;
+package chnytrcy.xyz.campusepidemicsystem.config.shiro.auth;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
 

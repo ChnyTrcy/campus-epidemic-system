@@ -1,7 +1,7 @@
 package chnytrcy.xyz.campusepidemicsystem.config.shiro;
 
-import chnytrcy.xyz.campusepidemicsystem.config.shiro.auto.AuthFilter;
-import chnytrcy.xyz.campusepidemicsystem.config.shiro.auto.AuthRealm;
+import chnytrcy.xyz.campusepidemicsystem.config.shiro.auth.AuthFilter;
+import chnytrcy.xyz.campusepidemicsystem.config.shiro.auth.AuthRealm;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -53,6 +53,7 @@ public class ShiroConfig {
         filterMap.put("/campus-epidemic-system/pc/user/addUser","anon");
         filterMap.put("/campus-epidemic-system/pc/user/loginByPassword","anon");
         filterMap.put("/campus-epidemic-system/app/user/login","anon");
+        filterMap.put("/campus-epidemic-system/dict/**","anon");
         // 除了以上路径，其他都需要权限验证
         filterMap.put("/**", "auth");
 

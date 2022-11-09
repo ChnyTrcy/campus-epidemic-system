@@ -1,5 +1,7 @@
 package chnytrcy.xyz.campusepidemicsystem.config.basic.model;
 
+import lombok.Getter;
+
 /**
  * @ProjectName: campus-epidemic-system
  * @Package: chnytrcy.xyz.campusepidemicsystem.config.basic.model

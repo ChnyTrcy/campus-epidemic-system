@@ -20,8 +20,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @EnumKey(name = "教职工枚举类",type = EnumsEntityType.TEACHER)
 public enum TeacherEnums implements BaseEnum {
-  EPIDEMIC_MARK_YES(1,"是否为防疫人员：是"),
-  EPIDEMIC_MARK_NO(0,"是否为防疫人员：否"),
+  EPIDEMIC_MARK_YES(1,"是否为防疫人员：是","EPIDEMIC_MARK","是否为防疫人员"),
+  EPIDEMIC_MARK_NO(0,"是否为防疫人员：否","EPIDEMIC_MARK","是否为防疫人员"),
 
   ;
 
@@ -29,6 +29,10 @@ public enum TeacherEnums implements BaseEnum {
   private Integer code;
 
   private String desc;
+
+  private String typeCode;
+
+  private String type;
 
   @Override
   public Integer getNumber() {

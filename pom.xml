@@ -26,6 +26,7 @@
     <easyexcel.version>3.0.5</easyexcel.version>
     <fastjson.version>1.2.79</fastjson.version>
     <swagger2.version>2.9.2</swagger2.version>
+    <swagger-models.version>1.5.21</swagger-models.version>
     <kaptcha.version>0.0.9</kaptcha.version>
     <radis.version>2.6.2</radis.version>
     <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
@@ -74,6 +75,11 @@
       <version>${mybatis-plus.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-generator</artifactId>
+      <version>${mybatis-plus.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-spring</artifactId>
       <version>${shiro.version}</version>
@@ -107,6 +113,17 @@
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
       <version>${swagger2.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>io.swagger</groupId>
+          <artifactId>swagger-models</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-models</artifactId>
+      <version>${swagger-models.version}</version>
     </dependency>
     <dependency>
       <groupId>com.github.axet</groupId>

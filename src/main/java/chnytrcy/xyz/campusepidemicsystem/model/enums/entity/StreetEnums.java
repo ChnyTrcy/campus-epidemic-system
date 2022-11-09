@@ -21,13 +21,17 @@ import lombok.Getter;
 @EnumKey(name = "街道枚举类",type = EnumsEntityType.STREET)
 public enum StreetEnums implements BaseEnum {
 
-  RISK_LEVEL_HIGH(2,"高风险"),
-  RISK_LEVEL_MIDDLE(1,"中风险"),
-  RISK_LEVEL_LOW(0,"低风险")
+  RISK_LEVEL_HIGH(2,"高风险","RISK_LEVEL","风险等级"),
+  RISK_LEVEL_MIDDLE(1,"中风险","RISK_LEVEL","风险等级"),
+  RISK_LEVEL_LOW(0,"低风险","RISK_LEVEL","风险等级")
   ;
   private Integer code;
 
   private String desc;
+
+  private String typeCode;
+
+  private String type;
 
   @Override
   public Integer getNumber() {

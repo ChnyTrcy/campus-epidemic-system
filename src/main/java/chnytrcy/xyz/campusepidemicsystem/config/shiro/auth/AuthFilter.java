@@ -1,4 +1,4 @@
-package chnytrcy.xyz.campusepidemicsystem.config.shiro.auto;
+package chnytrcy.xyz.campusepidemicsystem.config.shiro.auth;
 
 import chnytrcy.xyz.campusepidemicsystem.config.shiro.utils.HttpContextUtil;
 import chnytrcy.xyz.campusepidemicsystem.config.shiro.utils.TokenUtil;

@@ -21,14 +21,18 @@ import lombok.Getter;
 @EnumKey(name = "学生枚举类",type = EnumsEntityType.STUDENT)
 public enum StudentEnums implements BaseEnum {
 
-  REPUTATION_EXCELLENT(80,"优秀"),
-  REPUTATION_GOOD(55,"良好"),
-  REPUTATION_GENERALLY(25,"一般"),
-  REPUTATION_POOR(0,"差劲")
+  REPUTATION_EXCELLENT(80,"优秀","REPUTATION","信誉分"),
+  REPUTATION_GOOD(55,"良好","REPUTATION","信誉分"),
+  REPUTATION_GENERALLY(25,"一般","REPUTATION","信誉分"),
+  REPUTATION_POOR(0,"差劲","REPUTATION","信誉分")
   ;
   private Integer code;
 
   private String desc;
+
+  private String typeCode;
+
+  private String type;
 
   @Override
   public Integer getNumber() {

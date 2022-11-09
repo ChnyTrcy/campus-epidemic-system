@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.compress.utils.Lists;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -21,7 +22,7 @@ public class BasePageVO<T> implements Serializable {
 
   public static final Long defaultPageNum = 1L;
   public static final Long defaultPageSize = 10L;
-  public static final List defaultEmptyList = new ArrayList();
+  public static final List defaultEmptyList = Lists.newArrayList();
   public static final Long defaultTotalNum = 0L;
   public static final Long defaultTotalPages = 0L;
 

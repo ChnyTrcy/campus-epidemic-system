@@ -20,15 +20,19 @@ import lombok.Getter;
 @AllArgsConstructor
 @EnumKey(name = "角色枚举类",type = EnumsEntityType.ROLE)
 public enum RoleEnums implements BaseEnum {
-  ADMIN(1,"管理员"),
-  TEACHER(2,"教职工"),
-  EPIDEMIC_PREVENTION(3,"防疫人员"),
-  STUDENT(4,"学生"),
-  QUARANTINE(5,"隔离人员")
+  ADMIN(1,"管理员","TYPE","用户类型"),
+  TEACHER(2,"教职工","TYPE","用户类型"),
+  EPIDEMIC_PREVENTION(3,"防疫人员","TYPE","用户类型"),
+  STUDENT(4,"学生","TYPE","用户类型"),
+  QUARANTINE(5,"隔离人员","TYPE","用户类型")
   ;
   private Integer code;
 
   private String desc;
+
+  private String typeCode;
+
+  private String type;
 
   @Override
   public Integer getNumber() {

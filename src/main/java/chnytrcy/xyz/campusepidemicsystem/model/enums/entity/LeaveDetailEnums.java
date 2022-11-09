@@ -21,14 +21,18 @@ import lombok.Getter;
 @EnumKey(name = "离校申请枚举类",type = EnumsEntityType.LEAVE_DETAIL)
 public enum LeaveDetailEnums implements BaseEnum {
 
-  TYPE_STUDENT(1,"学生提出"),
-  TYPE_ADMIN_REPEAT(2,"管理员回复"),
-  TYPE_STUDENT_AGAIN(3,"学生再次回复"),
-  TYPE_END(4,"管理员终审")
+  TYPE_STUDENT(1,"学生提出","TYPE","离校申请进程"),
+  TYPE_ADMIN_REPEAT(2,"管理员回复","TYPE","离校申请进程"),
+  TYPE_STUDENT_AGAIN(3,"学生再次回复","TYPE","离校申请进程"),
+  TYPE_END(4,"管理员终审","TYPE","离校申请进程")
   ;
   private Integer code;
 
   private String desc;
+
+  private String typeCode;
+
+  private String type;
 
   @Override
   public Integer getNumber() {

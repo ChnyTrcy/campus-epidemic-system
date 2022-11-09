@@ -1,6 +1,7 @@
 package chnytrcy.xyz.campusepidemicsystem.model.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
  * @Version: 1.0
  */
 @AllArgsConstructor
+@Getter
 public enum EnumsEntityType {
   BUSINESS_ERROR("BUSINESS_ERROR","事务异常","campus-epidemic-system","ces-101"),
   AUTHENTICATION_ERROR("AUTHENTICATION_ERROR","用户异常","campus-epidemic-system","ces-102"),

@@ -21,16 +21,20 @@ import lombok.Getter;
 @EnumKey(name = "教职工上下班枚举类",type = EnumsEntityType.TEACHER_DAILY)
 public enum TeacherDailyEnums implements BaseEnum {
 
-  TYPE_UP(0,"上班"),
-  TYPE_DOWN(1,"下班"),
-  RESULT_GREEN(0,"绿"),
-  RESULT_YELLOW(1,"黄"),
-  RESULT_RED(2,"红")
+  TYPE_UP(0,"上班","TYPE","上下班状态"),
+  TYPE_DOWN(1,"下班","TYPE","上下班状态"),
+  RESULT_GREEN(0,"绿","RESULT","健康码颜色"),
+  RESULT_YELLOW(1,"黄","RESULT","健康码颜色"),
+  RESULT_RED(2,"红","RESULT","健康码颜色")
   ;
 
   private Integer code;
 
   private String desc;
+
+  private String typeCode;
+
+  private String type;
 
   @Override
   public Integer getNumber() {
