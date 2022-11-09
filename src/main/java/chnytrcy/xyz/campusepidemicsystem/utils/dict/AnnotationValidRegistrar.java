@@ -61,15 +61,11 @@ public class AnnotationValidRegistrar {
     Resource[] resources = resourcePatternResolver.getResources(pattern);
     MetadataReaderFactory readerfactory = new CachingMetadataReaderFactory(resourcePatternResolver);
     for (Resource resource : resources) {
-      //用于读取类信息
       MetadataReader reader = readerfactory.getMetadataReader(resource);
-      //扫描到的class
       String classname = reader.getClassMetadata().getClassName();
       Class<?> clazz = Class.forName(classname);
-      //判断是否有指定主解
       EnumKey anno = clazz.getAnnotation(EnumKey.class);
       if (anno != null) {
-        //将注解中的类型值作为key，对应的类作为 value
         handlerSet.add(clazz);
       }
     }

@@ -5,6 +5,7 @@ import chnytrcy.xyz.campusepidemicsystem.mapper.IsolationPersonMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.isolationdetail.AddIsolationDetailCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.isolationdetail.QueryIsolationDetailByIdCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.isolationdetail.ReviseIsolationDetailCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.constance.IsolationDetailConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationDetail;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationPerson;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.IsolationPersonEnums;
@@ -32,9 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IsolationDetailServiceImpl extends ServiceImpl<IsolationDetailMapper, IsolationDetail>
     implements IsolationDetailService {
-
-  private static final int normalTemperature = 373;
-  private static final int normalDay = 3;
 
   @Autowired private IsolationPersonMapper isolationPersonMapper;
 
@@ -89,14 +87,14 @@ public class IsolationDetailServiceImpl extends ServiceImpl<IsolationDetailMappe
       return;
     }
     for (IsolationDetail isolationDetail : list) {
-      if(isolationDetail.getTemperature() >= normalTemperature){
+      if(isolationDetail.getTemperature() >= IsolationDetailConstance.FEVER_TEMPERATURE){
         i++;
       }
     }
     //连续3天体温异常，直接转治疗,否则继续隔离中
     //todo 要不要一旦发烧，隔离结束时间重新开始计算14天
     IsolationPerson a = new IsolationPerson();
-    if(i == normalDay){
+    if(i == IsolationDetailConstance.DEAL_DAYS){
       a.setState(IsolationPersonEnums.STATE_TREAT.getCode());
     }else {
       a.setState(IsolationPersonEnums.STATE_QUARANTINED.getCode());
