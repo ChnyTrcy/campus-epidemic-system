@@ -80,4 +80,7 @@ public class Leave extends BaseEntity {
 
   @ApiModelProperty(value = "请假理由",required = true)
   private String reason;
+
+  @TableField(exist = false)
+  private Integer caseType = -1;
 }
