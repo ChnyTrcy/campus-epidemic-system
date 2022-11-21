@@ -1,6 +1,7 @@
 package chnytrcy.xyz.campusepidemicsystem.utils.aop;
 
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import java.lang.reflect.Parameter;
 import java.time.LocalDateTime;
@@ -55,7 +56,9 @@ public class ControllerLogAspect {
 //    sb.append("   ==>请求IP: " + request.getRemoteAddr());
     sb.append("   ==>调用方法: " + pdj.getSignature().getDeclaringTypeName() + "." + pdj.getSignature().getName());
 //    sb.append("   ==>请求参数: " + );
-    sb.append("   ==>是否成功返回:" + result.getSuccess());
+    if(ObjectUtil.isNotNull(result)){
+      sb.append("   ==>是否成功返回:" + result.getSuccess());
+    }
     sb.append("   ==>耗时: " + (endTime - startTime) + "毫秒");
     log.info(sb.toString());
     return ret;

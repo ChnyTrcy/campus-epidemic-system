@@ -7,6 +7,7 @@ import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +35,8 @@ public class UserAppController {
 
   @ApiOperation("登陆")
   @PostMapping("/login")
-  public Result login(@RequestBody @Valid LoginCommand command){
-    return userService.login(command, LoginMethodConstance.MOBILE);
+  public Result login(@RequestBody @Valid LoginCommand command, HttpServletRequest request){
+    return userService.login(command, LoginMethodConstance.MOBILE,request);
   }
 
   @ApiOperation("登出")

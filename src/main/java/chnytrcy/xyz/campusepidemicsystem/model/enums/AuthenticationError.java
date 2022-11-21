@@ -30,7 +30,10 @@ public enum AuthenticationError implements BaseEnum {
   EPIDEMIC_UNKNOWN_INFORMATION_ERROR(1013,"查询不到防疫人员基本信息"),
   ADMIN_UNKNOWN_INFORMATION_ERROR(1014,"查询不到管理员基本信息"),
   MOBILE_UNKNOWN_TYPE_ERROR(1015,"App端不可用的登陆方式"),
-  STUDENT_UNKNOWN_INFORMATION_ERROR(1016,"查询不到学生（隔离人员）基本信息")
+  STUDENT_UNKNOWN_INFORMATION_ERROR(1016,"查询不到学生（隔离人员）基本信息"),
+  CAPTCHA_GET_ERROR(1017,"验证码获取失败"),
+  CAPTCHA_TIME_ERROR(1018,"验证码失效"),
+  CAPTCHA_DIFFERENT_ERROR(1019,"验证码错误")
   ;
 
   private Integer code;

@@ -12,6 +12,7 @@ import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.constance.LoginMethodConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AdminInformationDTO;
+import chnytrcy.xyz.campusepidemicsystem.model.dto.CaptchaDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.EpidemicInformationDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.StudentInformationDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
@@ -31,12 +32,15 @@ import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +53,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+  @Value("${login.captcha.switch}")
+  private Boolean captchaSwitch;
+
+  @Value("${login.captcha.time}")
+  private Long captchaTime;
 
   @Autowired private ShiroService shiroService;
 
@@ -78,7 +88,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Result login(LoginCommand command,Integer i) {
+  public Result login(LoginCommand command,Integer i,HttpServletRequest request) {
+    if(captchaSwitch.equals(Boolean.TRUE) && i.equals(LoginMethodConstance.PC)){
+      CaptchaDTO captcha = (CaptchaDTO) request.getSession().getAttribute("captcha");
+      if(ObjectUtil.isNull(captcha)){
+        throw new UserAuthenticationException(AuthenticationError.CAPTCHA_GET_ERROR);
+      }
+      if(captcha.getStartTime().plusMinutes(captchaTime).isBefore(LocalDateTime.now())){
+        throw new UserAuthenticationException(AuthenticationError.CAPTCHA_TIME_ERROR);
+      }
+      if(!command.getCaptcha().equals(captcha.getText())){
+        throw new UserAuthenticationException(AuthenticationError.CAPTCHA_DIFFERENT_ERROR);
+      }
+    }
     User user = shiroService.findByUsername(command.getAccount());
     if(ObjectUtil.isNull(user)){
       throw new UserAuthenticationException(AuthenticationError.LOGIN_ACCOUNT_NOT_EXIST_ERROR);

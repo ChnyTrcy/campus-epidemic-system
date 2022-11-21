@@ -7,6 +7,7 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.User;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -31,7 +32,7 @@ public interface UserService extends IService<User> {
    * @param command 入参
    * @return 结果
    */
-  Result login(LoginCommand command,Integer i);
+  Result login(LoginCommand command,Integer i, HttpServletRequest request);
 
   /**
    * 登出

@@ -29,4 +29,7 @@ public class LoginCommand extends Base {
   @ApiModelProperty(value = "密码",required = true)
   @NotBlank(message = "密码不能为空")
   private String password;
+
+  @ApiModelProperty(value = "验证码")
+  private String captcha = "";
 }

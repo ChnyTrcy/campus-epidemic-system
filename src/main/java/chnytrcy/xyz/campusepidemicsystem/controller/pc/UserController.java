@@ -4,12 +4,20 @@ import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.AddUserCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.constance.LoginMethodConstance;
+import chnytrcy.xyz.campusepidemicsystem.model.dto.CaptchaDTO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +37,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "用户Controller",tags = "PC - 用户接口")
 public class UserController {
 
-  @Autowired
-  private UserService userService;
+  @Autowired private UserService userService;
+
+  @Autowired private DefaultKaptcha defaultKaptcha;
 
 
   @ApiOperation("注册")
@@ -41,8 +50,8 @@ public class UserController {
 
   @ApiOperation("登陆")
   @PostMapping("/loginByPassword")
-  public Result login(@RequestBody @Valid LoginCommand command){
-    return userService.login(command, LoginMethodConstance.PC);
+  public Result login(@RequestBody @Valid LoginCommand command,HttpServletRequest request){
+    return userService.login(command, LoginMethodConstance.PC,request);
   }
 
   @ApiOperation("登出")
@@ -55,6 +64,32 @@ public class UserController {
   @PostMapping("/changePwd")
   public Result changePwd(@RequestBody @Valid ChangePwdCommand command){
     return userService.changePwd(command);
+  }
+
+  @ApiOperation("获取验证码")
+  @PostMapping("/getCaptchaImg")
+  public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.setDateHeader("Expires",0);
+    response.setHeader("Cache-Control","no-store, no-cache, must-revalidate");
+    response.addHeader("Cache-Control","post-check=0, pre-check=0");
+    response.setHeader("pragma","no-cache");
+//    response.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
+    response.setContentType("image/jpg");
+    String text = defaultKaptcha.createText();
+    request.getSession().setAttribute("captcha",new CaptchaDTO(text, LocalDateTime.now()));
+    BufferedImage image = defaultKaptcha.createImage(text);
+    ServletOutputStream outputStream = null;
+    outputStream = response.getOutputStream();
+    //输出流输出图片,格式为jpg
+    ImageIO.write(image,"jpg",outputStream);
+    outputStream.flush();
+    if (outputStream != null){
+      try {
+        outputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
 }

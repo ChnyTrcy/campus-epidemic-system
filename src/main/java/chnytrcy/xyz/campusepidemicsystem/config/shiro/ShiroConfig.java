@@ -54,6 +54,7 @@ public class ShiroConfig {
         filterMap.put("/campus-epidemic-system/pc/user/loginByPassword","anon");
         filterMap.put("/campus-epidemic-system/app/user/login","anon");
         filterMap.put("/campus-epidemic-system/dict/**","anon");
+        filterMap.put("/campus-epidemic-system/pc/user/getCaptchaImg","anon");
         // 除了以上路径，其他都需要权限验证
         filterMap.put("/**", "auth");
 
