@@ -33,7 +33,14 @@ public enum AuthenticationError implements BaseEnum {
   STUDENT_UNKNOWN_INFORMATION_ERROR(1016,"查询不到学生（隔离人员）基本信息"),
   CAPTCHA_GET_ERROR(1017,"验证码获取失败"),
   CAPTCHA_TIME_ERROR(1018,"验证码失效"),
-  CAPTCHA_DIFFERENT_ERROR(1019,"验证码错误")
+  CAPTCHA_DIFFERENT_ERROR(1019,"验证码错误"),
+  SMS_MESSAGE_ERROR(1020,"短息发送错误，请重试"),
+  SMS_MESSAGE_EFFECTIVE_ERROR(1021,"短信仍在有效期内，请勿重复发送"),
+  SMS_SWITCH_CLOSE_ERROR(1022,"未开启短信登陆，请联系管理员"),
+  SMS_MESSAGE_NULL_ERROR(1023,"未发送短信，请获取短信"),
+  SMS_CODE_ERROR(1024,"短信验证码错误"),
+  SMS_TIME_LONG_ERROR(1025,"短信失效，请重新获取短信"),
+  LOGIN_ASSOCIATED_PHONE_MORE_ERROR(1026,"手机关联的账号过多，请联系管理员")
   ;
 
   private Integer code;

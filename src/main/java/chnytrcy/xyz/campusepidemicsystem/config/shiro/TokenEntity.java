@@ -1,10 +1,12 @@
 package chnytrcy.xyz.campusepidemicsystem.config.shiro;
 
+import chnytrcy.xyz.campusepidemicsystem.model.enums.LoginTypeEnums;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -29,6 +31,9 @@ public class TokenEntity implements Serializable {
 
     @ApiModelProperty(value = "name")
     private String name;
+
+    @ApiModelProperty(value = "登陆类型")
+    private LoginTypeEnums type;
 
     @ApiModelProperty(value = "token更新时间")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

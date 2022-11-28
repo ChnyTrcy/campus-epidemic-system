@@ -38,20 +38,30 @@ import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.RoleEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.student.QueryStudentByKeywordVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.StudentListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
+import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -91,6 +101,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
   @Autowired private MajorCommon majorCommon;
 
   @Autowired private ClassCommon classCommon;
+
+  @Autowired private StudentListener studentListener;
 
   @Override
   @Transactional(rollbackFor = Exception.class)
@@ -134,6 +146,29 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     this.deleteStudentCheck(command.getCode());
     this.deleteStudentOperate(command.getCode());
     return ResultFactory.successResult();
+  }
+
+  @Override
+  public void downloadTemplate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    InputStream resourceAsStream = this.getClass().getClassLoader()
+        .getResourceAsStream("excelTemplates/studentTemplate.xlsx");
+//    PrintFileContent.printFileContent(resourceAsStream);
+    OutputStream outputStream = response.getOutputStream();
+    response.setContentType("application/x-download");
+    response.addHeader("Content-Disposition", "attachment;filename=studentTemplate.xlsx");
+    IOUtils.copy(resourceAsStream, outputStream);
+    outputStream.flush();
+  }
+
+  @Override
+  public Result<Void> uploadAndParseTemplate(MultipartFile file) throws IOException {
+    InputStream inputStream = file.getInputStream();
+    EasyExcelFactory
+        .read(inputStream, StudentBO.class,studentListener)
+        .sheet(0)
+        .headRowNumber(2)
+        .doReadSync();
+    return null;
   }
 
   /**

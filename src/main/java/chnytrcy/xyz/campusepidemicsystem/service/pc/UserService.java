@@ -2,9 +2,12 @@ package chnytrcy.xyz.campusepidemicsystem.service.pc;
 
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.AddUserCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginByPhoneCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.PhoneMessageCaptchaCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.User;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.LoginTypeEnums;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +32,8 @@ public interface UserService extends IService<User> {
 
   /**
    * 多端聚合登陆
-   * @param command 入参
-   * @return 结果
    */
-  Result login(LoginCommand command,Integer i, HttpServletRequest request);
+  Result login(LoginCommand command, LoginTypeEnums type, HttpServletRequest request);
 
   /**
    * 登出
@@ -43,4 +44,10 @@ public interface UserService extends IService<User> {
    * 修改密码
    */
   Result changePwd(ChangePwdCommand command);
+
+  /**
+   * 发送短信验证码
+   */
+  Result<Void> getPhoneMessageCaptcha(PhoneMessageCaptchaCommand command);
+
 }

@@ -3,6 +3,7 @@ package chnytrcy.xyz.campusepidemicsystem.controller.app;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.constance.LoginMethodConstance;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.LoginTypeEnums;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import io.swagger.annotations.Api;
@@ -36,7 +37,7 @@ public class UserAppController {
   @ApiOperation("登陆")
   @PostMapping("/login")
   public Result login(@RequestBody @Valid LoginCommand command, HttpServletRequest request){
-    return userService.login(command, LoginMethodConstance.MOBILE,request);
+    return userService.login(command, LoginTypeEnums.APP_PASSWORD,request);
   }
 
   @ApiOperation("登出")

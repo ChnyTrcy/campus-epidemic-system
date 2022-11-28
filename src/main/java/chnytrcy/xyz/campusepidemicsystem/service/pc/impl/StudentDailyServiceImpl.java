@@ -1,4 +1,4 @@
-package chnytrcy.xyz.campusepidemicsystem.service.app.impl;
+package chnytrcy.xyz.campusepidemicsystem.service.pc.impl;
 
 import chnytrcy.xyz.campusepidemicsystem.config.exception.BusinessException;
 import chnytrcy.xyz.campusepidemicsystem.mapper.StudentDailyMapper;

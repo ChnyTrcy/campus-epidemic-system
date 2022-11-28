@@ -9,6 +9,12 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.student.QueryStudentByKeywordVO;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -42,4 +48,14 @@ public interface StudentService extends IService<Student> {
    * 删除该学生
    */
   Result<Void> deleteStudent(DeleteStudentCommand command);
+
+  /**
+   * 下载学生批量添加模版文件
+   */
+  void downloadTemplate(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+  /**
+   * 上传并解析学生模板文件
+   */
+  Result<Void> uploadAndParseTemplate(MultipartFile file) throws IOException;
 }

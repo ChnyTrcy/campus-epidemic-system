@@ -79,7 +79,9 @@ public enum BusinessError implements BaseEnum {
   LEAVE_NOT_BELONG_USER_ERROR(10061,"该用户无权限查看此条请假记录详情"),
   TEACHER_DAILY_UP_AGAIN_ERROR(10062,"教职工不能重复上班打卡"),
   TEACHER_DAILY_DOWN_AGAIN_ERROR(10063,"教职工不能重复下班打卡"),
-  FEEDBACK_ACCEPTANCE_UNTREATED_ERROR(10064,"有未处理的反馈受理")
+  FEEDBACK_ACCEPTANCE_UNTREATED_ERROR(10064,"有未处理的反馈受理"),
+  RATE_LIMIT_BUSY_ERROR(10065,"请不要重复请求"),
+
   ;
 
   private Integer code;

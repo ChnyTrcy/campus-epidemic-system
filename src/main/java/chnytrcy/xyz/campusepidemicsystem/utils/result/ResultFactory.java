@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
  */
 public class ResultFactory {
 
-  private static final Boolean SUCCESS_RETURN = true;
+  private static final Boolean SUCCESS_RETURN = Boolean.TRUE;
 
-  private static final Boolean ERROR_RETURN = false;
+  private static final Boolean ERROR_RETURN = Boolean.FALSE;
 
   public static <T> Result<T> successResult(){
     Result result = Result.instance();

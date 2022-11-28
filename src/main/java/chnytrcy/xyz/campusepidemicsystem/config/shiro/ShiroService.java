@@ -4,6 +4,7 @@ import chnytrcy.xyz.campusepidemicsystem.mapper.UserMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.Role;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.User;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.AuthenticationError;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.LoginTypeEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.SuccessReturnCode;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
@@ -44,19 +45,20 @@ public class ShiroService {
    * @param user 用户
    * @return token值
    */
-  public String createToken(User user,Integer i){
+  public String createToken(User user, LoginTypeEnums type){
     String token1 = MD5.SysMd5(String.valueOf(user.getId()),user.getPassword());
     String token2 = MD5.SysMd5(token1, token1);
     String token = token1 + "-" + token2;
     LocalDateTime nowTime = LocalDateTime.now();
     LocalDateTime expireTime;
-    if(i == 1){
+    if(type.equals(LoginTypeEnums.PC_PASSWORD) || type.equals(LoginTypeEnums.PC_PHONE)){
       expireTime = nowTime.plusHours(CONTINUED_HOUR);
     }else {
       expireTime = nowTime.plusDays(CONTINUED_DAY);
     }
     TokenEntity tokenEntity = new TokenEntity();
     tokenEntity.setToken(token);
+    tokenEntity.setType(type);
     tokenEntity.setExpireTime(expireTime);
     tokenEntity.setUpdateTime(nowTime);
     tokenEntity.setUserId(user.getId());

@@ -1,10 +1,14 @@
 package chnytrcy.xyz.campusepidemicsystem.controller.pc;
 
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.RateLimitAnnotation;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.AddUserCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginByPhoneCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.PhoneMessageCaptchaCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.constance.LoginMethodConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.CaptchaDTO;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.LoginTypeEnums;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
@@ -19,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,10 +53,10 @@ public class UserController {
     return userService.addUser(command);
   }
 
-  @ApiOperation("登陆")
+  @ApiOperation("账号密码登陆")
   @PostMapping("/loginByPassword")
   public Result login(@RequestBody @Valid LoginCommand command,HttpServletRequest request){
-    return userService.login(command, LoginMethodConstance.PC,request);
+    return userService.login(command, LoginTypeEnums.PC_PASSWORD,request);
   }
 
   @ApiOperation("登出")
@@ -90,6 +95,19 @@ public class UserController {
         e.printStackTrace();
       }
     }
+  }
+
+  @ApiOperation("发送短信验证码")
+  @PostMapping("/getPhoneMessageCaptcha")
+//  @RateLimitAnnotation(value = 1)
+  public Result<Void> getPhoneMessageCaptcha(@Valid @RequestBody PhoneMessageCaptchaCommand command){
+    return userService.getPhoneMessageCaptcha(command);
+  }
+
+  @ApiOperation("手机登陆")
+  @PostMapping("/loginByPhone")
+  public Result loginByPhone(@Valid @RequestBody LoginCommand command,HttpServletRequest request){
+    return userService.login(command,LoginTypeEnums.PC_PHONE,request);
   }
 
 }

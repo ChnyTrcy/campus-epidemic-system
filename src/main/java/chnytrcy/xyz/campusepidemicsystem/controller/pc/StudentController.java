@@ -10,14 +10,20 @@ import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -61,6 +67,20 @@ public class StudentController {
   @ApiOperation("根据学号删除学生")
   public Result<Void> deleteStudent(@Valid DeleteStudentCommand command){
     return studentService.deleteStudent(command);
+  }
+
+  @GetMapping("/downloadTemplate")
+  @RequiresPermissions("admin:student:insert")
+  @ApiOperation("下载学生批量添加模版文件")
+  public void downloadTemplate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    studentService.downloadTemplate(request,response);
+  }
+
+  @PostMapping("/uploadAndParseTemplate")
+  @RequiresPermissions("admin:student:insert")
+  @ApiOperation("上传并解析学生模板文件")
+  public Result<Void> uploadAndParseTemplate(MultipartFile file) throws IOException {
+    return studentService.uploadAndParseTemplate(file);
   }
 
 }

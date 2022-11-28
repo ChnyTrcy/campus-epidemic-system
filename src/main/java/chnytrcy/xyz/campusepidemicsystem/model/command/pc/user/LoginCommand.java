@@ -22,14 +22,15 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class LoginCommand extends Base {
 
-  @ApiModelProperty(value = "用户名",required = true)
+  @ApiModelProperty(value = "用户名/手机号",required = true)
   @NotBlank(message = "用户名不能为空")
   private String account;
 
-  @ApiModelProperty(value = "密码",required = true)
-  @NotBlank(message = "密码不能为空")
+  @ApiModelProperty(value = "密码/验证码",required = true)
+  @NotBlank(message = "密码/验证码不能为空")
   private String password;
 
   @ApiModelProperty(value = "验证码")
   private String captcha = "";
+
 }

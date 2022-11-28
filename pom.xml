@@ -35,6 +35,7 @@
     <dozer.version>6.5.2</dozer.version>
     <sms.version>2.0.2</sms.version>
     <minio.version>8.4.3</minio.version>
+    <guava.version>18.0</guava.version>
   </properties>
   <dependencies>
     <dependency>
@@ -169,6 +170,11 @@
       <artifactId>minio</artifactId>
       <version>${minio.version}</version>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.google.guava</groupId>-->
+<!--      <artifactId>guava</artifactId>-->
+<!--      <version>${guava.version}</version>-->
+<!--    </dependency>-->
   </dependencies>
 
   <build>
