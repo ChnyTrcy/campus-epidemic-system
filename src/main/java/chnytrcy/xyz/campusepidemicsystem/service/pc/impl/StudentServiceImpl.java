@@ -249,7 +249,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
   /**
    * 验证学生必要字段是否相关联合法
    */
-  private void checkStudentInformationMatch(LegitimateStudent command,Boolean isAdd){
+  public void checkStudentInformationMatch(LegitimateStudent command,Boolean isAdd){
     //验证院系是否存在
     if(0 == deptMapper.selectCount(new LambdaQueryWrapper<Dept>()
         .eq(Dept::getCode,command.getDeptCode()))){

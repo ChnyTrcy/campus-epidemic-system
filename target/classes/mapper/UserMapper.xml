@@ -8,6 +8,13 @@
     INSERT INTO user_role(user_id, role_id) VALUES (#{id},#{i})
   </insert>
 
+  <insert id="batchAddUserRole">
+    INSERT INTO user_role(user_id, role_id) VALUES
+        <foreach collection="idList" item="item"  separator=",">
+          (#{item},#{i})
+        </foreach>
+  </insert>
+
   <update id="updateRoleByUserId">
     UPDATE user_role SET role_id = #{i} WHERE user_id = #{userId}
   </update>

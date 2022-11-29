@@ -2,6 +2,7 @@ package chnytrcy.xyz.campusepidemicsystem.common;
 
 import chnytrcy.xyz.campusepidemicsystem.mapper.MajorMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,10 @@ public class MajorCommon {
     return majorMapper.selectList(null)
         .stream()
         .collect(Collectors.toMap(Major::getCode, Major::getName));
+  }
+
+  public List<Major> majorList(){
+    return majorMapper.selectList(null);
   }
 
 }

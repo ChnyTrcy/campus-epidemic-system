@@ -68,6 +68,15 @@ public interface UserMapper extends BaseMapper<User> {
   void addUserRole(Long id, int i);
 
   /**
+   * 批量添加用户和角色关联表（同角色）
+   * @param idList
+   * @param i
+   */
+  void batchAddUserRole(
+      @Param("idList") List<Long> idList,
+      @Param("i") int i);
+
+  /**
    * 删除用户和角色关联表
    * @param id 用户ID标识符
    */

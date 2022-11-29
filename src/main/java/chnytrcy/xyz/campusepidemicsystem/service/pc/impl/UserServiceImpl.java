@@ -11,10 +11,9 @@ import chnytrcy.xyz.campusepidemicsystem.mapper.TeacherMapper;
 import chnytrcy.xyz.campusepidemicsystem.mapper.UserMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.AddUserCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
-import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginByPhoneCommand;
+
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.PhoneMessageCaptchaCommand;
-import chnytrcy.xyz.campusepidemicsystem.model.constance.LoginMethodConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AdminInformationDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.CaptchaDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.EpidemicInformationDTO;
