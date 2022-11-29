@@ -58,6 +58,16 @@ public class ResultFactory {
     return result;
   }
 
+  public static <T> Result<T> warningResult(T data){
+    Result result = Result.instance();
+    result.setData(data);
+    result.setCode(SuccessReturnCode.WARING.getCode());
+    result.setMessage("以下数据存在异常");
+    result.setTime(LocalDateTime.now());
+    result.setSuccess(SUCCESS_RETURN);
+    return result;
+  }
+
   public static <T> Result<T> errorResult(BusinessError businessError){
     Result result = Result.instance();
     result.setCode(businessError.getCode());

@@ -17,6 +17,8 @@ public enum SuccessReturnCode implements BaseEnum {
   NORMAL(200,"success"),
   LOGOUT(300,"用户登出成功"),
 
+  WARING(201,"存在异常"),
+
   CHANGE_PASSWORD(301,"密码修改成功")
   ;
 

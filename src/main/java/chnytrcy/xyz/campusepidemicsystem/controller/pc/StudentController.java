@@ -79,7 +79,7 @@ public class StudentController {
   @PostMapping("/uploadAndParseTemplate")
   @RequiresPermissions("admin:student:insert")
   @ApiOperation("上传并解析学生模板文件")
-  public Result<Void> uploadAndParseTemplate(MultipartFile file) throws IOException {
+  public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
     return studentService.uploadAndParseTemplate(file);
   }
 

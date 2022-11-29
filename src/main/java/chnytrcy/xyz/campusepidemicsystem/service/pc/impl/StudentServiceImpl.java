@@ -38,11 +38,13 @@ import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.RoleEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.student.QueryStudentByKeywordVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.StudentListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -161,14 +163,19 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
   }
 
   @Override
-  public Result<Void> uploadAndParseTemplate(MultipartFile file) throws IOException {
+  public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
     InputStream inputStream = file.getInputStream();
     EasyExcelFactory
-        .read(inputStream, StudentBO.class,studentListener)
+        .read(inputStream, StudentBO.class, studentListener)
         .sheet(0)
         .headRowNumber(2)
         .doReadSync();
-    return null;
+    List<ErrorEntity> errorList = studentListener.getErrorList();
+    if(CollUtil.isEmpty(errorList)){
+      return ResultFactory.successResult();
+    }else {
+      return ResultFactory.warningResult(errorList);
+    }
   }
 
   /**

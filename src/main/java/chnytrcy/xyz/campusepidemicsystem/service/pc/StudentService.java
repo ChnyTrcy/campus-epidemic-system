@@ -57,5 +57,5 @@ public interface StudentService extends IService<Student> {
   /**
    * 上传并解析学生模板文件
    */
-  Result<Void> uploadAndParseTemplate(MultipartFile file) throws IOException;
+  Result uploadAndParseTemplate(MultipartFile file) throws IOException;
 }

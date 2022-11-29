@@ -22,6 +22,7 @@ import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.apache.coyote.OutputBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -103,6 +105,12 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
     this.cleanList();
   }
 
+  public List<ErrorEntity> getErrorList(){
+    List<ErrorEntity> errorEntities = ObjectUtil.cloneByStream(this.errorList);
+    errorList.clear();
+    return errorEntities;
+  }
+
   private void fillDataName(List<Student> data){
     log.info("开始填充数据");
     data.forEach(e -> {
@@ -114,27 +122,30 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
   }
 
   private void batchInsert(){
-    log.info("开始批量插入");
-    //todo 因为依赖循环的关系，这里只能使用Mapper而不能用IService的批量
-    studentList.forEach(e -> {
-      studentMapper.insert(e);
-    });
-    studentList.forEach(e -> {
-      User user = new User(
-          e.getCode(),
-          MD5.SysMd5(e.getCode(),userInitPassword),
-          e.getPhone()
-      );
-      user.setId(e.getId());
-      userList.add(user);
-      userIdList.add(e.getId());
-    });
-    userService.saveBatch(userList);
-    userMapper.batchAddUserRole(userIdList, RoleEnums.STUDENT.getNumber());
+    if(CollUtil.isEmpty(studentList)){
+      log.warn("没有符合条件的数据，无需插入");
+    }else {
+      log.info("开始批量插入");
+      //todo 因为依赖循环的关系，这里只能使用Mapper而不能用IService的批量
+      studentList.forEach(e -> {
+        studentMapper.insert(e);
+      });
+      studentList.forEach(e -> {
+        User user = new User(
+            e.getCode(),
+            MD5.SysMd5(e.getCode(),userInitPassword),
+            e.getPhone()
+        );
+        user.setId(e.getId());
+        userList.add(user);
+        userIdList.add(e.getId());
+      });
+      userService.saveBatch(userList);
+      userMapper.batchAddUserRole(userIdList, RoleEnums.STUDENT.getNumber());
+    }
   }
 
   protected void cleanList(){
-    this.errorList.clear();
     this.studentBOList.clear();
     this.addCodeList.clear();
     this.studentList.clear();

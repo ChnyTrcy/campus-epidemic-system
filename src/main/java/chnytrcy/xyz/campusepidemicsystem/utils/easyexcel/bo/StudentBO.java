@@ -53,15 +53,15 @@ public class StudentBO implements Serializable {
   @ApiModelProperty("紧急联系方式")
   private String emergencyPhone;
 
-  @ExcelProperty(index = 9)
+  @ExcelProperty(index = 8)
   @ApiModelProperty("性别")
   private Integer sex;
 
-  @ExcelProperty(index = 10)
+  @ExcelProperty(index = 9)
   @ApiModelProperty("身份证号")
   private String idCard;
 
-  @ExcelProperty(index = 11)
+  @ExcelProperty(index = 10)
   @ApiModelProperty("居住地址")
   private String address;
 
