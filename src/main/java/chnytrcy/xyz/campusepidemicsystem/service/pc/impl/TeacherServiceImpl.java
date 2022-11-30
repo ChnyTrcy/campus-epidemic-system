@@ -34,13 +34,21 @@ import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.teacher.QueryEpidemicPerson
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.teacher.QueryTeacherPageVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.TeacherService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.TeacherBO;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.TeacherListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
+import cn.hutool.core.collection.CollUtil;
+import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,10 +56,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -79,6 +91,8 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
   @Autowired private DeptCommon deptCommon;
 
   @Autowired private HttpContextUtil httpContextUtil;
+
+  @Autowired private TeacherListener teacherListener;
 
   @Override
   @Transactional(rollbackFor = Exception.class)
@@ -202,6 +216,34 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
       list.add(statisticalNameCountDTO);
     }
     return ResultFactory.successResult(new CountDeptEpidemicNumVO(list));
+  }
+
+  @Override
+  public void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    InputStream resourceAsStream = this.getClass().getClassLoader()
+        .getResourceAsStream("excelTemplates/teacherTemplate.xlsx");
+    OutputStream outputStream = response.getOutputStream();
+    response.setContentType("application/x-download");
+    response.addHeader("Content-Disposition", "attachment;filename=studentTemplate.xlsx");
+    IOUtils.copy(resourceAsStream, outputStream);
+    outputStream.flush();
+  }
+
+  @Override
+  public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
+    InputStream inputStream = file.getInputStream();
+    EasyExcelFactory
+        .read(inputStream, TeacherBO.class, teacherListener)
+        .sheet(0)
+        .headRowNumber(2)
+        .doReadSync();
+    List<ErrorEntity> errorList = teacherListener.getErrorList();
+    if(CollUtil.isEmpty(errorList)){
+      return ResultFactory.successResult();
+    }else {
+      return ResultFactory.warningResult(errorList);
+    }
   }
 
   /**

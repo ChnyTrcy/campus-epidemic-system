@@ -3,12 +3,9 @@ package chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener;
 import chnytrcy.xyz.campusepidemicsystem.common.ClassCommon;
 import chnytrcy.xyz.campusepidemicsystem.common.DeptCommon;
 import chnytrcy.xyz.campusepidemicsystem.common.MajorCommon;
-import chnytrcy.xyz.campusepidemicsystem.common.StudentCommon;
-import chnytrcy.xyz.campusepidemicsystem.config.basic.model.Base;
 import chnytrcy.xyz.campusepidemicsystem.mapper.ClassMapper;
 import chnytrcy.xyz.campusepidemicsystem.mapper.StudentMapper;
 import chnytrcy.xyz.campusepidemicsystem.mapper.UserMapper;
-import chnytrcy.xyz.campusepidemicsystem.model.command.pc.student.legitimate.LegitimateStudent;
 import chnytrcy.xyz.campusepidemicsystem.model.constance.StudentConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.ClassEntity;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Dept;
@@ -16,6 +13,7 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.User;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.RoleEnums;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.SexEnums;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
@@ -29,12 +27,12 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
-import org.apache.coyote.OutputBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -81,10 +79,10 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
 
   private List<Long> userIdList = Lists.newArrayList();
 
-  private Integer analysisRow = 2;
+  private Integer analysisRow = 3;
 
   static {
-    log.info("注入Excel解析监听器成功......");
+    log.info("注入学生Excel解析监听器成功......");
   }
 
   @Override
@@ -98,7 +96,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
 
   @Override
   public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-    log.info("解析完成...");
+    log.debug("解析完成...");
     studentList = DozerUtils.convertList(studentBOList,Student.class);
     this.fillDataName(studentList);
     this.batchInsert();
@@ -112,7 +110,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
   }
 
   private void fillDataName(List<Student> data){
-    log.info("开始填充数据");
+    log.debug("开始填充数据");
     data.forEach(e -> {
       e.setDeptName(deptCommon.deptHashMap().get(e.getDeptCode()));
       e.setMajorName(majorCommon.majorHashMapToName().get(e.getMajorCode()));
@@ -125,7 +123,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
     if(CollUtil.isEmpty(studentList)){
       log.warn("没有符合条件的数据，无需插入");
     }else {
-      log.info("开始批量插入");
+      log.debug("开始批量插入");
       //todo 因为依赖循环的关系，这里只能使用Mapper而不能用IService的批量
       studentList.forEach(e -> {
         studentMapper.insert(e);
@@ -187,7 +185,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
       errorList.add(ErrorEntity.builder()
           .row(analysisRow++)
           .content(JSON.toJSONString(bo))
-          .errorContent("不存在此院系编号")
+          .errorContent("不存在此专业编号")
           .build());
       return false;
     }
@@ -216,7 +214,18 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
       errorList.add(ErrorEntity.builder()
           .row(analysisRow++)
           .content(JSON.toJSONString(bo))
-          .errorContent("无效的紧急联系方式")
+          .errorContent("无效的联系方式")
+          .build());
+      return false;
+    }
+    Integer sex = bo.getSex();
+    HashSet<Integer> sexSets = CollUtil.newHashSet(SexEnums.MAN.getCode(),
+        SexEnums.WOMAN.getCode());
+    if(!sexSets.contains(sex)){
+      errorList.add(ErrorEntity.builder()
+          .row(analysisRow++)
+          .content(JSON.toJSONString(bo))
+          .errorContent("性别错误")
           .build());
       return false;
     }

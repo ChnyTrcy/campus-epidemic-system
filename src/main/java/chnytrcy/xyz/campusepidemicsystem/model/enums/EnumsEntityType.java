@@ -29,7 +29,8 @@ public enum EnumsEntityType {
   STUDENT("STUDENT","学生","campus-epidemic-system","ces-1009"),
   TEACHER_DAILY("TEACHER_DAILY","教职工日常打卡","campus-epidemic-system","ces-1010"),
   TEACHER("TEACHER","教职工","campus-epidemic-system","ces-1011"),
-  LOGIN("LOGIN","登陆类型","login-type","ces-1012")
+  LOGIN("LOGIN","登陆类型","login-type","ces-1012"),
+  SEX("SEX","性别","sex-type","ces-1013")
 
   ;
   private String name;

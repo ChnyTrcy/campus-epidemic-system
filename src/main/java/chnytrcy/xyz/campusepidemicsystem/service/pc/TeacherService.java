@@ -13,6 +13,10 @@ import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.teacher.QueryEpidemicPerson
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.teacher.QueryTeacherPageVO;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -60,4 +64,15 @@ public interface TeacherService extends IService<Teacher> {
    * 各学院防疫人数占比
    */
   Result<CountDeptEpidemicNumVO> countDeptEpidemicNum();
+
+  /**
+   * 下载教职工批量添加模版文件
+   */
+  void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException;
+
+  /**
+   * 上传并解析教职工模版文件
+   */
+  Result uploadAndParseTemplate(MultipartFile file) throws IOException;
 }

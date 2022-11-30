@@ -13,6 +13,9 @@ import chnytrcy.xyz.campusepidemicsystem.service.pc.TeacherService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -79,6 +83,21 @@ public class TeacherController {
   public Result<BasePageVO<QueryEpidemicPersonVO>>  queryEpidemicPerson(
       @Valid QueryEpidemicPersonCommand command){
     return teacherService.queryEpidemicPerson(command);
+  }
+
+  @GetMapping("/downloadTemplate")
+  @RequiresPermissions("admin:teacher:insert")
+  @ApiOperation("下载教职工批量添加模版文件")
+  public void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    teacherService.downloadTemplate(request,response);
+  }
+
+  @PostMapping("/uploadAndParseTemplate")
+  @RequiresPermissions("admin:teacher:insert")
+  @ApiOperation("上传并解析教职工模版文件")
+  public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
+    return teacherService.uploadAndParseTemplate(file);
   }
 
 }
