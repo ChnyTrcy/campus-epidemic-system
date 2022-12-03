@@ -1,7 +1,6 @@
 package chnytrcy.xyz.campusepidemicsystem.service.pc.impl;
 
 import chnytrcy.xyz.campusepidemicsystem.common.DeptCommon;
-import chnytrcy.xyz.campusepidemicsystem.config.basic.model.Base;
 import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
 import chnytrcy.xyz.campusepidemicsystem.config.exception.BusinessException;
 import chnytrcy.xyz.campusepidemicsystem.config.shiro.utils.HttpContextUtil;

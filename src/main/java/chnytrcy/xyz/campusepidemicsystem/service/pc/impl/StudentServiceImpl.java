@@ -3,6 +3,7 @@ package chnytrcy.xyz.campusepidemicsystem.service.pc.impl;
 import chnytrcy.xyz.campusepidemicsystem.common.ClassCommon;
 import chnytrcy.xyz.campusepidemicsystem.common.DeptCommon;
 import chnytrcy.xyz.campusepidemicsystem.common.MajorCommon;
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.DataSynchronous;
 import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
 import chnytrcy.xyz.campusepidemicsystem.config.exception.BusinessException;
 import chnytrcy.xyz.campusepidemicsystem.mapper.ClassMapper;
@@ -31,6 +32,7 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.User;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.BusinessError;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.FeedbackAcceptanceEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.IsolationPersonEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.LeaveEnums;
@@ -134,6 +136,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
   @Override
   @Transactional(rollbackFor = Exception.class)
+  @DataSynchronous(type = EntityEnums.STUDENT)
   public Result<Void> updateStudent(UpdateStudentCommand command) {
     this.checkStudentInformationMatch(command,true);
     Student convert = DozerUtils.convert(command, Student.class);

@@ -2,6 +2,7 @@ package chnytrcy.xyz.campusepidemicsystem.utils.mq.producter;
 
 import static chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance.EXCHANGE_NAME;
 
+import chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AbnormalStudentMessageDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AddMessageInfoDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,20 +21,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class StudentIsolateProducer {
 
+
+
   @Autowired private RabbitTemplate rabbitTemplate;
 
   /**
    * 隔离短信提醒
    */
   public void addMessage(AddMessageInfoDTO dto){
-    rabbitTemplate.convertAndSend(EXCHANGE_NAME,"student-isolate",dto);
+    rabbitTemplate.convertAndSend(EXCHANGE_NAME, MQConstance.STUDENT_ISOLATE,dto);
   }
 
   /**
    * 体温异常短信提醒
    */
   public void abnormalMessage(AbnormalStudentMessageDTO msg){
-    rabbitTemplate.convertAndSend(EXCHANGE_NAME,"student_treat",msg);
+    rabbitTemplate.convertAndSend(EXCHANGE_NAME,MQConstance.STUDENT_TREAT,msg);
   }
 
 }

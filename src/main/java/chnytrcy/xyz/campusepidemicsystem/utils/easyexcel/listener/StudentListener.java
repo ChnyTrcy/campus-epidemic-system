@@ -14,7 +14,6 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.User;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.RoleEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.SexEnums;
-import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
@@ -87,7 +86,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
 
   @Override
   public void invoke(StudentBO studentBO, AnalysisContext analysisContext) {
-    log.info("解析到一条数据:{}", JSON.toJSONString(studentBO));
+    log.debug("解析到一条数据:{}", JSON.toJSONString(studentBO));
     Boolean validation = validationData(studentBO);
     if(validation){
       studentBOList.add(studentBO);
@@ -124,7 +123,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
       log.warn("没有符合条件的数据，无需插入");
     }else {
       log.debug("开始批量插入");
-      //todo 因为依赖循环的关系，这里只能使用Mapper而不能用IService的批量
+      //todo 因为依赖循环的关系，这里只能使用Mapper而不能用IService的批量操作
       studentList.forEach(e -> {
         studentMapper.insert(e);
       });

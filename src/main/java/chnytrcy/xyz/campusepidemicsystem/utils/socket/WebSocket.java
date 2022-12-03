@@ -6,8 +6,10 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.server.standard.SpringConfigurator;
 
 /**
@@ -19,66 +21,67 @@ import org.springframework.web.socket.server.standard.SpringConfigurator;
  * @Date: 2022/11/14 19:40
  * @Version: 1.0
  */
-@ServerEndpoint(value="/app/webSocket", configurator = SpringConfigurator.class)
+@ServerEndpoint(value="/campus-epidemic-system/webSocket/", configurator = SpringConfigurator.class)
+@Component
 @Slf4j
 public class WebSocket {
 
-  private Session session;
-
   /**
-   * 客户端连接成功
+   * 连接事件，加入注解
+   * @param userId
    * @param session
    */
   @OnOpen
-  public void onOpen(Session session)
-  {
-    this.session = session;
-    log.info("WebSocket - 连接成功");
+  public void onOpen( @PathParam( value = "userid" ) String userId, Session session ) {
+    String message ="[" + userId + "]加入聊天室！！";
+
+    // 添加到session的映射关系中
+    WebSocketUtil.addSession ( userId, session );
+    // 广播通知，某用户上线了
+    WebSocketUtil.sendMessageForAll ( message );
   }
 
-
   /**
-   * 收到消息时执行
-   * @param message
+   * 连接事件，加入注解
+   * 用户断开链接
+   * @param userId
    * @param session
-   * @throws IOException
-   */
-  @OnMessage
-  public void onMessage(String message, Session session) throws IOException
-  {
-    this.sendMessage("success");
-  }
-
-
-  /**
-   * 关闭时执行
    */
   @OnClose
-  public void onClose()
-  {
-    log.info("webSocket - 连接关闭");
+  public void onClose(@PathParam ( value = "userId" ) String userId, Session session ) {
+    String message ="[" + userId + "]退出了聊天室...";
+
+    // 删除映射关系
+    WebSocketUtil.removeSession ( userId );
+    // 广播通知，用户下线了
+    WebSocketUtil.sendMessageForAll ( message );
   }
 
+  /**
+   * 当接收到用户上传的消息
+   * @param userId
+   * @param session
+   */
+  @OnMessage
+  public void onMessage(@PathParam ( value = "userId" ) String userId, Session session ,String message) {
+    String msg ="[" + userId + "]:"+message;
+
+    // 直接广播
+    WebSocketUtil.sendMessageForAll ( msg );
+  }
 
   /**
-   * 连接错误时执行
+   * 处理用户活连接异常
    * @param session
-   * @param error
+   * @param throwable
    */
   @OnError
-  public void onError(Session session, Throwable error)
-  {
-    log.error("webSocket - 出错：" + error.getMessage());
-  }
-
-
-  /**
-   * 发送消息给客户端
-   * @param message
-   * @throws IOException
-   */
-  public void sendMessage(String message) throws IOException
-  {
-    this.session.getBasicRemote().sendText(message);
+  public void onError(Session session, Throwable throwable) {
+    try {
+      session.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    throwable.printStackTrace();
   }
 }

@@ -1,7 +1,9 @@
 package chnytrcy.xyz.campusepidemicsystem.service.pc.impl;
 
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.DataSynchronous;
 import chnytrcy.xyz.campusepidemicsystem.mapper.ProvinceMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Province;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.province.GetProvinceListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.ProvinceService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;

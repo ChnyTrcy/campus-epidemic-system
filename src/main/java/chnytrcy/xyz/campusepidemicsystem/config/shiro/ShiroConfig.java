@@ -2,6 +2,7 @@ package chnytrcy.xyz.campusepidemicsystem.config.shiro;
 
 import chnytrcy.xyz.campusepidemicsystem.config.shiro.auth.AuthFilter;
 import chnytrcy.xyz.campusepidemicsystem.config.shiro.auth.AuthRealm;
+import com.google.common.collect.Maps;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,10 +37,10 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager);
         //auth过滤
-        Map<String, Filter> filters = new HashMap<>();
+        Map<String, Filter> filters = Maps.newHashMap();
         filters.put("auth", new AuthFilter());
         shiroFilter.setFilters(filters);
-        Map<String, String> filterMap = new LinkedHashMap<>();
+        Map<String, String> filterMap = Maps.newLinkedHashMap();
         // anon匿名访问  auth验证
         // 白名单地址
         filterMap.put("/webjars/**", "anon");
@@ -57,6 +58,7 @@ public class ShiroConfig {
         filterMap.put("/campus-epidemic-system/pc/user/getCaptchaImg","anon");
         filterMap.put("/campus-epidemic-system/pc/user/getPhoneMessageCaptcha","anon");
         filterMap.put("/campus-epidemic-system/pc/user/loginByPhone","anon");
+        filterMap.put("/campus-epidemic-system/webSocket/**","anon");
         // 除了以上路径，其他都需要权限验证
         filterMap.put("/**", "auth");
 

@@ -11,4 +11,12 @@ package chnytrcy.xyz.campusepidemicsystem.model.constance;
  */
 public interface MQConstance {
   String EXCHANGE_NAME = "campus-epidemic-system";
+
+  String EXCHANGE_DATA_SYNCHRONIZATION = "data_synchronization";
+
+  String STUDENT_ISOLATE = "student-isolate";
+
+  String STUDENT_TREAT = "student_treat";
+
+  String DATA_SYNCHRONOUS = "data-synchronous";
 }

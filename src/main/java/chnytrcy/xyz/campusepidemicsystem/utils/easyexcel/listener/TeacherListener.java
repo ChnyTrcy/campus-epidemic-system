@@ -48,8 +48,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TeacherListener extends AnalysisEventListener<TeacherBO> {
 
-  @Value("${user.init.password}")
-  private String userInitPassword;
+  @Value("${user.init.password}") private String userInitPassword;
 
   @Autowired private DeptCommon deptCommon;
 
