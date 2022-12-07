@@ -1,7 +1,6 @@
 package chnytrcy.xyz.campusepidemicsystem.utils.mq.consumer;
 
-import static chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance.EXCHANGE_NAME;
-
+import chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AbnormalStudentMessageDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AddMessageInfoDTO;
 import chnytrcy.xyz.campusepidemicsystem.utils.sms.ZhenziSmsUtil;
@@ -9,7 +8,6 @@ import com.zhenzi.sms.ZhenziSmsClient;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
@@ -38,9 +36,9 @@ public class StudentIsolateConsumer {
    * @throws Exception
    */
   @RabbitListener(bindings = @QueueBinding(
-      value = @Queue(name = "topic.queue"),
-      exchange = @Exchange(name = EXCHANGE_NAME,type = ExchangeTypes.TOPIC),
-      key = "student-isolate"
+      value = @Queue(name = "direct.isolate"),
+      exchange = @Exchange(name = MQConstance.EXCHANGE_QUARANTINE_NOTIFICATION),
+      key = MQConstance.STUDENT_ISOLATE
   ))
   public void listenStudentIsolate(AddMessageInfoDTO msg) throws Exception {
     ZhenziSmsClient client = zhenziSmsClient.zhenziSmsClient();
@@ -64,9 +62,9 @@ public class StudentIsolateConsumer {
   }
 
   @RabbitListener(bindings = @QueueBinding(
-      value = @Queue(name = "topic.queue"),
-      exchange = @Exchange(name = EXCHANGE_NAME,type = ExchangeTypes.TOPIC),
-      key = "student_treat"
+      value = @Queue(name = "direct.abnormal"),
+      exchange = @Exchange(name = MQConstance.EXCHANGE_ABNORMAL_MESSAGE),
+      key = MQConstance.STUDENT_TREAT
   ))
   public void listenStudentAbnormal(AbnormalStudentMessageDTO msg) throws Exception {
     ZhenziSmsClient client = zhenziSmsClient.zhenziSmsClient();

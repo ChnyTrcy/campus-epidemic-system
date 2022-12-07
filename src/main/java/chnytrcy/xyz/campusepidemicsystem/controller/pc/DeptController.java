@@ -1,5 +1,6 @@
 package chnytrcy.xyz.campusepidemicsystem.controller.pc;
 
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.RateLimitAnnotation;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.DeptService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
@@ -30,6 +31,7 @@ public class DeptController {
 
   @GetMapping("/getDeptList")
   @ApiOperation("获取院系列表")
+  @RateLimitAnnotation(value = 2)
   public Result<List<DeptListVO>> getDeptList(){
     return deptService.getDeptList();
   }

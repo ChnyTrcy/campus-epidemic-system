@@ -19,11 +19,11 @@ import java.lang.annotation.Target;
  */
 @Inherited
 @Documented
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RateLimitAnnotation {
 
   BusinessError errorCode() default BusinessError.RATE_LIMIT_BUSY_ERROR;
 
-  int value() default 1;
+  int value() default 10;
 }

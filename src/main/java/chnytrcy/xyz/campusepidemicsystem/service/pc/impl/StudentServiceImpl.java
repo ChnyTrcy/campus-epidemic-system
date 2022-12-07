@@ -122,7 +122,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
   }
 
   @Override
-  public Result<BasePageVO<QueryStudentByKeywordVO>>  queryStudentByKeyword(
+  public Result<BasePageVO<QueryStudentByKeywordVO>> queryStudentByKeyword(
       QueryStudentByKeywordCommand command) {
     PageHelper.startPage(command.getPageNum(),command.getPageSize());
     List<Student> studentList = getBaseMapper().queryStudentByKeyword(command.getKeyword(),
@@ -136,7 +136,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  @DataSynchronous(type = EntityEnums.STUDENT)
   public Result<Void> updateStudent(UpdateStudentCommand command) {
     this.checkStudentInformationMatch(command,true);
     Student convert = DozerUtils.convert(command, Student.class);

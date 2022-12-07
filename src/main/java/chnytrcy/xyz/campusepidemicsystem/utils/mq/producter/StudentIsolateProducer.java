@@ -1,7 +1,5 @@
 package chnytrcy.xyz.campusepidemicsystem.utils.mq.producter;
 
-import static chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance.EXCHANGE_NAME;
-
 import chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AbnormalStudentMessageDTO;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AddMessageInfoDTO;
@@ -29,14 +27,14 @@ public class StudentIsolateProducer {
    * 隔离短信提醒
    */
   public void addMessage(AddMessageInfoDTO dto){
-    rabbitTemplate.convertAndSend(EXCHANGE_NAME, MQConstance.STUDENT_ISOLATE,dto);
+    rabbitTemplate.convertAndSend(MQConstance.EXCHANGE_QUARANTINE_NOTIFICATION, MQConstance.STUDENT_ISOLATE,dto);
   }
 
   /**
    * 体温异常短信提醒
    */
   public void abnormalMessage(AbnormalStudentMessageDTO msg){
-    rabbitTemplate.convertAndSend(EXCHANGE_NAME,MQConstance.STUDENT_TREAT,msg);
+    rabbitTemplate.convertAndSend(MQConstance.EXCHANGE_ABNORMAL_MESSAGE,MQConstance.STUDENT_TREAT,msg);
   }
 
 }

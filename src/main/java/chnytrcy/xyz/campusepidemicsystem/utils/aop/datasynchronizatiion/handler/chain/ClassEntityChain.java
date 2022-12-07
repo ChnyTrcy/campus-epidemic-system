@@ -1,12 +1,13 @@
 package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler.chain;
 
 import chnytrcy.xyz.campusepidemicsystem.mapper.ClassMapper;
-import chnytrcy.xyz.campusepidemicsystem.mapper.MajorMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.ClassEntity;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
+import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.ClassService;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.MajorService;
+import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
 import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler.SynchronizationAbstract;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,9 @@ public class ClassEntityChain extends SynchronizationAbstract {
     log.info(INJECTION_MESSAGE,"班级");
   }
 
-  @Autowired private ClassService classService;
+  @Autowired private ClassMapper classMapper;
 
-  @Autowired private MajorService majorService;
+  @Autowired private StudentService studentService;
 
   @Override
   public String getTableComment() {
@@ -44,14 +45,15 @@ public class ClassEntityChain extends SynchronizationAbstract {
   @Override
   public synchronized void mainIn() {
     log.info(START_MESSAGE,getTableComment());
-    Map<String, String> majorMap = majorService.list(null).stream()
-        .collect(Collectors.toMap(Major::getCode, Major::getName));
-    List<ClassEntity> classList = classService.list(null);
-    classList.forEach(e -> {
-      String code = e.getCode();
-      String substring = code.substring(0, 2) + code.substring(code.length() - 2);
-      e.setName(majorMap.get(e.getMajorCode()) + substring);
+    Map<String, String> classMap = classMapper.selectList(null).stream()
+        .collect(Collectors.toMap(ClassEntity::getCode, ClassEntity::getName));
+    List<Student> list = studentService.list();
+    list.forEach(e -> {
+      e.setClassName(classMap.get(e.getClassCode()));
     });
+    studentService.updateBatchById(list);
+
     log.info(END_MESSAGE,getTableComment());
+
   }
 }

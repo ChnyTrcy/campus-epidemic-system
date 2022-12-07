@@ -144,7 +144,7 @@ public class StreetServiceImpl extends ServiceImpl<StreetMapper, Street>
     HashMap<String, Student> studentHashMap = new HashMap<>(studentCommon.studentHashMap());
 
     //获得街道映射表（开发环境不执行）
-//    HashMap<String,String> streetMap = new HashMap<>(streetCommon.codeToString());
+    HashMap<String,String> streetMap = new HashMap<>(streetCommon.codeToString());
 
     //4、添加到隔离人员表
     collect.forEach(e -> {
@@ -163,12 +163,12 @@ public class StreetServiceImpl extends ServiceImpl<StreetMapper, Street>
       isolationPersonMapper.insert(entity);
 
       //6、短信通知(开发环境不执行)
-//      AddMessageInfoDTO addMessageInfoDTO = new AddMessageInfoDTO();
-//      addMessageInfoDTO.setName(studentHashMap.get(e).getName());
-//      addMessageInfoDTO.setStreetName(streetMap.get(command.getStreetCode()));
-//      addMessageInfoDTO.setRiskLevel(command.getRiskLevel());
-//      addMessageInfoDTO.setPhone(studentHashMap.get(e).getPhone());
-//      studentIsolateProducer.addMessage(addMessageInfoDTO);
+      AddMessageInfoDTO addMessageInfoDTO = new AddMessageInfoDTO();
+      addMessageInfoDTO.setName(studentHashMap.get(e).getName());
+      addMessageInfoDTO.setStreetName(streetMap.get(command.getStreetCode()));
+      addMessageInfoDTO.setRiskLevel(command.getRiskLevel());
+      addMessageInfoDTO.setPhone(studentHashMap.get(e).getPhone());
+      studentIsolateProducer.addMessage(addMessageInfoDTO);
     });
   }
 }

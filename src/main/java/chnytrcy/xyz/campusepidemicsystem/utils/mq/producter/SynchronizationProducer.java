@@ -1,7 +1,5 @@
 package chnytrcy.xyz.campusepidemicsystem.utils.mq.producter;
 
-import static chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance.EXCHANGE_NAME;
-
 import chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
