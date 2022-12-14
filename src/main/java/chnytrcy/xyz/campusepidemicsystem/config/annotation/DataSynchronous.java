@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * @Package: chnytrcy.xyz.campusepidemicsystem.config.annotation
  * @ClassName: DataSynchronous
  * @Author: ChnyTrcy
- * @Description: 数据全量同步
+ * @Description: 数据全量同步注解
  * @Date: 2022/12/2 15:06
  * @Version: 1.0
  */

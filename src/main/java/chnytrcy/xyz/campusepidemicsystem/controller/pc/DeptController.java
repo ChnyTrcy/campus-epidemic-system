@@ -26,8 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "院系Controller",tags = "PC - 院系接口")
 public class DeptController {
 
-  @Autowired
-  private DeptService deptService;
+  @Autowired private DeptService deptService;
 
   @GetMapping("/getDeptList")
   @ApiOperation("获取院系列表")

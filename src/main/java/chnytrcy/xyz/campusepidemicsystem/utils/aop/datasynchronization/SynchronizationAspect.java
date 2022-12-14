@@ -1,16 +1,13 @@
-package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion;
+package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization;
 
 import chnytrcy.xyz.campusepidemicsystem.config.annotation.DataSynchronous;
-import chnytrcy.xyz.campusepidemicsystem.utils.PrintFileContent;
 import chnytrcy.xyz.campusepidemicsystem.utils.mq.producter.SynchronizationProducer;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,13 +33,10 @@ public class SynchronizationAspect {
   @Autowired private SynchronizationProducer producer;
 
   private final List<String> allowAspList = Stream.of(
-      "CLASS_ENTITY",
-      "FEEDBACK_ACCEPTANCE",
-      "HOLIDAY_STREET",
-      "ISOLATION_DETAIL",
-      "ISOLATION_PERSON",
-      "LEAVE_DETAIL",
+      "MAJOR",
       "STUDENT",
+      "DEPT",
+      "CLASS_ENTITY",
       "TEACHER"
   ).collect(Collectors.toList());
 

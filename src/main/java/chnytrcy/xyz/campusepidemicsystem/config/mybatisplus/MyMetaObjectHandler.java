@@ -47,6 +47,6 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     if (StringUtils.isNotBlank(userName)) {
       this.setFieldValByName("updateUser", userName, metaObject);
     }
-    this.setFieldValByName("updateDate", LocalDateTime.now(), metaObject);
+    this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
   }
 }

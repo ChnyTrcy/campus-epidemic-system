@@ -23,10 +23,13 @@ import javax.validation.Payload;
 public @interface ListValue {
 
   String message() default "";
+
   // 支持分组校验
   Class<?>[] groups() default {};
+
   // 自定义负载信息
   Class<? extends Payload>[] payload() default {};
+
   // 指定参数，就是上图中指定的可取值的范围
   int [] vals() default {};
 }

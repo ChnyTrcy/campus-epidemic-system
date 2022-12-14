@@ -1,4 +1,4 @@
-package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler;
+package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization.handler;
 
 import lombok.extern.slf4j.Slf4j;
 

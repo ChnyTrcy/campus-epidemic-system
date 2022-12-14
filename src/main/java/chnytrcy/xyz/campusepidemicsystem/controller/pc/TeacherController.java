@@ -59,7 +59,7 @@ public class TeacherController {
   @PostMapping("/updateTeacher")
   @ApiOperation("修改教职工")
   @RequiresPermissions("admin:teacher:update")
-  public Result<Void> updateTeacher(@Valid UpdateTeacherCommand command){
+  public Result<Void> updateTeacher(@Valid @RequestBody UpdateTeacherCommand command){
     return teacherService.updateTeacher(command);
   }
 

@@ -36,6 +36,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Order(value = 99)
 public class ControllerLogAspect {
 
+  static {
+    log.info("日志打印服务注入成功...");
+  }
+
   @Value("${controller.logs.switch}")
   private boolean key;
 
@@ -51,7 +55,7 @@ public class ControllerLogAspect {
       StringBuilder sb = new StringBuilder();
       sb.append("==>请求URL: " + request.getRequestURL().toString());
       sb.append("   ==>请求时间: " + LocalDateTime.now());
-//    sb.append("   ==>请求IP: " + request.getRemoteAddr());
+      sb.append("   ==>请求IP: " + request.getRemoteAddr());
       sb.append("   ==>调用方法: " + pdj.getSignature().getDeclaringTypeName() + "." + pdj.getSignature().getName());
 //    sb.append("   ==>请求参数: " + );
       if(ObjectUtil.isNotNull(result)){

@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.RateLimiter;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Aspect
+@Slf4j
 @Component
 @Order(value = 10)
 public class RateLimitAspect {
@@ -58,6 +60,7 @@ public class RateLimitAspect {
 
   @Around("rateLimit()")
   public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+    log.debug("限流注解开始了！");
     Signature signature = joinPoint.getSignature();
     MethodSignature msg=(MethodSignature) signature;
     Object target = joinPoint.getTarget();

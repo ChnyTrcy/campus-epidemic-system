@@ -3,8 +3,8 @@ package chnytrcy.xyz.campusepidemicsystem.utils.mq.consumer;
 
 import chnytrcy.xyz.campusepidemicsystem.model.constance.MQConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
-import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler.SynchronizationAbstract;
-import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler.SynchronizationFactory;
+import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization.handler.SynchronizationAbstract;
+import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization.handler.SynchronizationFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;

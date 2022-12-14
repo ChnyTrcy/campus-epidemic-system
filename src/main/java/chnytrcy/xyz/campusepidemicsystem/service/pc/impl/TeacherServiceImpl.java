@@ -1,6 +1,7 @@
 package chnytrcy.xyz.campusepidemicsystem.service.pc.impl;
 
 import chnytrcy.xyz.campusepidemicsystem.common.DeptCommon;
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.DataSynchronous;
 import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
 import chnytrcy.xyz.campusepidemicsystem.config.exception.BusinessException;
 import chnytrcy.xyz.campusepidemicsystem.config.shiro.utils.HttpContextUtil;
@@ -24,6 +25,7 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationPerson;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Teacher;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.user.User;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.BusinessError;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.FeedbackAcceptanceEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.IsolationPersonEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.RoleEnums;
@@ -132,9 +134,10 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
 
   @Override
   @Transactional(rollbackFor = Exception.class)
+  @DataSynchronous(type = EntityEnums.TEACHER)
   public Result<Void> updateTeacher(UpdateTeacherCommand command) {
     //判断院系是否存在
-    if(0 < deptMapper.selectCount(new LambdaQueryWrapper<Dept>()
+    if(0 == deptMapper.selectCount(new LambdaQueryWrapper<Dept>()
         .eq(Dept::getCode,command.getDeptCode()))){
       throw new BusinessException(BusinessError.DEPT_NOT_EXIST_ERROR);
     }
@@ -145,6 +148,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
 
   @Override
   @Transactional(rollbackFor = Exception.class)
+  @DataSynchronous(type = EntityEnums.TEACHER)
   public Result<Void> deleteTeacher(DeleteTeacherCommand command) {
     //判断是否为防疫人员
     if(Boolean.TRUE.equals(this.checkTeacherIsEpidemic(command.getCode()))){

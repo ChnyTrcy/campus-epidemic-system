@@ -135,9 +135,10 @@ public class IsolationPersonServiceImpl extends ServiceImpl<IsolationPersonMappe
   public Result<BasePageVO<QueryPageIsolationPersonVO>> queryPageIsolationPerson(
       QueryPageIsolationPersonCommand command) {
     PageHelper.startPage(command.getPageNum(),command.getPageSize());
+    String teacherDeptCode = teacherCommon.getTeacherDeptCode();
     List<QueryPageIsolationPersonVO> list = getBaseMapper().queryPageIsolationPerson(
         command,
-        teacherCommon.getTeacherDeptCode()
+        teacherDeptCode
     );
     PageInfo pageInfo = new PageInfo(list);
     return ResultFactory.successResult(new BasePageVO<>(pageInfo));

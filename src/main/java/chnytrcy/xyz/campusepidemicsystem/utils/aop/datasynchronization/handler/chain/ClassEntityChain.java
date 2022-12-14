@@ -1,14 +1,13 @@
-package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler.chain;
+package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization.handler.chain;
 
 import chnytrcy.xyz.campusepidemicsystem.mapper.ClassMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.ClassEntity;
-import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
+import chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationPerson;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Student;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
-import chnytrcy.xyz.campusepidemicsystem.service.pc.ClassService;
-import chnytrcy.xyz.campusepidemicsystem.service.pc.MajorService;
+import chnytrcy.xyz.campusepidemicsystem.service.pc.IsolationPersonService;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
-import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler.SynchronizationAbstract;
+import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization.handler.SynchronizationAbstract;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
  * @Package: chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronizatiion.handler.chain
  * @ClassName: ClassEntityChain
  * @Author: ChnyTrcy
- * @Description:
+ * @Description: 同步isolation_person、student表
  * @Date: 2022/12/3 22:37
  * @Version: 1.0
  */
@@ -36,6 +35,8 @@ public class ClassEntityChain extends SynchronizationAbstract {
   @Autowired private ClassMapper classMapper;
 
   @Autowired private StudentService studentService;
+
+  @Autowired private IsolationPersonService isolationPersonService;
 
   @Override
   public String getTableComment() {
@@ -53,7 +54,12 @@ public class ClassEntityChain extends SynchronizationAbstract {
     });
     studentService.updateBatchById(list);
 
-    log.info(END_MESSAGE,getTableComment());
+    List<IsolationPerson> isolationPersonList = isolationPersonService.list();
+    isolationPersonList.forEach(e -> {
+      e.setClassName(classMap.get(e.getClassCode()));
+    });
+    isolationPersonService.updateBatchById(isolationPersonList);
 
+    log.info(END_MESSAGE,getTableComment());
   }
 }

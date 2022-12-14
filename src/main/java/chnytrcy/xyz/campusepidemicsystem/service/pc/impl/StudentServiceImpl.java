@@ -136,6 +136,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
   @Override
   @Transactional(rollbackFor = Exception.class)
+  @DataSynchronous(type = EntityEnums.STUDENT)
   public Result<Void> updateStudent(UpdateStudentCommand command) {
     this.checkStudentInformationMatch(command,true);
     Student convert = DozerUtils.convert(command, Student.class);
@@ -146,6 +147,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
   @Override
   @Transactional(rollbackFor = Exception.class)
+  @DataSynchronous(type = EntityEnums.STUDENT)
   public Result<Void> deleteStudent(DeleteStudentCommand command) {
     this.deleteStudentCheck(command.getCode());
     this.deleteStudentOperate(command.getCode());
