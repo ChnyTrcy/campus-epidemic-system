@@ -13,6 +13,7 @@ import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.SexEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.TeacherEnums;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.TeacherBO;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
@@ -46,7 +47,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class TeacherListener extends AnalysisEventListener<TeacherBO> {
+public class TeacherListener extends AnalysisBaseListener<TeacherBO,Teacher> {
 
   @Value("${user.init.password}") private String userInitPassword;
 
@@ -57,10 +58,6 @@ public class TeacherListener extends AnalysisEventListener<TeacherBO> {
   @Resource private UserService userService;
 
   @Autowired private UserMapper userMapper;
-
-  private Integer analysisRow = 3;
-
-  private List<ErrorEntity> errorList = Lists.newArrayList();
 
   private List<TeacherBO> teacherBOList = Lists.newArrayList();
 
@@ -89,18 +86,12 @@ public class TeacherListener extends AnalysisEventListener<TeacherBO> {
   public void doAfterAllAnalysed(AnalysisContext analysisContext) {
     log.debug("解析完成...");
     teacherList = DozerUtils.convertList(teacherBOList, Teacher.class);
-    this.fillDataName();
+    this.fillData(teacherList);
     this.batchInsert();
     this.cleanList();
   }
 
-  public List<ErrorEntity> getErrorList(){
-    List<ErrorEntity> errorEntities = ObjectUtil.cloneByStream(this.errorList);
-    errorList.clear();
-    return errorEntities;
-  }
-
-  private void cleanList(){
+  protected void cleanList(){
     this.teacherBOList.clear();
     this.addCodeList.clear();
     this.teacherList.clear();
@@ -111,7 +102,7 @@ public class TeacherListener extends AnalysisEventListener<TeacherBO> {
   /**
    * 批量插入数据
    */
-  private void batchInsert(){
+  protected void batchInsert(){
     if(CollUtil.isEmpty(teacherList)){
       log.warn("没有符合条件的数据，无需插入");
     }else {
@@ -137,7 +128,7 @@ public class TeacherListener extends AnalysisEventListener<TeacherBO> {
   /**
    * 填充数据
    */
-  private void fillDataName(){
+  protected void fillData(List<Teacher> data){
     log.debug("开始填充数据...");
     teacherList.forEach(e -> {
       e.setDeptName(deptCommon.deptHashMap().get(e.getDeptCode()));
@@ -148,7 +139,7 @@ public class TeacherListener extends AnalysisEventListener<TeacherBO> {
   /**
    * 验证数据有效性
    */
-  private Boolean validationData(TeacherBO bo){
+  protected Boolean validationData(TeacherBO bo){
     log.debug("验证数据有效性");
     String deptCode = bo.getDeptCode();
     List<Dept> deptList = deptCommon.deptList();

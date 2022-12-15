@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -45,5 +47,12 @@ public class DeptController {
   public void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     deptService.downloadTemplate(request,response);
+  }
+
+  @PostMapping("/uploadAndParseTemplate")
+  @RequiresPermissions("admin:dept:insert")
+  @ApiOperation("上传并解析院系模版文件")
+  public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
+    return deptService.uploadAndParseTemplate(file);
   }
 }

@@ -16,6 +16,7 @@ import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.RoleEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.SexEnums;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
@@ -47,7 +48,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class StudentListener extends AnalysisEventListener<StudentBO> {
+public class StudentListener extends AnalysisBaseListener<StudentBO,Student> {
 
   @Value("${user.init.password}")
   private String userInitPassword;
@@ -66,8 +67,6 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
 
   @Autowired private UserMapper userMapper;
 
-  private List<ErrorEntity> errorList = Lists.newArrayList();
-
   private List<StudentBO> studentBOList = Lists.newArrayList();
 
   private List<String> addCodeList = Lists.newArrayList();
@@ -77,8 +76,6 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
   private List<User> userList = Lists.newArrayList();
 
   private List<Long> userIdList = Lists.newArrayList();
-
-  private Integer analysisRow = 3;
 
   static {
     log.info("注入学生Excel解析监听器成功......");
@@ -97,18 +94,12 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
   public void doAfterAllAnalysed(AnalysisContext analysisContext) {
     log.debug("解析完成...");
     studentList = DozerUtils.convertList(studentBOList,Student.class);
-    this.fillDataName(studentList);
+    this.fillData(studentList);
     this.batchInsert();
     this.cleanList();
   }
 
-  public List<ErrorEntity> getErrorList(){
-    List<ErrorEntity> errorEntities = ObjectUtil.cloneByStream(this.errorList);
-    errorList.clear();
-    return errorEntities;
-  }
-
-  private void fillDataName(List<Student> data){
+  protected void fillData(List<Student> data){
     log.debug("开始填充数据");
     data.forEach(e -> {
       e.setDeptName(deptCommon.deptHashMap().get(e.getDeptCode()));
@@ -118,7 +109,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
 
   }
 
-  private void batchInsert(){
+  protected void batchInsert(){
     if(CollUtil.isEmpty(studentList)){
       log.warn("没有符合条件的数据，无需插入");
     }else {
@@ -150,7 +141,7 @@ public class StudentListener extends AnalysisEventListener<StudentBO> {
     this.userIdList.clear();
   }
 
-  private Boolean validationData(StudentBO bo){
+  protected Boolean validationData(StudentBO bo){
     String deptCode = bo.getDeptCode();
     if(deptCode.length() != StudentConstance.DEPT_CODE_LENGTH){
       errorList.add(ErrorEntity.builder()

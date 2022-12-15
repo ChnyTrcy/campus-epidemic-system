@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -32,4 +33,11 @@ public interface DeptService extends IService<Dept> {
    */
   void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
       throws IOException;
+
+  /**
+   * 上传并解析院系模版文件
+   * @param file
+   * @return
+   */
+  Result uploadAndParseTemplate(MultipartFile file) throws IOException;
 }
