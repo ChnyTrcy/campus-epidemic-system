@@ -4,7 +4,10 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.Dept;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -21,4 +24,12 @@ public interface DeptService extends IService<Dept> {
    * 获取院系列表
    */
   Result<List<DeptListVO>> getDeptList();
+
+  /**
+   * 下载院系批量添加模版文件
+   * @param request
+   * @param response
+   */
+  void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException;
 }

@@ -6,7 +6,11 @@ import chnytrcy.xyz.campusepidemicsystem.service.pc.DeptService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,5 +37,13 @@ public class DeptController {
   @RateLimitAnnotation(value = 2)
   public Result<List<DeptListVO>> getDeptList(){
     return deptService.getDeptList();
+  }
+
+  @GetMapping("/downloadTemplate")
+  @RequiresPermissions("admin:dept:insert")
+  @ApiOperation("下载院系批量添加模版文件")
+  public void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    deptService.downloadTemplate(request,response);
   }
 }

@@ -8,8 +8,14 @@ import chnytrcy.xyz.campusepidemicsystem.service.pc.DeptService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +38,17 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     List<DeptListVO> key = Lists.newArrayList();
     deptCommon.deptList().forEach(e -> key.add(new DeptListVO(e.getCode(),e.getName())));
     return ResultFactory.successResult(key);
+  }
+
+  @Override
+  public void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    InputStream resourceAsStream = this.getClass().getClassLoader()
+        .getResourceAsStream("excelTemplates/deptTemplate.xlsx");
+    OutputStream outputStream = response.getOutputStream();
+    response.setContentType("application/x-download");
+    response.addHeader("Content-Disposition", "attachment;filename=院系批量插入模版.xlsx");
+    IOUtils.copy(resourceAsStream, outputStream);
+    outputStream.flush();
   }
 }

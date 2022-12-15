@@ -161,7 +161,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 //    PrintFileContent.printFileContent(resourceAsStream);
     OutputStream outputStream = response.getOutputStream();
     response.setContentType("application/x-download");
-    response.addHeader("Content-Disposition", "attachment;filename=studentTemplate.xlsx");
+    response.addHeader("Content-Disposition", "attachment;filename=学生批量插入模版.xlsx");
     IOUtils.copy(resourceAsStream, outputStream);
     outputStream.flush();
   }
