@@ -1,6 +1,7 @@
 package chnytrcy.xyz.campusepidemicsystem.controller.pc;
 
 import chnytrcy.xyz.campusepidemicsystem.config.annotation.RateLimitAnnotation;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.dept.UpdateDeptCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.DeptService;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
@@ -10,10 +11,13 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,5 +58,12 @@ public class DeptController {
   @ApiOperation("上传并解析院系模版文件")
   public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
     return deptService.uploadAndParseTemplate(file);
+  }
+
+  @PostMapping("/updateDeptName")
+  @RequiresPermissions("admin:dept:update")
+  @ApiOperation("更新院系名称")
+  public Result<Void> updateDeptName(@RequestBody @Valid UpdateDeptCommand command){
+    return deptService.updateDeptName(command);
   }
 }

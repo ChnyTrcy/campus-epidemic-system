@@ -41,7 +41,9 @@ import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.student.QueryStudentByKeywo
 import chnytrcy.xyz.campusepidemicsystem.service.pc.StudentService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.StudentListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
@@ -106,7 +108,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
   @Autowired private ClassCommon classCommon;
 
-  @Autowired private StudentListener studentListener;
+  @Autowired private ExcelDealFactory excelDealFactory;
 
   @Override
   @Transactional(rollbackFor = Exception.class)
@@ -158,7 +160,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
   public void downloadTemplate(HttpServletRequest request, HttpServletResponse response) throws IOException {
     InputStream resourceAsStream = this.getClass().getClassLoader()
         .getResourceAsStream("excelTemplates/studentTemplate.xlsx");
-//    PrintFileContent.printFileContent(resourceAsStream);
     OutputStream outputStream = response.getOutputStream();
     response.setContentType("application/x-download");
     response.addHeader("Content-Disposition", "attachment;filename=学生批量插入模版.xlsx");
@@ -168,18 +169,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
   @Override
   public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
-    InputStream inputStream = file.getInputStream();
-    EasyExcelFactory
-        .read(inputStream, StudentBO.class, studentListener)
-        .sheet(0)
-        .headRowNumber(2)
-        .doReadSync();
-    List<ErrorEntity> errorList = studentListener.getErrorList();
-    if(CollUtil.isEmpty(errorList)){
-      return ResultFactory.successResult();
-    }else {
-      return ResultFactory.warningResult(errorList);
-    }
+    AnalysisBaseListener instance = excelDealFactory.getInstance(EntityEnums.STUDENT);
+    return excelDealFactory.dealMain(instance,file);
   }
 
   /**

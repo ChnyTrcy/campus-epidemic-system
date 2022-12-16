@@ -5,7 +5,6 @@ import chnytrcy.xyz.campusepidemicsystem.mapper.DeptMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.constance.StudentConstance;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Dept;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
-import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.DeptBO;
 import cn.hutool.core.collection.CollUtil;
@@ -62,6 +61,7 @@ public class DeptListener extends AnalysisBaseListener<DeptBO,Dept> {
     this.cleanList();
   }
 
+  @Override
   protected void cleanList(){
     this.addCodeList.clear();
     this.deptBOList.clear();
@@ -71,6 +71,7 @@ public class DeptListener extends AnalysisBaseListener<DeptBO,Dept> {
   @Override
   protected void fillData(List<Dept> data) {}
 
+  @Override
   protected void batchInsert(){
     if(CollUtil.isEmpty(deptList)){
       log.warn("没有符合条件的数据，无需插入");
@@ -83,6 +84,7 @@ public class DeptListener extends AnalysisBaseListener<DeptBO,Dept> {
     }
   }
 
+  @Override
   protected Boolean validationData(DeptBO bo){
     String code = bo.getCode();
     if(code.length() != StudentConstance.DEPT_CODE_LENGTH){
@@ -101,4 +103,10 @@ public class DeptListener extends AnalysisBaseListener<DeptBO,Dept> {
     addCodeList.add(code);
     return true;
   }
+
+  @Override
+  public Class<DeptBO> getT() {
+    return DeptBO.class;
+  }
+
 }

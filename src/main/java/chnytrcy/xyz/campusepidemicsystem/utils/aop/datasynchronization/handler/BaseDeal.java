@@ -11,5 +11,4 @@ package chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization.handler;
  */
 public interface BaseDeal {
 
-
 }

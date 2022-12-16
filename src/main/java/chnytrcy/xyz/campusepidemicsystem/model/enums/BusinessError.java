@@ -81,6 +81,8 @@ public enum BusinessError implements BaseEnum {
   TEACHER_DAILY_DOWN_AGAIN_ERROR(10063,"教职工不能重复下班打卡"),
   FEEDBACK_ACCEPTANCE_UNTREATED_ERROR(10064,"有未处理的反馈受理"),
   RATE_LIMIT_BUSY_ERROR(10065,"请不要重复请求"),
+  DEPT_NAME_EXIST_ERROR(10066,"院系名称重复"),
+  ENTITY_ENUMS_NOT_EXIST_ERROR(10067,"未知的实体枚举类")
 
   ;
 

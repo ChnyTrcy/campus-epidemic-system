@@ -16,7 +16,6 @@ import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.RoleEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.entity.SexEnums;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.UserService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
-import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
@@ -25,7 +24,6 @@ import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.context.AnalysisContext;
-import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
 import java.util.HashSet;
 import java.util.List;
@@ -67,12 +65,6 @@ public class StudentListener extends AnalysisBaseListener<StudentBO,Student> {
 
   @Autowired private UserMapper userMapper;
 
-  private List<StudentBO> studentBOList = Lists.newArrayList();
-
-  private List<String> addCodeList = Lists.newArrayList();
-
-  private List<Student> studentList = Lists.newArrayList();
-
   private List<User> userList = Lists.newArrayList();
 
   private List<Long> userIdList = Lists.newArrayList();
@@ -86,19 +78,20 @@ public class StudentListener extends AnalysisBaseListener<StudentBO,Student> {
     log.debug("解析到一条数据:{}", JSON.toJSONString(studentBO));
     Boolean validation = validationData(studentBO);
     if(validation){
-      studentBOList.add(studentBO);
+      boList.add(studentBO);
     }
   }
 
   @Override
   public void doAfterAllAnalysed(AnalysisContext analysisContext) {
     log.debug("解析完成...");
-    studentList = DozerUtils.convertList(studentBOList,Student.class);
-    this.fillData(studentList);
+    addList = DozerUtils.convertList(boList,Student.class);
+    this.fillData(addList);
     this.batchInsert();
     this.cleanList();
   }
 
+  @Override
   protected void fillData(List<Student> data){
     log.debug("开始填充数据");
     data.forEach(e -> {
@@ -109,16 +102,17 @@ public class StudentListener extends AnalysisBaseListener<StudentBO,Student> {
 
   }
 
+  @Override
   protected void batchInsert(){
-    if(CollUtil.isEmpty(studentList)){
+    if(CollUtil.isEmpty(addList)){
       log.warn("没有符合条件的数据，无需插入");
     }else {
       log.debug("开始批量插入");
       //todo 因为依赖循环的关系，这里只能使用Mapper而不能用IService的批量操作
-      studentList.forEach(e -> {
+      addList.forEach(e -> {
         studentMapper.insert(e);
       });
-      studentList.forEach(e -> {
+      addList.forEach(e -> {
         User user = new User(
             e.getCode(),
             MD5.SysMd5(e.getCode(),userInitPassword),
@@ -133,14 +127,16 @@ public class StudentListener extends AnalysisBaseListener<StudentBO,Student> {
     }
   }
 
+  @Override
   protected void cleanList(){
-    this.studentBOList.clear();
-    this.addCodeList.clear();
-    this.studentList.clear();
+    boList.clear();
+    addCodeList.clear();
+    addList.clear();
     this.userList.clear();
     this.userIdList.clear();
   }
 
+  @Override
   protected Boolean validationData(StudentBO bo){
     String deptCode = bo.getDeptCode();
     if(deptCode.length() != StudentConstance.DEPT_CODE_LENGTH){
@@ -265,6 +261,10 @@ public class StudentListener extends AnalysisBaseListener<StudentBO,Student> {
     return true;
   }
 
+  @Override
+  public Class<StudentBO> getT() {
+    return StudentBO.class;
+  }
 
 
 }

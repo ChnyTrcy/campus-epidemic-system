@@ -4,7 +4,11 @@ import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.MajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -22,4 +26,14 @@ public interface MajorService extends IService<Major> {
    */
   Result<List<MajorListVO>> getMajorListByDept();
 
+  /**
+   * 下载专业批量添加模版文件
+   */
+  void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException;
+
+  /**
+   * 上传并解析专业模版文件
+   */
+  Result uploadAndParseTemplate(MultipartFile file) throws IOException;
 }

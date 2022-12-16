@@ -36,7 +36,9 @@ import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.teacher.QueryTeacherPageVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.TeacherService;
 import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.TeacherBO;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.TeacherListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
@@ -93,7 +95,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
 
   @Autowired private HttpContextUtil httpContextUtil;
 
-  @Autowired private TeacherListener teacherListener;
+  @Autowired private ExcelDealFactory excelDealFactory;
 
   @Override
   @Transactional(rollbackFor = Exception.class)
@@ -235,18 +237,8 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
 
   @Override
   public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
-    InputStream inputStream = file.getInputStream();
-    EasyExcelFactory
-        .read(inputStream, TeacherBO.class, teacherListener)
-        .sheet(0)
-        .headRowNumber(2)
-        .doReadSync();
-    List<ErrorEntity> errorList = teacherListener.getErrorList();
-    if(CollUtil.isEmpty(errorList)){
-      return ResultFactory.successResult();
-    }else {
-      return ResultFactory.warningResult(errorList);
-    }
+    AnalysisBaseListener instance = excelDealFactory.getInstance(EntityEnums.TEACHER);
+    return excelDealFactory.dealMain(instance,file);
   }
 
   /**

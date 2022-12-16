@@ -1,17 +1,27 @@
 package chnytrcy.xyz.campusepidemicsystem.service.pc.impl;
 
-import chnytrcy.xyz.campusepidemicsystem.common.DeptCommon;
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.DataSynchronous;
+import chnytrcy.xyz.campusepidemicsystem.config.exception.BusinessException;
+import chnytrcy.xyz.campusepidemicsystem.mapper.ClassMapper;
 import chnytrcy.xyz.campusepidemicsystem.mapper.DeptMapper;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.dept.UpdateDeptCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Dept;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.BusinessError;
+import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.DeptService;
+import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo.DeptBO;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.DeptListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.EasyExcelFactory;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +29,6 @@ import java.io.OutputStream;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,14 +46,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
 
-  @Autowired private DeptCommon deptCommon;
+  @Autowired private ExcelDealFactory excelDealFactory;
 
-  @Autowired private DeptListener deptListener;
+  @Autowired private ClassMapper classMapper;
 
   @Override
   public Result<List<DeptListVO>> getDeptList() {
-    List<DeptListVO> key = Lists.newArrayList();
-    deptCommon.deptList().forEach(e -> key.add(new DeptListVO(e.getCode(),e.getName())));
+    List<Dept> deptList = getBaseMapper().selectList(null);
+    List<DeptListVO> key = DozerUtils.convertList(deptList, DeptListVO.class);
     return ResultFactory.successResult(key);
   }
 
@@ -62,17 +71,24 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
   @Override
   public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
-    InputStream inputStream = file.getInputStream();
-    EasyExcelFactory
-        .read(inputStream, DeptBO.class,deptListener)
-        .sheet(0)
-        .headRowNumber(2)
-        .doReadSync();
-    List<ErrorEntity> errorList = deptListener.getErrorList();
-    if(CollUtil.isEmpty(errorList)){
-      return ResultFactory.successResult();
-    }else {
-      return ResultFactory.warningResult(errorList);
-    }
+    AnalysisBaseListener instance = excelDealFactory.getInstance(EntityEnums.DEPT);
+    return excelDealFactory.dealMain(instance,file);
   }
+
+  @Override
+  @DataSynchronous(type = EntityEnums.DEPT)
+  public Result<Void> updateDeptName(UpdateDeptCommand command) {
+    Dept dept = getBaseMapper().selectOne(
+        new LambdaQueryWrapper<Dept>().eq(Dept::getId, command.getId()));
+    if(ObjectUtil.isNull(dept)){
+      throw new BusinessException(BusinessError.DEPT_NOT_EXIST_ERROR);
+    }
+    if(command.getName().equals(dept.getName())){
+      throw new BusinessException(BusinessError.DEPT_NAME_EXIST_ERROR);
+    }
+    Dept convert = DozerUtils.convert(command, Dept.class);
+    getBaseMapper().updateById(convert);
+    return ResultFactory.successResult();
+  }
+
 }

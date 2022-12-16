@@ -1,5 +1,6 @@
 package chnytrcy.xyz.campusepidemicsystem.service.pc;
 
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.dept.UpdateDeptCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Dept;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
@@ -28,16 +29,17 @@ public interface DeptService extends IService<Dept> {
 
   /**
    * 下载院系批量添加模版文件
-   * @param request
-   * @param response
    */
   void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
       throws IOException;
 
   /**
    * 上传并解析院系模版文件
-   * @param file
-   * @return
    */
   Result uploadAndParseTemplate(MultipartFile file) throws IOException;
+
+  /**
+   * 更新院系名称
+   */
+  Result<Void> updateDeptName(UpdateDeptCommand command);
 }

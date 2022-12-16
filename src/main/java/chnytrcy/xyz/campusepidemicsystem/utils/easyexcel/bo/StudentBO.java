@@ -1,5 +1,6 @@
 package chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.bo;
 
+import chnytrcy.xyz.campusepidemicsystem.config.basic.model.Base;
 import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentBO implements Serializable {
+public class StudentBO extends Base {
 
   @ExcelProperty(index = 0)
   @ApiModelProperty("学号")

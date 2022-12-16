@@ -1,9 +1,12 @@
-package chnytrcy.xyz.campusepidemicsystem.utils.easyexcel;
+package chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener;
 
+import chnytrcy.xyz.campusepidemicsystem.config.basic.model.Base;
+import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.google.common.collect.Lists;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -14,9 +17,16 @@ import java.util.List;
  * @Date: 2022/12/15 15:05
  * @Version: 1.0
  */
+@Slf4j
 public abstract class AnalysisBaseListener<T,K> extends AnalysisEventListener<T> {
 
   protected List<ErrorEntity> errorList = Lists.newArrayList();
+
+  protected List<String> addCodeList = Lists.newArrayList();
+
+  protected List<K> addList = Lists.newArrayList();
+
+  protected List<T> boList = Lists.newArrayList();
 
   protected Integer analysisRow = 3;
 
@@ -33,4 +43,7 @@ public abstract class AnalysisBaseListener<T,K> extends AnalysisEventListener<T>
   protected abstract void cleanList();
 
   protected abstract Boolean validationData(T bo);
+
+  public abstract Class<? extends Base> getT();
+
 }

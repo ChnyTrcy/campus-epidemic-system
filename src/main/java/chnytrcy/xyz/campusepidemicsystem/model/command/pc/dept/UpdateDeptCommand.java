@@ -1,9 +1,9 @@
-package chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept;
+package chnytrcy.xyz.campusepidemicsystem.model.command.pc.dept;
 
-import chnytrcy.xyz.campusepidemicsystem.config.basic.model.Base;
 import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BaseId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,24 +11,22 @@ import lombok.NoArgsConstructor;
 
 /**
  * @ProjectName: campus-epidemic-system
- * @Package: chnytrcy.xyz.campusepidemicsystem.model.vo.dept
- * @ClassName: DeptListVO
+ * @Package: chnytrcy.xyz.campusepidemicsystem.model.command.pc.dept
+ * @ClassName: UpdateDeptCommand
  * @Author: ChnyTrcy
- * @Description:
- * @Date: 2022/8/25 1:45 PM
+ * @Description: 更新院系信息Command
+ * @Date: 2022/12/15 16:09
  * @Version: 1.0
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("返回院系列表")
-public class DeptListVO extends BaseId {
-
-  @ApiModelProperty("院系编号")
-  private String code;
+@ApiModel("更新院系名称Command")
+public class UpdateDeptCommand extends BaseId {
 
   @ApiModelProperty("院系名称")
-  private String label;
+  @NotBlank(message = "院系名称不能为空")
+  private String name;
 
 }
