@@ -40,7 +40,8 @@ public enum AuthenticationError implements BaseEnum {
   SMS_MESSAGE_NULL_ERROR(1023,"未发送短信，请获取短信"),
   SMS_CODE_ERROR(1024,"短信验证码错误"),
   SMS_TIME_LONG_ERROR(1025,"短信失效，请重新获取短信"),
-  LOGIN_ASSOCIATED_PHONE_MORE_ERROR(1026,"手机关联的账号过多，请联系管理员")
+  LOGIN_ASSOCIATED_PHONE_MORE_ERROR(1026,"手机关联的账号过多，请联系管理员"),
+  FORGET_PASSWORD_AGAIN_NOT_SAME_ERROR(1027,"两次新密码不相同，请重试")
   ;
 
   private Integer code;

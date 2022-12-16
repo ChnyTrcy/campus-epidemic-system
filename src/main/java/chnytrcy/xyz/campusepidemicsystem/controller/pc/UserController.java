@@ -3,6 +3,7 @@ package chnytrcy.xyz.campusepidemicsystem.controller.pc;
 import chnytrcy.xyz.campusepidemicsystem.config.annotation.RateLimitAnnotation;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.AddUserCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ForgetPasswordCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginByPhoneCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.PhoneMessageCaptchaCommand;
@@ -108,6 +109,12 @@ public class UserController {
   @PostMapping("/loginByPhone")
   public Result loginByPhone(@Valid @RequestBody LoginCommand command,HttpServletRequest request){
     return userService.login(command,LoginTypeEnums.PC_PHONE,request);
+  }
+
+  @PostMapping("/forgetPassword")
+  @ApiOperation("忘记密码")
+  public Result<String> forgetPassword(@RequestBody @Valid ForgetPasswordCommand command,HttpServletRequest request){
+    return userService.forgetPassword(command,request);
   }
 
 }

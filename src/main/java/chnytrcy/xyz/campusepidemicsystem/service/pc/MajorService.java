@@ -1,6 +1,9 @@
 package chnytrcy.xyz.campusepidemicsystem.service.pc;
 
+import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.major.GetMajorListCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
+import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.GetMajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.MajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -36,4 +39,9 @@ public interface MajorService extends IService<Major> {
    * 上传并解析专业模版文件
    */
   Result uploadAndParseTemplate(MultipartFile file) throws IOException;
+
+  /**
+   * 获得专业列表
+   */
+  Result<BasePageVO<GetMajorListVO>> getMajorList(GetMajorListCommand command);
 }

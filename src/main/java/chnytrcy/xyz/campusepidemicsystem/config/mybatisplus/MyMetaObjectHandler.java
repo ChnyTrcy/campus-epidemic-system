@@ -1,6 +1,7 @@
 package chnytrcy.xyz.campusepidemicsystem.config.mybatisplus;
 
 import chnytrcy.xyz.campusepidemicsystem.config.shiro.utils.HttpContextUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +44,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
   @Override
   public void updateFill(MetaObject metaObject) {
     log.debug("start update fill ....");
-    String userName = httpContextUtil.getUsername();
-    if (StringUtils.isNotBlank(userName)) {
-      this.setFieldValByName("updateUser", userName, metaObject);
+    if (ObjectUtil.isNotNull(httpContextUtil.getUsername())) {
+      this.setFieldValByName("updateUser", httpContextUtil.getUsername(), metaObject);
     }
     this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
   }

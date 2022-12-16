@@ -2,6 +2,7 @@ package chnytrcy.xyz.campusepidemicsystem.service.pc;
 
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.AddUserCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ForgetPasswordCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginByPhoneCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.PhoneMessageCaptchaCommand;
@@ -50,4 +51,9 @@ public interface UserService extends IService<User> {
    */
   Result<Void> getPhoneMessageCaptcha(PhoneMessageCaptchaCommand command);
 
+  /**
+   * 忘记密码
+   * @return
+   */
+  Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest request);
 }

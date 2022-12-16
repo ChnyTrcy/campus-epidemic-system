@@ -53,6 +53,7 @@ public class ShiroConfig {
         filterMap.put("/campus-epidemic-system/pc/user/img/head_icon","anon");
         filterMap.put("/campus-epidemic-system/pc/user/addUser","anon");
         filterMap.put("/campus-epidemic-system/pc/user/loginByPassword","anon");
+        filterMap.put("/campus-epidemic-system/pc/user/forgetPassword","anon");
         filterMap.put("/campus-epidemic-system/app/user/login","anon");
         filterMap.put("/campus-epidemic-system/dict/**","anon");
         filterMap.put("/campus-epidemic-system/pc/user/getCaptchaImg","anon");

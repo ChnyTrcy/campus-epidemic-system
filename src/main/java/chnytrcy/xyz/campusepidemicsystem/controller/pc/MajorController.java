@@ -1,5 +1,8 @@
 package chnytrcy.xyz.campusepidemicsystem.controller.pc;
 
+import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.major.GetMajorListCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.GetMajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.MajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.MajorService;
 import chnytrcy.xyz.campusepidemicsystem.utils.aop.datasynchronization.handler.BaseDeal;
@@ -10,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,5 +57,12 @@ public class MajorController {
   @ApiOperation("上传并解析专业模版文件")
   public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
     return majorService.uploadAndParseTemplate(file);
+  }
+
+  @GetMapping("/getMajorList")
+  @ApiOperation("获得专业列表")
+  @RequiresPermissions("admin:major:select")
+  public Result<BasePageVO<GetMajorListVO>> getMajorList(@Valid GetMajorListCommand command){
+    return majorService.getMajorList(command);
   }
 }

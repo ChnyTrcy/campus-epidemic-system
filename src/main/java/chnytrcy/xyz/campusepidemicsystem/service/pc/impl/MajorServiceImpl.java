@@ -1,15 +1,21 @@
 package chnytrcy.xyz.campusepidemicsystem.service.pc.impl;
 
+import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
 import chnytrcy.xyz.campusepidemicsystem.mapper.MajorMapper;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.major.GetMajorListCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
 import chnytrcy.xyz.campusepidemicsystem.model.enums.EntityEnums;
+import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.GetMajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.MajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.MajorService;
+import chnytrcy.xyz.campusepidemicsystem.utils.dozer.DozerUtils;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import chnytrcy.xyz.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -57,5 +63,15 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
   public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
     AnalysisBaseListener instance = excelDealFactory.getInstance(EntityEnums.MAJOR);
     return excelDealFactory.dealMain(instance,file);
+  }
+
+  @Override
+  public Result<BasePageVO<GetMajorListVO>> getMajorList(GetMajorListCommand command) {
+    PageHelper.startPage(command.getPageNum(),command.getPageSize());
+    List<Major> majorList = getBaseMapper().selectList(null);
+    PageInfo pageInfo = new PageInfo(majorList);
+    List<GetMajorListVO> getMajorListVOS = DozerUtils.convertList(majorList, GetMajorListVO.class);
+    pageInfo.setList(getMajorListVOS);
+    return ResultFactory.successResult(new BasePageVO<>(pageInfo));
   }
 }

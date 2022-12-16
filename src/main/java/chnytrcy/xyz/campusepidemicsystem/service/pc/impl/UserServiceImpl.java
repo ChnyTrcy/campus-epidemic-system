@@ -12,6 +12,7 @@ import chnytrcy.xyz.campusepidemicsystem.mapper.UserMapper;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.AddUserCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ChangePwdCommand;
 
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.ForgetPasswordCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.LoginCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.user.PhoneMessageCaptchaCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.dto.AdminInformationDTO;
@@ -35,13 +36,17 @@ import chnytrcy.xyz.campusepidemicsystem.utils.md5.MD5;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import chnytrcy.xyz.campusepidemicsystem.utils.result.ResultFactory;
 import chnytrcy.xyz.campusepidemicsystem.utils.sms.ZhenziSmsUtil;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.HexUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageInfo;
 import com.zhenzi.sms.ZhenziSmsClient;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -81,10 +86,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   @Value("${login.sms.captcha.time}")
   private Long phoneCaptchaTime;
 
+  private static final String SESSION_CAPTCHA_NAME = "captcha";
+
   /**
    * 短信模版ID
    */
   private static final String SMS_TEMPLATE_CODE = "10728";
+
+  private static final String SMS_TEMPLATE_FORGET_CODE = "10895";
 
   @Autowired private RedisTemplate redisTemplate;
 
@@ -120,7 +129,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   @Override
   public Result login(LoginCommand command, LoginTypeEnums type,HttpServletRequest request) {
     if(captchaSwitch.equals(Boolean.TRUE) && type.equals(LoginTypeEnums.PC_PASSWORD)){
-      CaptchaDTO captcha = (CaptchaDTO) request.getSession().getAttribute("captcha");
+      CaptchaDTO captcha = (CaptchaDTO) request.getSession().getAttribute(SESSION_CAPTCHA_NAME);
       if(ObjectUtil.isNull(captcha)){
         throw new UserAuthenticationException(AuthenticationError.CAPTCHA_GET_ERROR);
       }
@@ -130,6 +139,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
       if(!command.getCaptcha().equals(captcha.getText())){
         throw new UserAuthenticationException(AuthenticationError.CAPTCHA_DIFFERENT_ERROR);
       }
+      request.getSession().removeAttribute(SESSION_CAPTCHA_NAME);
     }
     if(type.equals(LoginTypeEnums.PC_PHONE)){
       loginByPhone(command);
@@ -236,6 +246,57 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         .build();
     redisTemplate.opsForValue().set(LOGIN_CAPTCHA_SMS_PREFIX + s,dto,1, TimeUnit.DAYS);
     return ResultFactory.successResult();
+  }
+
+  @Override
+  public Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest request) {
+    CaptchaDTO captcha = (CaptchaDTO) request.getSession().getAttribute(SESSION_CAPTCHA_NAME);
+    if(ObjectUtil.isNull(captcha)){
+      throw new UserAuthenticationException(AuthenticationError.CAPTCHA_GET_ERROR);
+    }
+    if(captcha.getStartTime().plusMinutes(captchaTime).isBefore(LocalDateTime.now())){
+      throw new UserAuthenticationException(AuthenticationError.CAPTCHA_TIME_ERROR);
+    }
+    if(!command.getCaptcha().equals(captcha.getText())){
+      throw new UserAuthenticationException(AuthenticationError.CAPTCHA_DIFFERENT_ERROR);
+    }
+    request.getSession().removeAttribute(SESSION_CAPTCHA_NAME);
+    String account = command.getAccount();
+    User user;
+    if(Validator.isMobile(account)){
+      //手机登陆
+      List<User> userList = getBaseMapper().selectList(
+          new LambdaQueryWrapper<User>().eq(User::getPhone, account));
+      if(userList.size() > 1){
+        throw new UserAuthenticationException(AuthenticationError.LOGIN_ASSOCIATED_PHONE_MORE_ERROR);
+      }
+      user = userList.get(0);
+    }else{
+      user = getBaseMapper().selectOne(new LambdaQueryWrapper<User>().eq(User::getAccount,account));
+    }
+    if(ObjectUtil.isNull(user)){
+      throw new UserAuthenticationException(AuthenticationError.LOGIN_ACCOUNT_NOT_EXIST_ERROR);
+    }
+    //随机生成动态密码
+    String newPwd = HexUtil.encodeHexStr(String.valueOf(System.currentTimeMillis()),
+        StandardCharsets.UTF_8).substring(0,7);
+    String newEncryptionPwd = MD5.SysMd5(user.getAccount(), newPwd);
+    user.setPassword(newEncryptionPwd);
+    userMapper.updateById(user);
+    ZhenziSmsClient client = smsUtil.zhenziSmsClient();
+    Map<String, Object> params = new HashMap<>();
+    params.put("number", user.getPhone());
+    params.put("templateId", SMS_TEMPLATE_FORGET_CODE);
+    String[] templateParams = new String[1];
+    templateParams[0] = newPwd;
+    params.put("templateParams", templateParams);
+    String result = null;
+    try {
+      result = client.send(params);
+    } catch (Exception e) {
+      log.info(e.getMessage());
+    }
+    return ResultFactory.successResult(result);
   }
 
   private void loginByPassword(LoginCommand command){
