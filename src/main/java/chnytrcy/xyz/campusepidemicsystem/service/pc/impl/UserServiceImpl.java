@@ -278,7 +278,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
       throw new UserAuthenticationException(AuthenticationError.LOGIN_ACCOUNT_NOT_EXIST_ERROR);
     }
     //随机生成动态密码
-    String newPwd = HexUtil.encodeHexStr(String.valueOf(System.currentTimeMillis()),
+    String newPwd = HexUtil.encodeHexStr(String.valueOf(System.currentTimeMillis() + account),
         StandardCharsets.UTF_8).substring(0,7);
     String newEncryptionPwd = MD5.SysMd5(user.getAccount(), newPwd);
     user.setPassword(newEncryptionPwd);
