@@ -53,7 +53,6 @@ public interface UserService extends IService<User> {
 
   /**
    * 忘记密码
-   * @return
    */
   Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest request);
 }

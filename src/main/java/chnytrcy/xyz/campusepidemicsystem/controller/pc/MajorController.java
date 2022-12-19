@@ -2,6 +2,7 @@ package chnytrcy.xyz.campusepidemicsystem.controller.pc;
 
 import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.major.GetMajorListCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.major.UpdateMajorNameCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.GetMajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.MajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.MajorService;
@@ -18,6 +19,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,5 +66,12 @@ public class MajorController {
   @RequiresPermissions("admin:major:select")
   public Result<BasePageVO<GetMajorListVO>> getMajorList(@Valid GetMajorListCommand command){
     return majorService.getMajorList(command);
+  }
+
+  @PostMapping("/updateMajorName")
+  @ApiOperation("更改专业名称")
+  @RequiresPermissions("admin:major:update")
+  public Result<Void> updateMajorName(@RequestBody @Valid UpdateMajorNameCommand command){
+    return majorService.updateMajorName(command);
   }
 }

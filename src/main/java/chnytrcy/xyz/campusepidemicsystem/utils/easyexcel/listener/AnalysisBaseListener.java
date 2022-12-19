@@ -45,5 +45,4 @@ public abstract class AnalysisBaseListener<T,K> extends AnalysisEventListener<T>
   protected abstract Boolean validationData(T bo);
 
   public abstract Class<? extends Base> getT();
-
 }

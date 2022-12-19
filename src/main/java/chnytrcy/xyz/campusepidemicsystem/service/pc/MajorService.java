@@ -2,6 +2,7 @@ package chnytrcy.xyz.campusepidemicsystem.service.pc;
 
 import chnytrcy.xyz.campusepidemicsystem.config.basic.model.BasePageVO;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.major.GetMajorListCommand;
+import chnytrcy.xyz.campusepidemicsystem.model.command.pc.major.UpdateMajorNameCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.entity.Major;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.GetMajorListVO;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.major.MajorListVO;
@@ -44,4 +45,11 @@ public interface MajorService extends IService<Major> {
    * 获得专业列表
    */
   Result<BasePageVO<GetMajorListVO>> getMajorList(GetMajorListCommand command);
+
+  /**
+   * 更改专业名称
+   * @param command
+   * @return
+   */
+  Result<Void> updateMajorName(UpdateMajorNameCommand command);
 }

@@ -13,6 +13,9 @@
 # sort
 .idea
 
+# target
+target
+
 # Package Files #
 *.original
 *.jar
