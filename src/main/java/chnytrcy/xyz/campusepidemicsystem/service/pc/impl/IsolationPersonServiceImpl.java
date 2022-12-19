@@ -153,7 +153,7 @@ public class IsolationPersonServiceImpl extends ServiceImpl<IsolationPersonMappe
             .eq(IsolationPerson::getId, command.getId())
             .orderByDesc(IsolationPerson::getCreateTime)
             .last("limit 1"));
-    this.isolationDeal(isolationPerson,epidemic);
+    this. isolationDeal(isolationPerson,epidemic);
     return ResultFactory.successResult();
   }
 
