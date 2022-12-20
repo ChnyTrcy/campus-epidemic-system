@@ -60,7 +60,7 @@ public class MajorServiceImpl extends ServiceImpl<MajorMapper, Major> implements
         .getResourceAsStream("excelTemplates/majorTemplate.xlsx");
     OutputStream outputStream = response.getOutputStream();
     response.setContentType("application/x-download");
-    response.addHeader("Content-Disposition", "attachment;filename=专业批量插入模版.xlsx");
+    response.addHeader("Content-Disposition", "attachment;filename=template.xlsx");
     IOUtils.copy(resourceAsStream, outputStream);
     outputStream.flush();
   }

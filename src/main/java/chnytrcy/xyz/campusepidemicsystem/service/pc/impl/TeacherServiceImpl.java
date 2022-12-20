@@ -230,7 +230,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
         .getResourceAsStream("excelTemplates/teacherTemplate.xlsx");
     OutputStream outputStream = response.getOutputStream();
     response.setContentType("application/x-download");
-    response.addHeader("Content-Disposition", "attachment;filename=教职工批量添加模版.xlsx");
+    response.addHeader("Content-Disposition", "attachment;filename=template.xlsx");
     IOUtils.copy(resourceAsStream, outputStream);
     outputStream.flush();
   }

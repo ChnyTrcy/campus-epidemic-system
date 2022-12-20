@@ -64,7 +64,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         .getResourceAsStream("excelTemplates/deptTemplate.xlsx");
     OutputStream outputStream = response.getOutputStream();
     response.setContentType("application/x-download");
-    response.addHeader("Content-Disposition", "attachment;filename=院系批量插入模版.xlsx");
+    response.addHeader("Content-Disposition", "attachment;filename=template.xlsx");
     IOUtils.copy(resourceAsStream, outputStream);
     outputStream.flush();
   }

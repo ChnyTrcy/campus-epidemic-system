@@ -48,7 +48,7 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, ClassEntity> impl
         .getResourceAsStream("excelTemplates/classTemplate.xlsx");
     OutputStream outputStream = response.getOutputStream();
     response.setContentType("application/x-download");
-    response.addHeader("Content-Disposition", "attachment;filename=班级批量插入模版.xlsx");
+    response.addHeader("Content-Disposition", "attachment;filename=template.xlsx");
     IOUtils.copy(resourceAsStream, outputStream);
     outputStream.flush();
   }

@@ -40,7 +40,6 @@ public class DeptController {
 
   @GetMapping("/getDeptList")
   @ApiOperation("获取院系列表")
-  @RateLimitAnnotation(value = 2)
   public Result<List<DeptListVO>> getDeptList(){
     return deptService.getDeptList();
   }
