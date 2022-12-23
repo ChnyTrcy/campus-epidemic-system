@@ -86,6 +86,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   @Value("${login.sms.captcha.time}")
   private Long phoneCaptchaTime;
 
+  @Value("${login.sms.captcha.limit}")
+  private Boolean phoneCaptchaLimit;
+
   private static final String SESSION_CAPTCHA_NAME = "captcha";
 
   /**
@@ -212,7 +215,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     PhoneMessageCaptchaDTO o = (PhoneMessageCaptchaDTO) redisTemplate.opsForValue().get(
         LOGIN_CAPTCHA_SMS_PREFIX + s);
     if(ObjectUtil.isNotNull(o)){
-      if(o.getStartTime().plusSeconds(o.getDurationTime()).isAfter(LocalDateTime.now())){
+      if(o.getStartTime().plusSeconds(o.getDurationTime()).isAfter(LocalDateTime.now()) || !phoneCaptchaLimit){
         throw new UserAuthenticationException(AuthenticationError.SMS_MESSAGE_EFFECTIVE_ERROR);
       }
     }

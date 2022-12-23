@@ -1,6 +1,6 @@
 package chnytrcy.xyz.campusepidemicsystem.controller.pc;
 
-import chnytrcy.xyz.campusepidemicsystem.config.annotation.RateLimitAnnotation;
+import chnytrcy.xyz.campusepidemicsystem.config.annotation.ApiCall;
 import chnytrcy.xyz.campusepidemicsystem.model.command.pc.dept.UpdateDeptCommand;
 import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
 import chnytrcy.xyz.campusepidemicsystem.service.pc.DeptService;
@@ -9,12 +9,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +40,7 @@ public class DeptController {
 
   @GetMapping("/getDeptList")
   @ApiOperation("获取院系列表")
+  @ApiCall(time = 1,limitCount = 100,timeUnit = TimeUnit.SECONDS)
   public Result<List<DeptListVO>> getDeptList(){
     return deptService.getDeptList();
   }

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class SynchronizationAbstract implements BaseDeal{
 
-  protected static final String INJECTION_MESSAGE = "<{}>同步链注入成功";
+  protected static final String INJECTION_MESSAGE = "<{}>同步链注入成功......";
 
   protected static final String START_MESSAGE = "<{}>数据表开始同步";
 
