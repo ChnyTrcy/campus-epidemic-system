@@ -1,0 +1,273 @@
+package xyz.chnytrcy.campusepidemicsystem.service.pc.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import xyz.chnytrcy.campusepidemicsystem.common.DeptCommon;
+import xyz.chnytrcy.campusepidemicsystem.mapper.AdminMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.DeptMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.FeedbackAcceptanceMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.IsolationPersonMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.TeacherMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.UserMapper;
+import xyz.chnytrcy.campusepidemicsystem.model.command.pc.teacher.AddTeacherCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.pc.teacher.DeleteTeacherCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.pc.teacher.QueryEpidemicPersonCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.pc.teacher.QueryTeacherPageCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.pc.teacher.SetTeacherToEpidemicPersonCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.pc.teacher.UpdateTeacherCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.dto.StatisticalNameCountDTO;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Admin;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.FeedbackAcceptance;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.IsolationPerson;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Teacher;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.user.User;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.BusinessError;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.EntityEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.FeedbackAcceptanceEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.IsolationPersonEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.RoleEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.TeacherEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.analysis.CountDeptEpidemicNumVO;
+import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.teacher.QueryEpidemicPersonVO;
+import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.teacher.QueryTeacherPageVO;
+import xyz.chnytrcy.campusepidemicsystem.service.pc.TeacherService;
+import xyz.chnytrcy.campusepidemicsystem.utils.aop.datasynchronization.DataSynchronous;
+import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
+import xyz.chnytrcy.core.config.basic.model.BasePageVO;
+import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.config.shiro.utils.HttpContextUtil;
+import xyz.chnytrcy.core.utils.md5.MD5;
+import xyz.chnytrcy.core.utils.result.Result;
+import xyz.chnytrcy.core.utils.result.ResultFactory;
+
+/**
+ * @ProjectName: campus-epidemic-system
+ * @Package: xyz.chnytrcy.campusepidemicsystem.service.pc.impl
+ * @ClassName: TeacherServiceImpl
+ * @Author: ChnyTrcy
+ * @Description:
+ * @Date: 2022/8/24 4:58 PM
+ * @Version: 1.0
+ */
+@Service
+public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
+    implements TeacherService {
+
+  @Autowired private DeptMapper deptMapper;
+
+  @Autowired private FeedbackAcceptanceMapper feedbackAcceptanceMapper;
+
+  @Autowired private UserMapper userMapper;
+
+  @Autowired private IsolationPersonMapper isolationPersonMapper;
+
+  @Autowired private AdminMapper adminMapper;
+
+  @Autowired private DeptCommon deptCommon;
+
+  @Autowired private HttpContextUtil httpContextUtil;
+
+  @Autowired private ExcelDealFactory excelDealFactory;
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Result<Void> addTeacher(AddTeacherCommand command) {
+    //判断院系是否存在
+    if(0 == deptMapper.selectCount(new LambdaQueryWrapper<Dept>()
+        .eq(Dept::getCode,command.getDeptCode()))){
+      throw new BusinessException(BusinessError.DEPT_NOT_EXIST_ERROR);
+    }
+    //判断工号是否已存在
+    if(0 < getBaseMapper().selectCount(new LambdaQueryWrapper<Teacher>().eq(Teacher::getCode,command.getCode()))){
+      throw new BusinessException(BusinessError.TEACHER_CODE_IS_EXIST_ERROR);
+    }
+    Teacher teacher = DozerUtils.convert(command, Teacher.class);
+    teacher.setDeptName(deptCommon.deptHashMap().get(command.getDeptCode()));
+    getBaseMapper().insert(teacher);
+    //创建用户
+    User user = new User();
+    user.setId(teacher.getId());
+    user.setAccount(teacher.getCode());
+    user.setPassword(MD5.SysMd5(teacher.getCode(),"123456"));
+    user.setPhone(teacher.getPhone());
+    userMapper.insert(user);
+    userMapper.addUserRole(user.getId(), RoleEnums.TEACHER.getNumber());
+    return ResultFactory.successResult();
+  }
+
+  @Override
+  public Result<BasePageVO<QueryTeacherPageVO>> queryTeacherPage(QueryTeacherPageCommand command) {
+    PageHelper.startPage(command.getPageNum(),command.getPageSize());
+    List<Teacher> teacherList = getBaseMapper().queryTeacherPage(command);
+    PageInfo pageInfo = new PageInfo(teacherList);
+    List<QueryTeacherPageVO> queryTeacherPageVOS = DozerUtils.convertList(teacherList,
+        QueryTeacherPageVO.class);
+    pageInfo.setList(queryTeacherPageVOS);
+    return ResultFactory.successResult(new BasePageVO<>(pageInfo));
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  @DataSynchronous(type = EntityEnums.TEACHER)
+  public Result<Void> updateTeacher(UpdateTeacherCommand command) {
+    //判断院系是否存在
+    if(0 == deptMapper.selectCount(new LambdaQueryWrapper<Dept>()
+        .eq(Dept::getCode,command.getDeptCode()))){
+      throw new BusinessException(BusinessError.DEPT_NOT_EXIST_ERROR);
+    }
+    Teacher teacher = DozerUtils.convert(command, Teacher.class);
+    getBaseMapper().updateById(teacher);
+    return ResultFactory.successResult();
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  @DataSynchronous(type = EntityEnums.TEACHER)
+  public Result<Void> deleteTeacher(DeleteTeacherCommand command) {
+    //判断是否为防疫人员
+    if(Boolean.TRUE.equals(this.checkTeacherIsEpidemic(command.getCode()))){
+      this.deleteTeacherCheck(command.getCode());
+    }
+    getBaseMapper().delete(new LambdaQueryWrapper<Teacher>()
+        .eq(Teacher::getCode,command.getCode()));
+    Long id = userMapper.selectOne(new LambdaQueryWrapper<User>()
+        .eq(User::getAccount, command.getCode())).getId();
+    userMapper.deleteUserToRole(id);
+    userMapper.deleteById(id);
+    return ResultFactory.successResult();
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public Result<Void> setTeacherToEpidemicPerson(SetTeacherToEpidemicPersonCommand command) {
+    Teacher one = getBaseMapper().selectOne(new LambdaQueryWrapper<Teacher>()
+        .eq(Teacher::getCode, command.getCode()));
+    Integer epidemicMark = one.getEpidemicMark();
+    if(Objects.equals(epidemicMark, TeacherEnums.EPIDEMIC_MARK_NO.getNumber())){
+      one.setEpidemicMark(TeacherEnums.EPIDEMIC_MARK_YES.getNumber());
+      //更新教职工表
+      getBaseMapper().update(one,new LambdaQueryWrapper<Teacher>()
+          .eq(Teacher::getCode,command.getCode()));
+      //更新用户权限表
+      userMapper.updateRoleByUserId(one.getId(), RoleEnums.EPIDEMIC_PREVENTION.getNumber());
+    }else {
+      //解除防疫人员属性
+      //检查相关属性
+      this.deleteTeacherCheck(command.getCode());
+      one.setEpidemicMark(TeacherEnums.EPIDEMIC_MARK_NO.getNumber());
+      //更新教职工表
+      getBaseMapper().update(one,new LambdaQueryWrapper<Teacher>()
+          .eq(Teacher::getCode,command.getCode()));
+      //更新用户权限表
+      userMapper.updateRoleByUserId(one.getId(),RoleEnums.TEACHER.getNumber());
+    }
+    return ResultFactory.successResult();
+  }
+
+  @Override
+  public Result<BasePageVO<QueryEpidemicPersonVO>> queryEpidemicPerson(QueryEpidemicPersonCommand command) {
+    Admin admin = adminMapper.selectOne(new LambdaQueryWrapper<Admin>()
+        .eq(Admin::getUserId, httpContextUtil.getUserId()));
+    String deptCode = admin.getDeptCode();
+    PageHelper.startPage(command.getPageNum(),command.getPageSize());
+    List<Teacher> list =  getBaseMapper().queryEpidemicPerson(command.getWordType(),
+        command.getKeyword(),
+        deptCode);
+    PageInfo pageInfo = new PageInfo(list);
+    List<QueryEpidemicPersonVO> vos = DozerUtils.convertList(list,
+        QueryEpidemicPersonVO.class);
+    pageInfo.setList(vos);
+    return ResultFactory.successResult(new BasePageVO<>(pageInfo));
+  }
+
+  @Override
+  public Result<CountDeptEpidemicNumVO> countDeptEpidemicNum() {
+    List<Teacher> teacherList = list(
+        new LambdaQueryWrapper<Teacher>().eq(Teacher::getEpidemicMark,
+            TeacherEnums.EPIDEMIC_MARK_YES.getCode()));
+    Map<String, List<Teacher>> map = teacherList.stream()
+        .collect(Collectors.groupingBy(Teacher::getDeptName));
+    List<StatisticalNameCountDTO> list = Lists.newArrayList();
+    for (Entry<String, List<Teacher>> entry : map.entrySet()) {
+      StatisticalNameCountDTO statisticalNameCountDTO = new StatisticalNameCountDTO(entry.getKey(),entry.getValue().size());
+      list.add(statisticalNameCountDTO);
+    }
+    return ResultFactory.successResult(new CountDeptEpidemicNumVO(list));
+  }
+
+  @Override
+  public void downloadTemplate(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    InputStream resourceAsStream = this.getClass().getClassLoader()
+        .getResourceAsStream("excelTemplates/teacherTemplate.xlsx");
+    OutputStream outputStream = response.getOutputStream();
+    response.setContentType("application/x-download");
+    response.addHeader("Content-Disposition", "attachment;filename=template.xlsx");
+    IOUtils.copy(resourceAsStream, outputStream);
+    outputStream.flush();
+  }
+
+  @Override
+  public Result uploadAndParseTemplate(MultipartFile file) throws IOException {
+    AnalysisBaseListener instance = excelDealFactory.getInstance(EntityEnums.TEACHER);
+    return excelDealFactory.dealMain(instance,file);
+  }
+
+  /**
+   * 判断该老师是不是防疫人员
+   * @param code 工号
+   */
+  private Boolean checkTeacherIsEpidemic(String code){
+    return 1 <= getBaseMapper().selectCount(new LambdaQueryWrapper<Teacher>()
+        .eq(Teacher::getEpidemicMark, TeacherEnums.EPIDEMIC_MARK_YES)
+        .eq(Teacher::getCode,code));
+  }
+
+  /**
+   * 删除该教职工的检查
+   */
+  private void deleteTeacherCheck(String code){
+    //检查是否有未完成的反馈受理表
+    Long aLong = feedbackAcceptanceMapper.selectCount(new LambdaQueryWrapper<FeedbackAcceptance>()
+        .eq(FeedbackAcceptance::getProducerType,
+            FeedbackAcceptanceEnums.PRODUCER_TYPE_EPIDEMIC_PREVENTION)
+        .eq(FeedbackAcceptance::getProducerCode, code)
+        .in(FeedbackAcceptance::getResult, new ArrayList<>(Arrays.asList(
+            FeedbackAcceptanceEnums.RESULT_UNREAD, FeedbackAcceptanceEnums.RESULT_NOT_HANDLER
+        ))));
+    if(0 < aLong){
+      throw new BusinessException(BusinessError.TEACHER_IN_UNDONE_FEEDBACK_ACCEPTANCE_ERROR);
+    }
+    //检查是否有自己名下的隔离学生
+    Long aLong1 = isolationPersonMapper.selectCount(new LambdaQueryWrapper<IsolationPerson>()
+        .eq(IsolationPerson::getPreventionPersonnelCode, code)
+        .eq(IsolationPerson::getState, IsolationPersonEnums.STATE_QUARANTINED));
+    if(0 < aLong1){
+      throw new BusinessException(BusinessError.TEACHER_IN_UNDONE_ISOLATION_STUDENT_ERROR);
+    }
+  }
+
+}

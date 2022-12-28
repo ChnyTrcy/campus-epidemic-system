@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.IsolationPersonMapper">
+<mapper namespace="xyz.chnytrcy.campusepidemicsystem.mapper.IsolationPersonMapper">
 
   <select id="queryStudentIsolationList" resultType="java.lang.String">
     SELECT
@@ -19,7 +19,7 @@
   </select>
 
   <select id="queryPageIsolationPersonByAdmin"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationPerson">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.entity.IsolationPerson">
     SELECT
         id,
         code,
@@ -56,7 +56,7 @@
   </select>
 
   <select id="queryPageToBeIsolationPerson"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.IsolationPerson">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.entity.IsolationPerson">
     SELECT
       id,
       code,
@@ -79,7 +79,7 @@
       </if>
   </select>
   <select id="queryPageIsolationPerson"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.vo.pc.isolationperson.QueryPageIsolationPersonVO">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.vo.pc.isolationperson.QueryPageIsolationPersonVO">
     SELECT
       ip.id AS id,
       ip.code AS code,
@@ -132,7 +132,7 @@
         ip.prevention_personnel_code = #{code} AND ip.is_delete = 0
   </select>
 
-  <select id="queryFeedbackList" resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance">
+  <select id="queryFeedbackList" resultType="xyz.chnytrcy.campusepidemicsystem.model.entity.FeedbackAcceptance">
     SELECT
       id,
       type,
@@ -146,7 +146,7 @@
       is_delete = 0 AND producer_code = #{code} AND producer_type = 1
   </select>
   
-  <resultMap id="queryPageIsolationPersonByEpidemicMap" type="chnytrcy.xyz.campusepidemicsystem.model.dto.QueryPageIsolationPersonByEpidemicDTO">
+  <resultMap id="queryPageIsolationPersonByEpidemicMap" type="xyz.chnytrcy.campusepidemicsystem.model.dto.QueryPageIsolationPersonByEpidemicDTO">
     <id property="id" column="id"/>
     <result property="code" column="code"/>
     <result property="name" column="name"/>
@@ -157,7 +157,7 @@
     <result property="startTime" column="startTime"/>
     <result property="endTime" column="endTime"/>
     <result property="quarantineLocation" column="quarantineLocation"/>
-    <collection property="list" ofType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance"
+    <collection property="list" ofType="xyz.chnytrcy.campusepidemicsystem.model.entity.FeedbackAcceptance"
       select="queryFeedbackList" column="code"/>
   </resultMap>
   

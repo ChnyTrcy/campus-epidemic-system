@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.HolidayStreetMapper">
+<mapper namespace="xyz.chnytrcy.campusepidemicsystem.mapper.HolidayStreetMapper">
 
   <select id="queryHolidayToRiskLevel"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.dto.HolidayStreetRiskLevelDTO">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.dto.HolidayStreetRiskLevelDTO">
     SELECT
       hs.name AS name,
       hs.code AS code,

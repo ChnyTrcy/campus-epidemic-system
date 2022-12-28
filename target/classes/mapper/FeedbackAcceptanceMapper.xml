@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.FeedbackAcceptanceMapper">
+<mapper namespace="xyz.chnytrcy.campusepidemicsystem.mapper.FeedbackAcceptanceMapper">
 
   <select id="queryPageAdminFeedbackAcceptance"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.entity.FeedbackAcceptance">
     SELECT
         id,
         producer_code AS producerCode,
@@ -33,7 +33,7 @@
     ORDER BY is_end
   </select>
   <select id="queryPageEpidemicFeedbackAcceptance"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.vo.pc.feedbackacceptance.QueryPageEpidemicFeedbackAcceptanceVO">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.vo.pc.feedbackacceptance.QueryPageEpidemicFeedbackAcceptanceVO">
     SELECT
       fa.id AS id,
       fa.producer_code AS producerCode,
@@ -72,7 +72,7 @@
 
   </select>
   <select id="analyzeEpidemicFeedbackAcceptance"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.FeedbackAcceptance">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.entity.FeedbackAcceptance">
     SELECT
         fa.result AS result
     FROM

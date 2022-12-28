@@ -1,0 +1,50 @@
+package xyz.chnytrcy.campusepidemicsystem.model.vo.pc.teacher;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import xyz.chnytrcy.core.config.basic.model.BaseId;
+
+/**
+ * @ProjectName: campus-epidemic-system
+ * @Package: xyz.chnytrcy.campusepidemicsystem.model.vo.teacher
+ * @ClassName: QueryTeacherPageVO
+ * @Author: ChnyTrcy
+ * @Description: 分页查询教职工VO
+ * @Date: 2022/8/26 5:25 PM
+ * @Version: 1.0
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("分页查询教职工VO")
+public class QueryTeacherPageVO extends BaseId {
+
+  @ApiModelProperty(value = "工号")
+  private String code;
+
+  @ApiModelProperty(value = "姓名")
+  private String name;
+
+  @ApiModelProperty(value = "院系名称",required = true)
+  private String deptName;
+
+  @ApiModelProperty(value = "联系方式",required = true)
+  private String phone;
+
+  @ApiModelProperty(value = "性别（1:男，2:女）",required = true)
+  private Integer sex;
+
+  @ApiModelProperty(value = "身份证号")
+  private String idCard;
+
+  @ApiModelProperty(value = "居住地点")
+  private String address;
+
+  @ApiModelProperty(value = "是否为防疫人员标识（0：否，1：是）")
+  private Integer epidemicMark;
+}

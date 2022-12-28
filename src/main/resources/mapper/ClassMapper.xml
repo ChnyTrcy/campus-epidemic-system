@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.ClassMapper">
+<mapper namespace="xyz.chnytrcy.campusepidemicsystem.mapper.ClassMapper">
 
   <select id="getClassListByMajorCode"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.vo.pc.classvo.ClassListVO">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.vo.pc.classvo.ClassListVO">
     SELECT
         name AS label,
         code AS code
