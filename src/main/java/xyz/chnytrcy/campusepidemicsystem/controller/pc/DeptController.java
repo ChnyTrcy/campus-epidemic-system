@@ -1,15 +1,9 @@
-package chnytrcy.xyz.campusepidemicsystem.controller.pc;
+package xyz.chnytrcy.campusepidemicsystem.controller.pc;
 
-import chnytrcy.xyz.campusepidemicsystem.config.annotation.ApiCall;
-import chnytrcy.xyz.campusepidemicsystem.model.command.pc.dept.UpdateDeptCommand;
-import chnytrcy.xyz.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
-import chnytrcy.xyz.campusepidemicsystem.service.pc.DeptService;
-import chnytrcy.xyz.campusepidemicsystem.utils.result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -21,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.chnytrcy.campusepidemicsystem.model.command.pc.dept.UpdateDeptCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
+import xyz.chnytrcy.campusepidemicsystem.service.pc.DeptService;
+import xyz.chnytrcy.core.utils.result.Result;
 
 /**
  * @ProjectName: campus-epidemic-system
- * @Package: chnytrcy.xyz.campusepidemicsystem.controller.pc
+ * @Package: xyz.chnytrcy.campusepidemicsystem.controller.pc
  * @ClassName: DeptController
  * @Author: ChnyTrcy
  * @Description: 院系Controller
@@ -40,7 +38,6 @@ public class DeptController {
 
   @GetMapping("/getDeptList")
   @ApiOperation("获取院系列表")
-  @ApiCall(time = 1,limitCount = 100,timeUnit = TimeUnit.SECONDS)
   public Result<List<DeptListVO>> getDeptList(){
     return deptService.getDeptList();
   }

@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.chnytrcy.campusepidemicsystem.converter.DeptConverter;
 import xyz.chnytrcy.campusepidemicsystem.mapper.ClassMapper;
 import xyz.chnytrcy.campusepidemicsystem.mapper.DeptMapper;
 import xyz.chnytrcy.campusepidemicsystem.model.command.pc.dept.UpdateDeptCommand;
@@ -45,12 +46,13 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
   @Autowired private ClassMapper classMapper;
 
+  @Autowired private DeptConverter deptConverter;
+
 
   @Override
   public Result<List<DeptListVO>> getDeptList() {
     List<Dept> deptList = getBaseMapper().selectList(null);
-    List<DeptListVO> key = DozerUtils.convertList(deptList, DeptListVO.class);
-    return ResultFactory.successResult(key);
+    return ResultFactory.successResult(deptConverter.deptEntityToDeptListVo(deptList));
   }
 
   @Override
