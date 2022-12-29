@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.LeaveMapper">
+<mapper namespace="xyz.chnytrcy.campusepidemicsystem.mapper.LeaveMapper">
 
-  <resultMap id="resultListMap" type="chnytrcy.xyz.campusepidemicsystem.model.dto.QueryPageLeaveDTO">
+  <resultMap id="resultListMap" type="xyz.chnytrcy.campusepidemicsystem.model.dto.QueryPageLeaveDTO">
     <id property="id" column="id"/>
     <result property="code" column="code"/>
     <result property="name" column="name"/>
@@ -20,11 +20,11 @@
     <result property="target" column="target"/>
     <result property="approvalResult" column="approvalResult"/>
     <result property="reputation" column="reputation"/>
-    <collection property="complex" ofType="chnytrcy.xyz.campusepidemicsystem.model.dto.LeaveDetailDTO"
+    <collection property="complex" ofType="xyz.chnytrcy.campusepidemicsystem.model.dto.LeaveDetailDTO"
       column="id" select="queryComplex"/>
   </resultMap>
 
-  <select id="queryComplex" resultType="chnytrcy.xyz.campusepidemicsystem.model.dto.LeaveDetailDTO">
+  <select id="queryComplex" resultType="xyz.chnytrcy.campusepidemicsystem.model.dto.LeaveDetailDTO">
     SELECT
         id,
         type,
@@ -98,7 +98,7 @@
   </select>
 
   <select id="queryUnfinishedLeave"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.Leave">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.entity.Leave">
     SELECT
         id,
         is_return AS isReturn,

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="chnytrcy.xyz.campusepidemicsystem.mapper.StudentMapper">
+<mapper namespace="xyz.chnytrcy.campusepidemicsystem.mapper.StudentMapper">
 
   <sql id="queryStudentByKeywordFiled">
     id,
@@ -42,7 +42,7 @@
   </sql>
 
   <select id="queryStudentByKeyword"
-          resultType="chnytrcy.xyz.campusepidemicsystem.model.entity.Student">
+          resultType="xyz.chnytrcy.campusepidemicsystem.model.entity.Student">
     SELECT
         <include refid="queryStudentByKeywordFiled"/>
     FROM

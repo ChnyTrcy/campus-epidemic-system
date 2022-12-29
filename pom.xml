@@ -4,178 +4,45 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.2</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <groupId>xyz.chnytrcy</groupId>
+    <artifactId>base.core.dependence</artifactId>
+    <version>1.0.0.RELEASE</version>
+    <relativePath/>
   </parent>
-  <groupId>chnytrcy.xyz</groupId>
+  <groupId>xyz.chnytrcy</groupId>
   <artifactId>campus-epidemic-system</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>campus-epidemic-system</name>
   <description>campus-epidemic-system</description>
   <packaging>jar</packaging>
+
   <properties>
     <java.version>11</java.version>
-    <druid.version>1.2.8</druid.version>
-    <mybatis-plus.version>3.5.0</mybatis-plus.version>
-    <shiro.version>1.4.1</shiro.version>
-    <shiro-redis.version>3.3.1</shiro-redis.version>
-    <lang3.version>3.12.0</lang3.version>
-    <pagehelper.version>1.4.1</pagehelper.version>
-    <easyexcel.version>3.0.5</easyexcel.version>
-    <fastjson.version>1.2.79</fastjson.version>
-    <swagger2.version>2.9.2</swagger2.version>
-    <swagger-models.version>1.5.21</swagger-models.version>
-    <kaptcha.version>0.0.9</kaptcha.version>
-    <radis.version>2.6.2</radis.version>
-    <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
-    <validation-api.version>2.6.4</validation-api.version>
-    <hutool.version>4.5.0</hutool.version>
-    <dozer.version>6.5.2</dozer.version>
-    <sms.version>2.0.2</sms.version>
-    <minio.version>8.4.3</minio.version>
-    <guava.version>18.0</guava.version>
   </properties>
   <dependencies>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>xyz.chnytrcy</groupId>
+      <artifactId>springboot-core-parent</artifactId>
+      <version>1.0.3</version>
     </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-websocket</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-amqp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>druid-spring-boot-starter</artifactId>
-      <version>${druid.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.baomidou</groupId>
-      <artifactId>mybatis-plus-boot-starter</artifactId>
-      <version>${mybatis-plus.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.baomidou</groupId>
-      <artifactId>mybatis-plus-generator</artifactId>
-      <version>${mybatis-plus.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.shiro</groupId>
-      <artifactId>shiro-spring</artifactId>
-      <version>${shiro.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.crazycake</groupId>
-      <artifactId>shiro-redis</artifactId>
-      <version>${shiro-redis.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${lang3.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.pagehelper</groupId>
-      <artifactId>pagehelper-spring-boot-starter</artifactId>
-      <version>${pagehelper.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>easyexcel</artifactId>
-      <version>${easyexcel.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.alibaba</groupId>
-      <artifactId>fastjson</artifactId>
-      <version>${fastjson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-      <version>${swagger2.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>io.swagger</groupId>
-          <artifactId>swagger-models</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-models</artifactId>
-      <version>${swagger-models.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.axet</groupId>
-      <artifactId>kaptcha</artifactId>
-      <version>${kaptcha.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-redis</artifactId>
-      <version>${radis.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
-      <version>${validation-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.xiaoymin</groupId>
-      <artifactId>swagger-bootstrap-ui</artifactId>
-      <version>${swagger-bootstrap-ui.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>cn.hutool</groupId>
-      <artifactId>hutool-all</artifactId>
-      <version>${hutool.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.dozermapper</groupId>
-      <artifactId>dozer-core</artifactId>
-      <version>${dozer.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.zhenzikj</groupId>
-      <artifactId>zhenzisms</artifactId>
-      <version>${sms.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.minio</groupId>
-      <artifactId>minio</artifactId>
-      <version>${minio.version}</version>
-    </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.google.guava</groupId>-->
-<!--      <artifactId>guava</artifactId>-->
-<!--      <version>${guava.version}</version>-->
-<!--    </dependency>-->
   </dependencies>
+
+<!--  连接远程私有Maven仓库-->
+  <distributionManagement>
+    <!--稳定版本的仓库地址,必须是允许上传的私服地址-->
+    <repository>
+      <id>maven-releases</id>
+      <url>http://43.139.226.150:8081/repository/maven-releases/</url>
+    </repository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>maven-releases</id>
+      <name>maven-releases</name>
+      <url>http://43.139.226.150:8081/repository/maven-releases/</url>
+    </repository>
+  </repositories>
 
   <build>
     <plugins>
@@ -203,6 +70,14 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,address=12340,server=y,suspend=n</jvmArguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
         </configuration>
       </plugin>
     </plugins>
