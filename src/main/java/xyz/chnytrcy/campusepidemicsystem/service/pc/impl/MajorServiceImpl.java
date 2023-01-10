@@ -25,11 +25,11 @@ import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.major.GetMajorListVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.major.MajorListVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.MajorService;
 import xyz.chnytrcy.campusepidemicsystem.utils.aop.datasynchronization.DataSynchronous;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

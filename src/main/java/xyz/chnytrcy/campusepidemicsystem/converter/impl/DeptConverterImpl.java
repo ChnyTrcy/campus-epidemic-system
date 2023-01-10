@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import xyz.chnytrcy.campusepidemicsystem.converter.DeptConverter;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 
 /**
  * @ProjectName: campus-epidemic-system

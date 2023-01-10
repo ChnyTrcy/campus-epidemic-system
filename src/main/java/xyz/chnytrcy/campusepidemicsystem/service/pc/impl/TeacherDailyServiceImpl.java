@@ -9,7 +9,7 @@ import xyz.chnytrcy.campusepidemicsystem.model.command.pc.teacherdaily.QueryTeac
 import xyz.chnytrcy.campusepidemicsystem.model.entity.TeacherDaily;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.teacherdaily.QueryTeacherDailyHistoryVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.TeacherDailyService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

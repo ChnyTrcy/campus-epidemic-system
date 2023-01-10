@@ -56,10 +56,10 @@ import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.isolationperson.QueryPageAd
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.isolationperson.QueryPageIsolationPersonVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.isolationperson.QueryPageToBeIsolationPersonVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.IsolationPersonService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
 import xyz.chnytrcy.core.config.exception.BusinessException;
 import xyz.chnytrcy.core.config.shiro.utils.HttpContextUtil;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

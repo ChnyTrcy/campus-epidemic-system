@@ -11,8 +11,8 @@ import xyz.chnytrcy.campusepidemicsystem.model.entity.StudentDaily;
 import xyz.chnytrcy.campusepidemicsystem.model.enums.BusinessError;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.studentdaily.QueryStudentDailyVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.StudentDailyService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

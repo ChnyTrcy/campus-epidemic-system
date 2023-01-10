@@ -7,7 +7,7 @@ import xyz.chnytrcy.campusepidemicsystem.mapper.ProvinceMapper;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Province;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.province.GetProvinceListVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.ProvinceService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

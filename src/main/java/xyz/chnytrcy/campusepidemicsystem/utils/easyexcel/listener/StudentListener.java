@@ -1,23 +1,5 @@
 package xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener;
 
-import xyz.chnytrcy.campusepidemicsystem.common.ClassCommon;
-import xyz.chnytrcy.campusepidemicsystem.common.DeptCommon;
-import xyz.chnytrcy.campusepidemicsystem.common.MajorCommon;
-import xyz.chnytrcy.campusepidemicsystem.mapper.ClassMapper;
-import xyz.chnytrcy.campusepidemicsystem.mapper.StudentMapper;
-import xyz.chnytrcy.campusepidemicsystem.mapper.UserMapper;
-import xyz.chnytrcy.campusepidemicsystem.model.constance.StudentConstance;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.ClassEntity;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.Major;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.Student;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.user.User;
-import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.RoleEnums;
-import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.SexEnums;
-import xyz.chnytrcy.campusepidemicsystem.service.pc.UserService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
-import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
-import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdcardUtil;
@@ -33,6 +15,24 @@ import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import xyz.chnytrcy.campusepidemicsystem.common.ClassCommon;
+import xyz.chnytrcy.campusepidemicsystem.common.DeptCommon;
+import xyz.chnytrcy.campusepidemicsystem.common.MajorCommon;
+import xyz.chnytrcy.campusepidemicsystem.mapper.ClassMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.StudentMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.UserMapper;
+import xyz.chnytrcy.campusepidemicsystem.model.constance.StudentConstance;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.ClassEntity;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Major;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Student;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.user.User;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.RoleEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.SexEnums;
+import xyz.chnytrcy.campusepidemicsystem.service.pc.UserService;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ErrorEntity;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.bo.StudentBO;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.md5.MD5;
 
 /**

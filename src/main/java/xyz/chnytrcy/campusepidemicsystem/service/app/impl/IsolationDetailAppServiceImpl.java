@@ -32,9 +32,9 @@ import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.StudentDailyEnums;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.AddTemperatureVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.QueryPageIsolationDetailVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.IsolationDetailAppService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.campusepidemicsystem.utils.mq.producter.StudentIsolateProducer;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

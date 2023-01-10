@@ -19,9 +19,9 @@ import xyz.chnytrcy.campusepidemicsystem.model.entity.Teacher;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationperson.QueryPageIsolationPersonByEpidemicVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.IsolationPersonAppService;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.impl.IsolationPersonServiceImpl;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.config.basic.model.BasePageCommand;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

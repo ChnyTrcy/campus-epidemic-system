@@ -1,12 +1,5 @@
 package xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener;
 
-import xyz.chnytrcy.campusepidemicsystem.common.DeptCommon;
-import xyz.chnytrcy.campusepidemicsystem.mapper.DeptMapper;
-import xyz.chnytrcy.campusepidemicsystem.model.constance.StudentConstance;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
-import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ErrorEntity;
-import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.bo.DeptBO;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.fastjson.JSON;
@@ -16,6 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import xyz.chnytrcy.campusepidemicsystem.common.DeptCommon;
+import xyz.chnytrcy.campusepidemicsystem.mapper.DeptMapper;
+import xyz.chnytrcy.campusepidemicsystem.model.constance.StudentConstance;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ErrorEntity;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.bo.DeptBO;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 
 /**
  * @ProjectName: campus-epidemic-system

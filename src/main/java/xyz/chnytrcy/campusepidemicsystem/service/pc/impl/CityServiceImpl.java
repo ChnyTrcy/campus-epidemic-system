@@ -1,15 +1,15 @@
 package xyz.chnytrcy.campusepidemicsystem.service.pc.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+import org.springframework.stereotype.Service;
 import xyz.chnytrcy.campusepidemicsystem.mapper.CityMapper;
 import xyz.chnytrcy.campusepidemicsystem.model.command.pc.city.GetCityListCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.City;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.city.GetCityListVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.CityService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import java.util.List;
-import org.springframework.stereotype.Service;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

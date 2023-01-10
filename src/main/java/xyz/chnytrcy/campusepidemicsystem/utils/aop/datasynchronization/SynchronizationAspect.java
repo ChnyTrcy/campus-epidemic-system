@@ -20,7 +20,7 @@ import xyz.chnytrcy.campusepidemicsystem.utils.mq.producter.SynchronizationProdu
  * @Package: xyz.chnytrcy.campusepidemicsystem.utils.aop.datasynchronizatiion
  * @ClassName: SynchronizationAspect
  * @Author: ChnyTrcy
- * @Description:
+ * @Description: 数据全量同步切面
  * @Date: 2022/12/2 15:26
  * @Version: 1.0
  */

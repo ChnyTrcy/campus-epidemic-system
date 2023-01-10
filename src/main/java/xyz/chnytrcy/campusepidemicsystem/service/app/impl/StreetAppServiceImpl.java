@@ -9,7 +9,7 @@ import xyz.chnytrcy.campusepidemicsystem.model.command.app.street.QueryStreetLis
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Street;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.street.QueryStreetListVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.StreetAppService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

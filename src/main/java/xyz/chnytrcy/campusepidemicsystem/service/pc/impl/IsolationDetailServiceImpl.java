@@ -17,7 +17,7 @@ import xyz.chnytrcy.campusepidemicsystem.model.entity.IsolationPerson;
 import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.IsolationPersonEnums;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.isolationdetail.QueryIsolationDetailByIdVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.IsolationDetailService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

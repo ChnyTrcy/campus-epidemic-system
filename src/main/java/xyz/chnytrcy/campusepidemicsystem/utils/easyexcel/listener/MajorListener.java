@@ -5,7 +5,6 @@ import xyz.chnytrcy.campusepidemicsystem.mapper.MajorMapper;
 import xyz.chnytrcy.campusepidemicsystem.model.constance.StudentConstance;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Major;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ErrorEntity;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.bo.MajorBO;
 import cn.hutool.core.collection.CollUtil;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 
 /**
  * @ProjectName: campus-epidemic-system

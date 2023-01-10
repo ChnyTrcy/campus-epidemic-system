@@ -1,6 +1,7 @@
 package xyz.chnytrcy.campusepidemicsystem.converter.impl;
 
-import static xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils.MAPPER;
+
+import static xyz.chnytrcy.core.utils.dozer.DozerUtils.MAPPER;
 
 import xyz.chnytrcy.campusepidemicsystem.converter.LeaveConverter;
 import xyz.chnytrcy.campusepidemicsystem.model.dto.QueryPageLeaveDTO;

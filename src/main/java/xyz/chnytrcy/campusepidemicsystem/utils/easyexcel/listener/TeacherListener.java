@@ -1,18 +1,5 @@
 package xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener;
 
-import xyz.chnytrcy.campusepidemicsystem.common.DeptCommon;
-import xyz.chnytrcy.campusepidemicsystem.mapper.TeacherMapper;
-import xyz.chnytrcy.campusepidemicsystem.mapper.UserMapper;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.Teacher;
-import xyz.chnytrcy.campusepidemicsystem.model.entity.user.User;
-import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.RoleEnums;
-import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.SexEnums;
-import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.TeacherEnums;
-import xyz.chnytrcy.campusepidemicsystem.service.pc.UserService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
-import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ErrorEntity;
-import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.bo.TeacherBO;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdcardUtil;
@@ -27,6 +14,19 @@ import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import xyz.chnytrcy.campusepidemicsystem.common.DeptCommon;
+import xyz.chnytrcy.campusepidemicsystem.mapper.TeacherMapper;
+import xyz.chnytrcy.campusepidemicsystem.mapper.UserMapper;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Dept;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.Teacher;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.user.User;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.RoleEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.SexEnums;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.TeacherEnums;
+import xyz.chnytrcy.campusepidemicsystem.service.pc.UserService;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ErrorEntity;
+import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.bo.TeacherBO;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.md5.MD5;
 
 /**

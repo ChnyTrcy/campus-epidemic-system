@@ -25,8 +25,8 @@ import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.IsolationPersonEnums
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.student.GetUserIdVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.student.ScanCodeGetStudentInformationVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.StudentAppService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

@@ -23,7 +23,7 @@
     <dependency>
       <groupId>xyz.chnytrcy</groupId>
       <artifactId>springboot-core-parent</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.6</version>
     </dependency>
   </dependencies>
 
@@ -65,6 +65,7 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+<!--      允许远程Debug调试连接-->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

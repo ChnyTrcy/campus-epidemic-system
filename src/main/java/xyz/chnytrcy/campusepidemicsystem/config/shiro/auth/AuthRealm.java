@@ -1,6 +1,7 @@
 package xyz.chnytrcy.campusepidemicsystem.config.shiro.auth;
 
 import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import xyz.chnytrcy.campusepidemicsystem.config.shiro.ShiroService;
 import xyz.chnytrcy.campusepidemicsystem.mapper.UserMapper;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.user.Permission;
@@ -32,6 +33,9 @@ import xyz.chnytrcy.core.config.shiro.utils.TokenEntity;
  */
 @Component
 public class AuthRealm extends AuthorizingRealm {
+
+    @Value("${login.token.refresh.time}")
+    private Integer REFRESH_TOKEN_TIME = 60;
 
     @Autowired
     private ShiroService shiroService;
@@ -86,7 +90,7 @@ public class AuthRealm extends AuthorizingRealm {
             throw new UserAuthenticationException(AuthenticationError.LOGIN_ACCOUNT_NOT_EXIST_ERROR);
         }
         //5、延长token持续时间
-        tokenEntity.setExpireTime(LocalDateTime.now().plusHours(1));
+        tokenEntity.setExpireTime(LocalDateTime.now().plusMinutes(REFRESH_TOKEN_TIME));
         tokenEntity.setUpdateTime(LocalDateTime.now());
         sysTokenRepository.updateTokenEntity(tokenEntity);
 

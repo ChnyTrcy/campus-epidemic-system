@@ -35,11 +35,11 @@ import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.feedbackacceptance.QueryPag
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.feedbackacceptance.QueryPageEpidemicFeedbackAcceptanceVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.feedbackacceptance.QueryPageEpidemicMyselfFeedbackAcceptanceVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.FeedbackAcceptanceService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.config.basic.model.BaseId;
 import xyz.chnytrcy.core.config.basic.model.BasePageCommand;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

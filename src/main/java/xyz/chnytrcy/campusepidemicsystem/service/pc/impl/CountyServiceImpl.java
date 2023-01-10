@@ -9,7 +9,7 @@ import xyz.chnytrcy.campusepidemicsystem.model.command.pc.county.GetCountyListCo
 import xyz.chnytrcy.campusepidemicsystem.model.entity.County;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.county.GetCountyListVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.CountyService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

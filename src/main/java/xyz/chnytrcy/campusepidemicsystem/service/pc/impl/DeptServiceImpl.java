@@ -23,10 +23,10 @@ import xyz.chnytrcy.campusepidemicsystem.model.enums.EntityEnums;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.dept.DeptListVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.DeptService;
 import xyz.chnytrcy.campusepidemicsystem.utils.aop.datasynchronization.DataSynchronous;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 
@@ -47,7 +47,6 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
   @Autowired private ClassMapper classMapper;
 
   @Autowired private DeptConverter deptConverter;
-
 
   @Override
   public Result<List<DeptListVO>> getDeptList() {

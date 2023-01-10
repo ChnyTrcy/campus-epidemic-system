@@ -32,10 +32,10 @@ import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.StreetEnums;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.street.QueryPageStreetVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.street.QueryStatisticsStreetVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.StreetService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.campusepidemicsystem.utils.mq.producter.StudentIsolateProducer;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

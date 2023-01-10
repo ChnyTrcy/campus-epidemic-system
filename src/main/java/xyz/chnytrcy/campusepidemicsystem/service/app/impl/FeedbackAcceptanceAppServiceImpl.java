@@ -30,9 +30,9 @@ import xyz.chnytrcy.campusepidemicsystem.model.vo.app.feedbackacceptance.QueryPa
 import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.feedbackacceptance.QueryPageEpidemicFeedbackAcceptanceVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.FeedbackAcceptanceAppService;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.impl.FeedbackAcceptanceServiceImpl;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

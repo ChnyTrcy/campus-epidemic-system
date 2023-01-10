@@ -8,7 +8,7 @@ import xyz.chnytrcy.campusepidemicsystem.mapper.TeacherMapper;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Teacher;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.teacher.GetInformationVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.TeacherAppService;
-import xyz.chnytrcy.campusepidemicsystem.utils.dozer.DozerUtils;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 
