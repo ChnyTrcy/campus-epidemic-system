@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import xyz.chnytrcy.campusepidemicsystem.model.command.pc.feedbackacceptance.Rej
 import xyz.chnytrcy.campusepidemicsystem.model.command.pc.feedbackacceptance.UnableDealEpidemicFeedbackAcceptanceCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.FeedbackAcceptance;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Teacher;
+import xyz.chnytrcy.campusepidemicsystem.model.entity.user.User;
 import xyz.chnytrcy.campusepidemicsystem.model.enums.BusinessError;
 import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.FeedbackAcceptanceEnums;
 import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.TeacherEnums;
@@ -71,6 +73,7 @@ public class FeedbackAcceptanceServiceImpl extends ServiceImpl<FeedbackAcceptanc
         command.getFeedbackType(),
         command.getQueryType(),
         code);
+
     PageInfo pageInfo = new PageInfo(list);
     List<QueryPageAdminFeedbackAcceptanceVO> vos = DozerUtils.convertList(
         list, QueryPageAdminFeedbackAcceptanceVO.class);
@@ -80,6 +83,7 @@ public class FeedbackAcceptanceServiceImpl extends ServiceImpl<FeedbackAcceptanc
 
   @Override
   public Result<Void> agreeAdminFeedbackAcceptance(AgreeAdminFeedbackAcceptanceCommand command) {
+
     FeedbackAcceptance feedbackAcceptance = this.checkAdminFeedbackAcceptance(command);
     feedbackAcceptance.setResult(FeedbackAcceptanceEnums.RESULT_AGREE.getCode());
     feedbackAcceptance.setIsEnd(FeedbackAcceptanceEnums.IS_END_YES.getCode());
@@ -189,6 +193,7 @@ public class FeedbackAcceptanceServiceImpl extends ServiceImpl<FeedbackAcceptanc
     getBaseMapper().insert(feedbackAcceptance);
     return ResultFactory.successResult();
   }
+
 
   @Override
   public Result<BasePageVO<QueryPageEpidemicMyselfFeedbackAcceptanceVO>> queryPageEpidemicMyselfFeedbackAcceptance(

@@ -1,12 +1,20 @@
 package xyz.chnytrcy.campusepidemicsystem.config.socket.component;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -15,6 +23,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -26,37 +35,41 @@ import lombok.extern.slf4j.Slf4j;
  * @Version: 1.0
  */
 @ServerEndpoint(value = "/chat/{userId}")
+@Component
 @Slf4j
 public class WebSocketServer {
+
+  static {
+    log.info("WebSocket注册成功");
+  }
 
   /**
    * 记录当前在线连接数
    */
-  public static final Map<String, Session> SESSION_MAP = new ConcurrentHashMap<>();
+  private static final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+
+  /**
+   * 未消费的消息
+   */
+  private static final Map<String,List<MessageObject>> messageMap = new ConcurrentHashMap<>();
 
   /**
    * 连接成功调用的方法
    */
   @OnOpen
   public void onOpen(Session session,@PathParam("userId") String userId){
-    SESSION_MAP.put(userId,session);
-    log.info("有新用户加入，userId = {},当前在线人数为：{}",userId,SESSION_MAP.size());
-    JSONObject result = new JSONObject();
-    JSONArray array = new JSONArray();
-    result.put("users",array);
-    for (String aLong : SESSION_MAP.keySet()) {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put("userId",aLong);
-      array.add(jsonObject);
+    sessionMap.put(userId,session);
+    log.info("有新用户加入，userId = {},当前在线人数为：{}",userId,sessionMap.size());
+    //监测是否有未消费的消息
+    if(messageMap.containsKey(userId)){
+
     }
-    //发送消息给所有的客户端
-    this.sendAllMessage(JSON.toJSONString(result));
   }
 
   @OnClose
   public void onClose(Session session,@PathParam("userId") String userId){
-    SESSION_MAP.remove(userId);
-    log.info("有一个连接关闭，移除userId = {}的用户session，当前在线人数为：{}",userId,SESSION_MAP.size());
+    sessionMap.remove(userId);
+    log.info("有一个连接关闭，移除userId = {}的用户session，当前在线人数为：{}",userId,sessionMap.size());
   }
 
   /**
@@ -71,7 +84,7 @@ public class WebSocketServer {
     JSONObject obj = (JSONObject) JSON.parse(message);
     String toUserId = obj.getString("to");
     String text = obj.getString("text");
-    Session toSession = SESSION_MAP.get(toUserId);
+    Session toSession = sessionMap.get(toUserId);
     if(ObjectUtil.isNotNull(toSession)){
       //服务器重新组装消息体
       JSONObject jsonObject = new JSONObject();
@@ -81,6 +94,9 @@ public class WebSocketServer {
       log.info("发送给用户userId = {}，消息：{}",toUserId,JSON.toJSONString(jsonObject));
     }else {
       log.warn("发送失败，未找到用户userId = {}的session",toUserId);
+      //组装消息体
+      MessageObject messageObject = MessageObject.builder().from(userId).message(text).build();
+      putMessageMap(toUserId,messageObject);
     }
   }
 
@@ -109,12 +125,23 @@ public class WebSocketServer {
    */
   private void sendAllMessage(String message){
     try {
-      for (Session session : SESSION_MAP.values()) {
+      for (Session session : sessionMap.values()) {
         log.info("服务端给客户端[{}]发送消息{}",session.getId(),message);
         session.getBasicRemote().sendText(message);
       }
     } catch (IOException e) {
       log.error("服务端发送消息给客户端失败",e);
+    }
+  }
+
+  private void putMessageMap(String key,MessageObject value){
+    List<MessageObject> messageObjectList = messageMap.get(key);
+    if(ObjectUtil.isNull(messageObjectList)){
+      List<MessageObject> collect = Stream.of(value).collect(Collectors.toList());
+      messageMap.put(key,collect);
+    }else {
+      messageObjectList.add(value);
+      messageMap.replace(key,messageObjectList);
     }
   }
 }

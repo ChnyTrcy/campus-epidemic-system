@@ -74,5 +74,4 @@ public class ExcelDealFactory {
       return ResultFactory.warningResult(errorList);
     }
   }
-
 }

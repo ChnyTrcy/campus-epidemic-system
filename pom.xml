@@ -23,8 +23,9 @@
     <dependency>
       <groupId>xyz.chnytrcy</groupId>
       <artifactId>springboot-core-parent</artifactId>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
     </dependency>
+
   </dependencies>
 
 <!--  连接远程私有Maven仓库-->
@@ -66,13 +67,13 @@
         </configuration>
       </plugin>
 <!--      允许远程Debug调试连接-->
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,address=12340,server=y,suspend=n</jvmArguments>
-        </configuration>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,address=12340,server=y,suspend=n</jvmArguments>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

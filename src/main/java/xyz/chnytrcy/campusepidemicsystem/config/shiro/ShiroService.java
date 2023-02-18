@@ -2,7 +2,6 @@ package xyz.chnytrcy.campusepidemicsystem.config.shiro;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +37,6 @@ public class ShiroService {
   private final static int CONTINUED_HOUR_DEV = 7 * 24;
 
 
-
   public User findByUsername(String username) {
     return userMapper.findUserByName(username);
   }
@@ -51,7 +49,7 @@ public class ShiroService {
   public String createToken(User user, LoginTypeEnums type){
     String token1 = MD5.SysMd5(String.valueOf(user.getId()),user.getPassword());
     String token2 = MD5.SysMd5(token1, token1);
-    String token = token1 + "-" + token2;
+    String token = "bear_" + token1 + token2;
     LocalDateTime nowTime = LocalDateTime.now();
     LocalDateTime expireTime;
     if(type.equals(LoginTypeEnums.PC_PASSWORD) || type.equals(LoginTypeEnums.PC_PHONE)){

@@ -59,6 +59,7 @@ import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
 import xyz.chnytrcy.core.config.exception.BusinessException;
+import xyz.chnytrcy.core.utils.BaseUtils;
 import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.md5.MD5;
 import xyz.chnytrcy.core.utils.result.Result;
@@ -180,14 +181,16 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         .in(FeedbackAcceptance::getResult, new ArrayList<>(Arrays.asList(
             FeedbackAcceptanceEnums.RESULT_UNREAD.getCode(),FeedbackAcceptanceEnums.RESULT_NOT_HANDLER.getCode()
         ))));
-    if(feedbackAcceptanceCount > 0){
+//    if(feedbackAcceptanceCount > 0){
+    if(BaseUtils.isNotEmpty(feedbackAcceptanceCount)){
       throw new BusinessException(BusinessError.STUDENT_IN_UNDONE_FEEDBACK_ACCEPTANCE_ERROR);
     }
     //检查该学生是否处于隔离状态
     Long isolationPersonCount = isolationPersonMapper.selectCount(new LambdaQueryWrapper<IsolationPerson>()
         .eq(IsolationPerson::getCode, code)
         .ne(IsolationPerson::getState, IsolationPersonEnums.STATE_END.getCode()));
-    if(isolationPersonCount > 0){
+//    if(isolationPersonCount > 0){
+    if(BaseUtils.isNotEmpty(isolationPersonCount)){
       throw new BusinessException(BusinessError.STUDENT_IN_UNDONE_ISOLATION_PERSON_ERROR);
     }
     //检查该学生是否存在未完成的请假单
@@ -195,7 +198,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         .eq(Leave::getCode, code)
         .eq(Leave::getIsReturn, LeaveEnums.IS_RETURN_NO.getCode())
         .ne(Leave::getApprovalResult, LeaveEnums.APPROVAL_RESULT_REJECT));
-    if(leaveCount > 0){
+//    if(leaveCount > 0){
+    if(BaseUtils.isNotEmpty(leaveCount)){
       throw new BusinessException(BusinessError.STUDENT_IN_UNDONE_LEAVE_ERROR);
     }
   }
@@ -246,7 +250,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
   /**
    * 验证学生必要字段是否相关联合法
    */
-  public void checkStudentInformationMatch(LegitimateStudent command,Boolean isAdd){
+  protected void checkStudentInformationMatch(LegitimateStudent command,Boolean isAdd){
     //验证院系是否存在
     if(0 == deptMapper.selectCount(new LambdaQueryWrapper<Dept>()
         .eq(Dept::getCode,command.getDeptCode()))){
@@ -276,4 +280,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
       }
     }
   }
+
+
 }

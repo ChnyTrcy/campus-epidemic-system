@@ -53,4 +53,9 @@ public interface UserService extends IService<User> {
    * 忘记密码
    */
   Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest request);
+
+  /**
+   * 获得验证码是否开启状态
+   */
+  Result<Boolean> getCaptchaStatue(String account,HttpServletRequest request);
 }

@@ -85,7 +85,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   @Value("${login.sms.captcha.limit}")
   private Boolean phoneCaptchaLimit;
 
+  @Value("${login.captcha.auto}")
+  private Boolean captchaAuto;
+
+  @Value("${login.captcha.auto.number}")
+  private Integer captchaAutoNumber;
+
   private static final String SESSION_CAPTCHA_NAME = "captcha";
+
+  private static final String SESSION_CAPTCHA_AUTO_ID = "captchaAutoId_";
 
   /**
    * 短信模版ID
@@ -127,23 +135,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
   @Override
   public Result login(LoginCommand command, LoginTypeEnums type,HttpServletRequest request) {
-    if(captchaSwitch.equals(Boolean.TRUE) && type.equals(LoginTypeEnums.PC_PASSWORD)){
-      CaptchaDTO captcha = (CaptchaDTO) request.getSession().getAttribute(SESSION_CAPTCHA_NAME);
-      if(ObjectUtil.isNull(captcha)){
-        throw new UserAuthenticationException(AuthenticationError.CAPTCHA_GET_ERROR);
-      }
-      if(captcha.getStartTime().plusMinutes(captchaTime).isBefore(LocalDateTime.now())){
-        throw new UserAuthenticationException(AuthenticationError.CAPTCHA_TIME_ERROR);
-      }
-      if(!command.getCaptcha().equals(captcha.getText())){
-        throw new UserAuthenticationException(AuthenticationError.CAPTCHA_DIFFERENT_ERROR);
-      }
-      request.getSession().removeAttribute(SESSION_CAPTCHA_NAME);
-    }
+    captchaPrepositionValidate(command,type,request);
     if(type.equals(LoginTypeEnums.PC_PHONE)){
       loginByPhone(command);
     }else {
-      loginByPassword(command);
+      loginByPassword(command,request);
     }
     User user = shiroService.findByUsername(command.getAccount());
     List<Role> roleList = userMapper.findRoleListByUserId(user.getId());
@@ -298,13 +294,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     return ResultFactory.successResult(result);
   }
 
-  private void loginByPassword(LoginCommand command){
+  @Override
+  public Result<Boolean> getCaptchaStatue(String account,HttpServletRequest request) {
+    if(captchaSwitch){
+      if(captchaAuto){
+        if(ObjectUtil.isNull(account)){
+          return ResultFactory.successResult(false);
+        }
+        Integer attribute = (Integer) request.getSession().getAttribute(SESSION_CAPTCHA_AUTO_ID + account);
+        if(attribute > captchaAutoNumber){
+          return ResultFactory.successResult(true);
+        }
+      }else {
+        return ResultFactory.successResult(true);
+      }
+    }
+    return ResultFactory.successResult(false);
+  }
+
+  private void loginByPassword(LoginCommand command,HttpServletRequest request){
     User user = shiroService.findByUsername(command.getAccount());
     if(ObjectUtil.isNull(user)){
+      addAutoNumber(command.getAccount(),request);
       throw new UserAuthenticationException(AuthenticationError.LOGIN_ACCOUNT_NOT_EXIST_ERROR);
     }
     String password = MD5.SysMd5(String.valueOf(user.getAccount()),command.getPassword());
     if(!user.getPassword().equals(password)){
+      addAutoNumber(command.getAccount(),request);
       throw new UserAuthenticationException(AuthenticationError.LOGIN_PASSWORD_ERROR);
     }
   }
@@ -338,9 +354,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
   /**
    * 填充用户基本信息
-   * @param map
-   * @param roleName
-   * @param user
    */
   public void fillUser(Map<String,Object> map,String roleName,User user){
     if(roleName.equals(RoleEnums.ADMIN.getName())){
@@ -375,7 +388,56 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   /**
    * 生成六位手机验证码
    */
-  protected int generatePhoneCaptcha(){
+  protected static int generatePhoneCaptcha(){
     return RandomUtil.randomInt(100000, 999999);
+  }
+
+  /**
+   * 验证码前置条件筛选
+   */
+  private void captchaPrepositionValidate(LoginCommand command, LoginTypeEnums type,HttpServletRequest request){
+    if(captchaSwitch.equals(Boolean.TRUE) && type.equals(LoginTypeEnums.PC_PASSWORD)){
+      if(captchaAuto){
+        Integer attribute = (Integer) request.getSession()
+            .getAttribute(SESSION_CAPTCHA_AUTO_ID + command.getAccount());
+        if(ObjectUtil.isNotNull(attribute) && attribute > captchaAutoNumber) {
+          captchaValidate(command,type,request);
+        }
+      }else {
+        captchaValidate(command,type,request);
+      }
+    }
+  }
+
+  /**
+   * 验证码筛选
+   */
+  private void captchaValidate(LoginCommand command, LoginTypeEnums type,HttpServletRequest request){
+    CaptchaDTO captcha = (CaptchaDTO) request.getSession().getAttribute(SESSION_CAPTCHA_NAME);
+    if(ObjectUtil.isNull(captcha)){
+      throw new UserAuthenticationException(AuthenticationError.CAPTCHA_GET_ERROR);
+    }
+    if(captcha.getStartTime().plusMinutes(captchaTime).isBefore(LocalDateTime.now())){
+      throw new UserAuthenticationException(AuthenticationError.CAPTCHA_TIME_ERROR);
+    }
+    if(!command.getCaptcha().equals(captcha.getText())){
+      throw new UserAuthenticationException(AuthenticationError.CAPTCHA_DIFFERENT_ERROR);
+    }
+    request.getSession().removeAttribute(SESSION_CAPTCHA_NAME);
+  }
+
+  /**
+   * 增加自适应验证次数
+   */
+  private void addAutoNumber(String account,HttpServletRequest request){
+    if(captchaAuto){
+      Object attribute = request.getSession().getAttribute(SESSION_CAPTCHA_AUTO_ID + account);
+      if(ObjectUtil.isNull(attribute)){
+        request.getSession().setAttribute(SESSION_CAPTCHA_AUTO_ID + account,1);
+      }else {
+        Integer num = (Integer) attribute;
+        request.getSession().setAttribute(SESSION_CAPTCHA_AUTO_ID + account, ++num);
+      }
+    }
   }
 }

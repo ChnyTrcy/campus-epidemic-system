@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
 
 /**
  * @ProjectName: campus-epidemic-system

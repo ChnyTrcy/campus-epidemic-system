@@ -43,7 +43,6 @@ public class UserController {
 
   @Autowired private DefaultKaptcha defaultKaptcha;
 
-
   @ApiOperation("注册")
   @PostMapping("/addUser")
   public Result<Void> addUser(@RequestBody @Valid AddUserCommand command){
@@ -113,4 +112,9 @@ public class UserController {
     return userService.forgetPassword(command,request);
   }
 
+  @ApiOperation("获得验证码是否开启状态")
+  @GetMapping("/getCaptchaStatue")
+  public Result<Boolean> getCaptchaStatue(String account,HttpServletRequest request){
+    return userService.getCaptchaStatue(account,request);
+  }
 }

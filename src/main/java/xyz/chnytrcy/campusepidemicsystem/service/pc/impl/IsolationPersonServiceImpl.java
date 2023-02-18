@@ -10,10 +10,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +99,7 @@ public class IsolationPersonServiceImpl extends ServiceImpl<IsolationPersonMappe
       QueryPageAdminIsolationPersonCommand command) {
     Admin admin = adminMapper.selectOne(new LambdaQueryWrapper<Admin>()
         .eq(Admin::getUserId, httpContextUtil.getUserId()));
-    if(null == admin){
+    if(ObjectUtil.isNull(admin)){
       throw new BusinessException(BusinessError.ADMIN_IS_NOT_EXIST_ERROR);
     }
     String deptCode = admin.getDeptCode();
@@ -242,9 +244,9 @@ public class IsolationPersonServiceImpl extends ServiceImpl<IsolationPersonMappe
 
   @Override
   public Result<CountDeptPeopleProportionVO> countDeptPeopleProportion() {
-    List<Dept> depts = deptMapper.selectList(null);
+    List<Dept> deptList = deptMapper.selectList(null);
     Map<String,Integer> hashmap = Maps.newHashMap();
-    List<String> deptNameAllList = depts.stream().map(Dept::getName).collect(Collectors.toList());
+    List<String> deptNameAllList = deptList.stream().map(Dept::getName).collect(Collectors.toList());
     List<Teacher> teacherList = teacherMapper.selectList(null);
     Map<String, List<Teacher>> collect = teacherList.stream()
         .filter(e -> e.getEpidemicMark().equals(TeacherEnums.EPIDEMIC_MARK_YES.getNumber()))
