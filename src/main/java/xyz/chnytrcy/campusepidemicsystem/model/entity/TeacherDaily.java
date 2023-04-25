@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
+import xyz.chnytrcy.core.config.basic.entity.EnumValue;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -24,14 +26,17 @@ import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @TableName("teacher_daily")
 @ApiModel("教职工日常打卡")
+@EnumTransformation
 public class TeacherDaily extends BaseEntity {
 
   @ApiModelProperty(value = "工号",required = true)
   private String code;
 
   @ApiModelProperty(value = "打卡类型（0:上班，1:下班）",required = true)
+  @EnumValue("TYPE")
   private Integer type;
 
   @ApiModelProperty(value = "打卡结果（0:绿，1:黄，2:红）",required = true)
+  @EnumValue("RESULT")
   private Integer result;
 }

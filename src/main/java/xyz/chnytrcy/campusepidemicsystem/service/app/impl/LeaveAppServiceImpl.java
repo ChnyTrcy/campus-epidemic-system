@@ -27,8 +27,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,7 +82,7 @@ import xyz.chnytrcy.core.utils.result.ResultFactory;
  * @Version: 1.0
  */
 @Service
-public class LeaveAppServiceImpl extends ServiceImpl<LeaveMapper, Leave> implements LeaveAppService {
+public class LeaveAppServiceImpl extends ServiceImpl<LeaveMapper, Leave> implements LeaveAppService{
 
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -115,7 +117,7 @@ public class LeaveAppServiceImpl extends ServiceImpl<LeaveMapper, Leave> impleme
   @Autowired private StudentCommon studentCommon;
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Transactional(rollbackFor = BusinessException.class)
   public Result<Void> addNewLeaveApplication(AddNewLeaveApplicationCommand command)
       throws ParseException {
     Long studentCode = Long.parseLong(userCommon.getAccount());

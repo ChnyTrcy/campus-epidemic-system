@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
+import xyz.chnytrcy.core.config.basic.entity.EnumValue;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -24,6 +26,7 @@ import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @TableName("leave_health")
 @ApiModel("请假健康实体类")
+@EnumTransformation
 public class LeaveHealth extends BaseEntity {
 
   @ApiModelProperty(value = "关联ID",required = true)
@@ -33,5 +36,6 @@ public class LeaveHealth extends BaseEntity {
   private String healthImg;
 
   @ApiModelProperty(value = "核酸结果（0：阴，1：阳）",required = true)
+  @EnumValue("NUCLEIC_ACID")
   private Integer nucleicAcid;
 }

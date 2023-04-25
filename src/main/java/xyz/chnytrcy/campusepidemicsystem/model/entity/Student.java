@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
+import xyz.chnytrcy.core.config.basic.entity.EnumValue;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -23,6 +25,7 @@ import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel("学生实体类")
+@EnumTransformation
 public class Student extends BaseEntity {
 
   @ApiModelProperty(value = "学号",required = true)
@@ -77,5 +80,6 @@ public class Student extends BaseEntity {
   private String address;
 
   @ApiModelProperty("信誉值")
+  @EnumValue("REPUTATION")
   private Integer reputation;
 }

@@ -33,7 +33,7 @@ public class DeptConverterImpl implements DeptConverter {
     return key;
   }
 
-  private DeptListVO deptToDeptListVo(Dept data){
+  private DeptListVO deptToDeptListVo(Dept data) {
     DeptListVO convert = DozerUtils.convert(data, DeptListVO.class);
     convert.setLabel(data.getName());
     return convert;

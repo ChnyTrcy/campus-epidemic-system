@@ -1,5 +1,7 @@
 package xyz.chnytrcy.campusepidemicsystem.utils.socket;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import java.io.IOException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -10,7 +12,6 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.server.standard.SpringConfigurator;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -21,7 +22,8 @@ import org.springframework.web.socket.server.standard.SpringConfigurator;
  * @Date: 2022/11/14 19:40
  * @Version: 1.0
  */
-@ServerEndpoint(value="/campus-epidemic-system/webSocket/", configurator = SpringConfigurator.class)
+//@ServerEndpoint(value="/campus-epidemic-system/ws/chat", configurator = SpringConfigurator.class)
+@ServerEndpoint(value="/ws/chat/{userId}")
 @Component
 @Slf4j
 public class WebSocket {
@@ -32,13 +34,15 @@ public class WebSocket {
    * @param session
    */
   @OnOpen
-  public void onOpen( @PathParam( value = "userid" ) String userId, Session session ) {
+  public void onOpen( @PathParam( value = "userId" ) String userId, Session session ) {
     String message ="[" + userId + "]加入聊天室！！";
-
+    log.info(message);
     // 添加到session的映射关系中
     WebSocketUtil.addSession ( userId, session );
     // 广播通知，某用户上线了
-    WebSocketUtil.sendMessageForAll ( message );
+//    WebSocketUtil.sendMessageForAll ( message );
+    //查看是否有未消费
+    WebSocketUtil.initMessageQueue(userId);
   }
 
   /**
@@ -50,24 +54,28 @@ public class WebSocket {
   @OnClose
   public void onClose(@PathParam ( value = "userId" ) String userId, Session session ) {
     String message ="[" + userId + "]退出了聊天室...";
-
+    log.info(message);
     // 删除映射关系
     WebSocketUtil.removeSession ( userId );
     // 广播通知，用户下线了
-    WebSocketUtil.sendMessageForAll ( message );
+//    WebSocketUtil.sendMessageForAll ( message );
   }
 
   /**
    * 当接收到用户上传的消息
-   * @param userId
    * @param session
    */
   @OnMessage
-  public void onMessage(@PathParam ( value = "userId" ) String userId, Session session ,String message) {
-    String msg ="[" + userId + "]:"+message;
-
+  public void onMessage(String data, Session session) throws IOException {
+//    String msg ="[" + userId + "]:"+message;
+    JSONObject jsonObject = JSON.parseObject(data);
+    String sourceId = jsonObject.getString("sourceId");
+    String targetId = jsonObject.getString("targetId");
+    String message = jsonObject.getString("message");
+    log.info(jsonObject.toJSONString());
+    WebSocketUtil.sendMessage(sourceId,targetId,message,session);
     // 直接广播
-    WebSocketUtil.sendMessageForAll ( msg );
+//    WebSocketUtil.sendMessageForAll ( msg );
   }
 
   /**

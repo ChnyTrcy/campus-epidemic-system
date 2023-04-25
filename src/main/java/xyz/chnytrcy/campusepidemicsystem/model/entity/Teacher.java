@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
+import xyz.chnytrcy.core.config.basic.entity.EnumValue;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -22,6 +24,7 @@ import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("教职工实体类")
+@EnumTransformation
 public class Teacher extends BaseEntity {
 
   @ApiModelProperty(value = "工号",required = true)
@@ -49,5 +52,6 @@ public class Teacher extends BaseEntity {
   private String address;
 
   @ApiModelProperty(value = "防疫人员标记(0:否，1：是)",required = true)
+  @EnumValue("EPIDEMIC_MARK")
   private Integer epidemicMark;
 }

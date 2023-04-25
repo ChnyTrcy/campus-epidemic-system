@@ -48,4 +48,9 @@ public enum LoginTypeEnums implements BaseLoginType {
   public String getFullPinYin() {
     return PinyinUtil.getPinYin(getDesc());
   }
+
+  @Override
+  public String getTypeCode() {
+    return null;
+  }
 }

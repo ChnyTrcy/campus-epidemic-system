@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
+import xyz.chnytrcy.core.config.basic.entity.EnumValue;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -25,6 +27,7 @@ import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
 @NoArgsConstructor
 @TableName("isolation_person")
 @ApiModel("隔离人员实体类")
+@EnumTransformation
 public class IsolationPerson extends BaseEntity {
 
   @ApiModelProperty(value = "学号",required = true)
@@ -56,6 +59,7 @@ public class IsolationPerson extends BaseEntity {
 
   @ApiModelProperty(value = "0:通知未隔离；1:已隔离，2:治疗中，3:隔离结束）",
       required = true)
+  @EnumValue("STATE")
   private Integer state;
 
   @ApiModelProperty(value = "隔离开始时间",required = true)

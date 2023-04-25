@@ -94,7 +94,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher>
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Result<Void> addTeacher(AddTeacherCommand command) {
+  public Result<Void> addTeacher(AddTeacherCommand command){
     //判断院系是否存在
     if(0 == deptMapper.selectCount(new LambdaQueryWrapper<Dept>()
         .eq(Dept::getCode,command.getDeptCode()))){

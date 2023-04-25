@@ -73,7 +73,6 @@ public class FeedbackAcceptanceServiceImpl extends ServiceImpl<FeedbackAcceptanc
         command.getFeedbackType(),
         command.getQueryType(),
         code);
-
     PageInfo pageInfo = new PageInfo(list);
     List<QueryPageAdminFeedbackAcceptanceVO> vos = DozerUtils.convertList(
         list, QueryPageAdminFeedbackAcceptanceVO.class);

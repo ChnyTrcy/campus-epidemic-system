@@ -11,12 +11,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhenzi.sms.ZhenziSmsClient;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.chnytrcy.campusepidemicsystem.config.shiro.ShiroService;
 import xyz.chnytrcy.campusepidemicsystem.mapper.StudentMapper;
 import xyz.chnytrcy.campusepidemicsystem.mapper.TeacherMapper;
@@ -176,6 +180,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
+  @Transactional(rollbackFor = UserAuthenticationException.class)
   public Result changePwd(ChangePwdCommand command) {
     if(command.getPassword().equals(command.getPasswordRepeat())){
       throw new UserAuthenticationException(AuthenticationError.PASSWORD_NOT_SAME_ERROR);
@@ -244,7 +249,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   }
 
   @Override
-  public Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest request) {
+  @Transactional(rollbackFor = RuntimeException.class)
+  public Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest  request)
+      throws Exception {
     CaptchaDTO captcha = (CaptchaDTO) request.getSession().getAttribute(SESSION_CAPTCHA_NAME);
     if(ObjectUtil.isNull(captcha)){
       throw new UserAuthenticationException(AuthenticationError.CAPTCHA_GET_ERROR);
@@ -273,7 +280,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
       throw new UserAuthenticationException(AuthenticationError.LOGIN_ACCOUNT_NOT_EXIST_ERROR);
     }
     //随机生成动态密码
-    String newPwd = HexUtil.encodeHexStr(String.valueOf(System.currentTimeMillis() + account),
+    String newPwd = HexUtil.encodeHexStr(System.currentTimeMillis() + account,
         StandardCharsets.UTF_8).substring(0,7);
     String newEncryptionPwd = MD5.SysMd5(user.getAccount(), newPwd);
     user.setPassword(newEncryptionPwd);
@@ -286,11 +293,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     templateParams[0] = newPwd;
     params.put("templateParams", templateParams);
     String result = null;
-    try {
-      result = client.send(params);
-    } catch (Exception e) {
-      log.info(e.getMessage());
-    }
+    //第三方插件异常不能try，会导致事务失效
+    result = client.send(params);
     return ResultFactory.successResult(result);
   }
 
@@ -301,8 +305,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(ObjectUtil.isNull(account)){
           return ResultFactory.successResult(false);
         }
-        Integer attribute = (Integer) request.getSession().getAttribute(SESSION_CAPTCHA_AUTO_ID + account);
-        if(attribute > captchaAutoNumber){
+        Object attributeObject = request.getSession().getAttribute(SESSION_CAPTCHA_AUTO_ID + account);
+        if(ObjectUtil.isNull(attributeObject)){
+          return ResultFactory.successResult(false);
+        }
+        if((Integer) attributeObject > captchaAutoNumber){
           return ResultFactory.successResult(true);
         }
       }else {

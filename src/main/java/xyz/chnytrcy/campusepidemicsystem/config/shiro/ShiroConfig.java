@@ -57,9 +57,12 @@ public class ShiroConfig {
         filterMap.put("/campus-epidemic-system/pc/user/getCaptchaImg","anon");
         filterMap.put("/campus-epidemic-system/pc/user/getPhoneMessageCaptcha","anon");
         filterMap.put("/campus-epidemic-system/pc/user/loginByPhone","anon");
+        filterMap.put("/campus-epidemic-system/pc/user/getCaptchaStatue","anon");
+//        getCaptchaStatue
         //websocket路径
-        filterMap.put("/chat/**","anon");
+        filterMap.put("/ws/chat/**","anon");
         // 除了以上路径，其他都需要权限验证
+//        filterMap.put("/**", "anon");
         filterMap.put("/**", "auth");
 
         shiroFilter.setFilterChainDefinitionMap(filterMap);

@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
+import xyz.chnytrcy.core.config.basic.entity.EnumValue;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -26,6 +28,7 @@ import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
 @EqualsAndHashCode(callSuper = true)
 @TableName("leave_daily")
 @ApiModel("日常出入校请假表")
+@EnumTransformation
 public class Leave extends BaseEntity {
 
   @ApiModelProperty(value = "学生学号",required = true)
@@ -35,6 +38,7 @@ public class Leave extends BaseEntity {
   private String name;
 
   @ApiModelProperty(value = "请假类型（0:事假，1:病假）",required = true)
+  @EnumValue("TYPE")
   private Integer type;
 
   @ApiModelProperty(value = "预计出校时间",required = true)
@@ -51,28 +55,35 @@ public class Leave extends BaseEntity {
 
   @ApiModelProperty(value = "是否跨区",required = true)
   @TableField("is_stride_county")
+  @EnumValue("IS_STRIDE_COUNTY")
   private Integer isStrideCounty;
 
   @ApiModelProperty(value = "是否跨天",required = true)
   @TableField("is_stride_day")
+  @EnumValue("IS_STRIDE_DAY")
   private Integer isStrideDay;
 
   @ApiModelProperty(value = "是否已出校",required = true,example = "0")
+  @EnumValue("IS_START")
   private Integer isStart;
 
   @ApiModelProperty(value = "是否已返校",required = true,example = "0")
+  @EnumValue("IS_RETURN")
   private Integer isReturn;
 
   @ApiModelProperty(value = "审批是否结束",required = true,example = "0")
+  @EnumValue("IS_END")
   private Integer isEnd;
 
   @ApiModelProperty(value = "是否过期",required = true,example = "0")
+  @EnumValue("IS_OVERDUE_YES")
   private Integer isOverdue;
 
   @ApiModelProperty(value = "目的地（只能选择一个）",required = true)
   private String target;
 
   @ApiModelProperty(value = "审批结果（0:未处理，1:同意，2:拒绝，3：处理中）",required = true,example = "0")
+  @EnumValue("APPROVAL_RESULT")
   private Integer approvalResult;
 
   @ApiModelProperty(value = "管理员Id",required = true)

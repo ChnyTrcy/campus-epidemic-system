@@ -52,7 +52,8 @@ public interface UserService extends IService<User> {
   /**
    * 忘记密码
    */
-  Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest request);
+  Result<String> forgetPassword(ForgetPasswordCommand command, HttpServletRequest request)
+      throws Exception;
 
   /**
    * 获得验证码是否开启状态

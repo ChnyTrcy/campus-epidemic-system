@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import xyz.chnytrcy.campusepidemicsystem.common.StreetCommon;
 import xyz.chnytrcy.campusepidemicsystem.common.StudentCommon;
@@ -118,8 +119,9 @@ public class StreetServiceImpl extends ServiceImpl<StreetMapper, Street>
   }
 
   /**
-   * 修改地区为中高风险
+   * 修改地区为中高风险,异步执行
    */
+  @Async
   public void modifyStreetToMediumOrHighRisk(ModifyStreetRiskLevelCommand command){
     //1、获得涉及风险地区的学生
     List<HolidayStreetRiskLevelDTO> riskLevelDTOList = holidayStreetMapper.queryHolidayToRiskLevel(command);

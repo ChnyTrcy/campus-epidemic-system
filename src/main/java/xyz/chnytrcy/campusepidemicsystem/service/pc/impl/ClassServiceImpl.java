@@ -18,6 +18,7 @@ import xyz.chnytrcy.campusepidemicsystem.model.vo.pc.classvo.ClassListVO;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.ClassService;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.ExcelDealFactory;
 import xyz.chnytrcy.campusepidemicsystem.utils.easyexcel.listener.AnalysisBaseListener;
+import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
 

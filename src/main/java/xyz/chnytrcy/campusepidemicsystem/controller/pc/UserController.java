@@ -11,7 +11,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,7 @@ import xyz.chnytrcy.campusepidemicsystem.model.command.pc.user.PhoneMessageCaptc
 import xyz.chnytrcy.campusepidemicsystem.model.dto.CaptchaDTO;
 import xyz.chnytrcy.campusepidemicsystem.model.enums.LoginTypeEnums;
 import xyz.chnytrcy.campusepidemicsystem.service.pc.UserService;
+import xyz.chnytrcy.core.config.annotation.RateLimitAnnotation;
 import xyz.chnytrcy.core.utils.result.Result;
 
 /**
@@ -37,11 +40,15 @@ import xyz.chnytrcy.core.utils.result.Result;
 @RestController
 @RequestMapping("${mvc.url.perfix.pc}/user")
 @Api(value = "用户Controller",tags = "PC - 用户接口")
+@Slf4j
 public class UserController {
 
   @Autowired private UserService userService;
 
   @Autowired private DefaultKaptcha defaultKaptcha;
+
+  @Value("${login.captcha.print}")
+  private Boolean captchaPrint;
 
   @ApiOperation("注册")
   @PostMapping("/addUser")
@@ -69,6 +76,7 @@ public class UserController {
 
   @ApiOperation("获取验证码")
   @PostMapping("/getCaptchaImg")
+  @RateLimitAnnotation(value = 100,open = false)
   public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setDateHeader("Expires",0);
     response.setHeader("Cache-Control","no-store, no-cache, must-revalidate");
@@ -77,6 +85,9 @@ public class UserController {
 //    response.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
     response.setContentType("image/jpg");
     String text = defaultKaptcha.createText();
+    if(captchaPrint){
+      log.info("验证码为："+text);
+    }
     request.getSession().setAttribute("captcha",new CaptchaDTO(text, LocalDateTime.now()));
     BufferedImage image = defaultKaptcha.createImage(text);
     ServletOutputStream outputStream = null;
@@ -108,7 +119,8 @@ public class UserController {
 
   @PostMapping("/forgetPassword")
   @ApiOperation("忘记密码")
-  public Result<String> forgetPassword(@RequestBody @Valid ForgetPasswordCommand command,HttpServletRequest request){
+  public Result<String> forgetPassword(@RequestBody @Valid ForgetPasswordCommand command,HttpServletRequest request)
+      throws Exception {
     return userService.forgetPassword(command,request);
   }
 

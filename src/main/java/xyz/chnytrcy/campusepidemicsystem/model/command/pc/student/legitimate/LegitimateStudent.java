@@ -21,7 +21,7 @@ import xyz.chnytrcy.core.config.basic.model.Base;
 public class LegitimateStudent extends Base {
 
   @ApiModelProperty(value = "学号",required = true)
-  @NotBlank(message = "学号不能为空")
+  @NotBlank(message = "x")
   @Size(max = 10,min = 10,message = "学号长度错误")
   private String code;
 

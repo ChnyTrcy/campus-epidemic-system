@@ -45,4 +45,9 @@ public enum SuccessReturnCode implements BaseEnum {
   public String getFullPinYin() {
     return PinyinUtil.getPinYin(getDesc());
   }
+
+  @Override
+  public String getTypeCode() {
+    return null;
+  }
 }

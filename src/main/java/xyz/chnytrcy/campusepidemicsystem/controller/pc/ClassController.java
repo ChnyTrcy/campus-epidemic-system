@@ -36,7 +36,7 @@ public class ClassController {
 
   @GetMapping("/getClassListByMajorCode")
   @ApiOperation("根据专业编号获取班级列表")
-  @RateLimitAnnotation(value = 10)
+//  @RateLimitAnnotation(value = 10)
   public Result<List<ClassListVO>> getClassListByMajorCode(){
     return classService.getClassListByMajorCode();
   }

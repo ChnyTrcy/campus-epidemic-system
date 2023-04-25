@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
+import xyz.chnytrcy.core.config.basic.entity.EnumTransformation;
+import xyz.chnytrcy.core.config.basic.entity.EnumValue;
 
 /**
  * @ProjectName: campus-epidemic-system
@@ -22,6 +24,7 @@ import xyz.chnytrcy.core.config.basic.entity.BaseEntity;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("街道实体类")
+@EnumTransformation
 public class Street extends BaseEntity {
 
   @ApiModelProperty(value = "街道编号",required = true)
@@ -43,6 +46,7 @@ public class Street extends BaseEntity {
   private String fullName;
 
   @ApiModelProperty(value = "风险等级",required = true,example = "0")
+  @EnumValue("RISK_LEVEL")
   private Integer riskLevel;
 
 }
