@@ -53,34 +53,34 @@ public class StudentChain extends SynchronizationAbstract {
 
   @Override
   public void mainIn() {
-    log.info(START_MESSAGE,getTableComment());
+//    log.info(START_MESSAGE,getTableComment());
+//
+//    Map<String, String> studentMap = studentService.list().stream()
+//        .collect(Collectors.toMap(Student::getCode, Student::getName));
+//    List<HolidayStreet> holidayStreetList = holidayStreetService.list();
+//    holidayStreetList.forEach(e -> {
+//      e.setName(studentMap.get(e.getCode()));
+//    });
+//    holidayStreetService.updateBatchById(holidayStreetList);
 
-    Map<String, String> studentMap = studentService.list().stream()
-        .collect(Collectors.toMap(Student::getCode, Student::getName));
-    List<HolidayStreet> holidayStreetList = holidayStreetService.list();
-    holidayStreetList.forEach(e -> {
-      e.setName(studentMap.get(e.getCode()));
-    });
-    holidayStreetService.updateBatchById(holidayStreetList);
-
-    List<IsolationDetail> isolationDetailList = isolationDetailService.list();
-    isolationDetailList.forEach(e -> {
-      e.setName(studentMap.get(e.getCode()));
-    });
-    isolationDetailService.updateBatchById(isolationDetailList);
-
-    List<IsolationPerson> isolationPersonList = isolationPersonService.list();
-    isolationPersonList.forEach(e -> {
-      e.setName(studentMap.get(e.getCode()));
-    });
-    isolationPersonService.updateBatchById(isolationPersonList);
-
-    List<Leave> leaveList = leaveService.list();
-    leaveList.forEach(e -> {
-      e.setName(studentMap.get(e.getCode()));
-    });
-    leaveService.updateBatchById(leaveList);
-
-    log.info(END_MESSAGE,getTableComment());
+//    List<IsolationDetail> isolationDetailList = isolationDetailService.list();
+//    isolationDetailList.forEach(e -> {
+//      e.setName(studentMap.get(e.getCode()));
+//    });
+//    isolationDetailService.updateBatchById(isolationDetailList);
+//
+//    List<IsolationPerson> isolationPersonList = isolationPersonService.list();
+//    isolationPersonList.forEach(e -> {
+//      e.setName(studentMap.get(e.getCode()));
+//    });
+//    isolationPersonService.updateBatchById(isolationPersonList);
+//
+//    List<Leave> leaveList = leaveService.list();
+//    leaveList.forEach(e -> {
+//      e.setName(studentMap.get(e.getCode()));
+//    });
+//    leaveService.updateBatchById(leaveList);
+//
+//    log.info(END_MESSAGE,getTableComment());
   }
 }

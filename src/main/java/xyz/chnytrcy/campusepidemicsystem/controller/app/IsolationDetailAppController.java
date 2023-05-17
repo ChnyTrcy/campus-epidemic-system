@@ -1,8 +1,13 @@
 package xyz.chnytrcy.campusepidemicsystem.controller.app;
 
+import javax.validation.Valid;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.AddTemperatureCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.InsertDetailCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.QueryPageIsolationDetailCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.AddTemperatureVO;
+import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.QueryIsolationTimeVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.QueryPageIsolationDetailVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.IsolationDetailAppService;
 import io.swagger.annotations.Api;
@@ -44,6 +49,20 @@ public class IsolationDetailAppController {
   public Result<BasePageVO<QueryPageIsolationDetailVO>> queryPageIsolationDetail(
       QueryPageIsolationDetailCommand command){
     return isolationDetailAppService.queryPageIsolationDetail(command);
+  }
+
+  @ApiOperation("添加每日健康打卡记录")
+  @RequiresPermissions("isolation:isolationDetail:insert")
+  @PostMapping("/insertDetail")
+  public Result<Void> insertDetail(@Valid @RequestBody InsertDetailCommand command){
+    return isolationDetailAppService.insertDetail(command);
+  }
+
+  @ApiOperation("获取隔离开始/结束时间")
+  @RequiresPermissions("isolation:isolationDetail:select")
+  @GetMapping("/queryIsolationTime")
+  public Result<QueryIsolationTimeVO> queryIsolationTime(){
+    return isolationDetailAppService.queryIsolationTime();
   }
 
 }

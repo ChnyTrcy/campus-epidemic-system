@@ -1,6 +1,7 @@
 package xyz.chnytrcy.campusepidemicsystem.controller.app;
 
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.leave.AddNewLeaveApplicationCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.app.leave.BackSchoolCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.leave.QueryHistoryListCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.leave.QueryLeaveDetailCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.leave.ReturnLeaveToAdminMessageCommand;
@@ -75,15 +76,15 @@ public class LeaveAppController {
     return leaveAppService.outSchool();
   }
 
-  @PostMapping(value = "/backSchool",
-      consumes = "multipart/*",
-      headers = "content-type=multipart/form-data")
+//  @PostMapping(value = "/backSchool",
+//      consumes = "multipart/*",
+//      headers = "content-type=multipart/form-data")
+  @PostMapping(value = "/backSchool")
   @RequiresPermissions("student:leave:update")
   @ApiOperation("返校")
-  public Result<Void> backSchool(MultipartFile healthCodePicture,
-      @RequestParam("nucleicAcid") @Valid String nucleicAcid)
+  public Result<Void> backSchool(@RequestBody @Valid BackSchoolCommand command)
       throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-    return leaveAppService.backSchool(nucleicAcid,healthCodePicture);
+    return leaveAppService.backSchool(command.getNucleicAcid(),command.getHealthCodePicture());
   }
 
   @GetMapping("/queryHistoryList")

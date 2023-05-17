@@ -47,7 +47,7 @@ public interface LeaveAppService extends IService<Leave> {
   /**
    * 返校
    */
-  Result<Void> backSchool(String nucleicAcid, MultipartFile healthCodePicture)
+  Result<Void> backSchool(String nucleicAcid, String healthCodePicture)
       throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
 
   /**

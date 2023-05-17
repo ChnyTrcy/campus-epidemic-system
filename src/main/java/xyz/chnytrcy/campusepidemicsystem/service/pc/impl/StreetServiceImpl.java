@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -161,6 +162,8 @@ public class StreetServiceImpl extends ServiceImpl<StreetMapper, Street>
       entity.setClassCode(studentHashMap.get(e).getClassCode());
       entity.setClassName(studentHashMap.get(e).getClassName());
       entity.setState(IsolationPersonEnums.STATE_NOTIFICATION_NOT_QUARANTINED.getCode());
+      entity.setStartTime(LocalDateTime.now());
+      entity.setEndTime(LocalDateTime.now().plusDays(7));
       //5、添加隔离人员
       isolationPersonMapper.insert(entity);
 

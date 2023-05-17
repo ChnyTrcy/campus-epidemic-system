@@ -157,10 +157,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     InputStream resourceAsStream = this.getClass().getClassLoader()
         .getResourceAsStream("excelTemplates/studentTemplate.xlsx");
     OutputStream outputStream = response.getOutputStream();
-    response.setContentType("application/x-download");
-    response.addHeader("Content-Disposition", "attachment;filename=template.xlsx");
+//    response.setContentType("application/x-download");
+    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+//    response.addHeader("Content-Disposition", "attachment;filename=template.xlsx");
+    response.setHeader("Content-Disposition", "attachment;filename=template.xlsx");
     IOUtils.copy(resourceAsStream, outputStream);
     outputStream.flush();
+    outputStream.close();
   }
 
   @Override

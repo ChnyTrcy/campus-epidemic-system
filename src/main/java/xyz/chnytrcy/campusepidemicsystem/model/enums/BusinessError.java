@@ -82,7 +82,9 @@ public enum BusinessError implements BaseError {
   RATE_LIMIT_BUSY_ERROR(10065,"请不要重复请求"),
   DEPT_NAME_EXIST_ERROR(10066,"院系名称重复"),
   ENTITY_ENUMS_NOT_EXIST_ERROR(10067,"未知的实体枚举类"),
-  MAJOR_NAME_REPEAT_ERROR(10068,"专业名称重复")
+  MAJOR_NAME_REPEAT_ERROR(10068,"专业名称重复"),
+  DAILY_PROMISE_ERROR(10069,"无效的承诺"),
+  ISOLATION_DAILY_AGAIN_OPEN_CARD(10070, "隔离人员不能重复打卡")
 
   ;
 

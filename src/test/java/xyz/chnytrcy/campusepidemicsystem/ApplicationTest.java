@@ -53,7 +53,7 @@ import xyz.chnytrcy.core.utils.random.RandomName.NameDTO;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-@ActiveProfiles("debug")
+@ActiveProfiles("dev")
 public class ApplicationTest {
 
   /**
@@ -64,7 +64,7 @@ public class ApplicationTest {
   /**
    * 批量生成请假数量
    */
-  private static int LEAVE_NUMBER = 10;
+  private static int LEAVE_NUMBER = 50;
 
   @Value("${user.init.password}")
   private String password;

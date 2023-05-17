@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.record.PageBreakRecord.Break;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.chnytrcy.campusepidemicsystem.utils.mq.producter.SynchronizationProducer;
 
@@ -31,6 +33,9 @@ public class SynchronizationAspect {
 
   @Autowired private SynchronizationProducer producer;
 
+  @Value("${aop.synchronization.data.switch}")
+  private Boolean aopSwitch;
+
   private final List<String> allowAspList = Stream.of(
       "MAJOR",
       "STUDENT",
@@ -44,6 +49,9 @@ public class SynchronizationAspect {
 
   @AfterReturning("point()")
   public void synchronization(JoinPoint joinPoint) throws Throwable {
+    if(!aopSwitch){
+      return;
+    }
     Method method = null;
     log.info("进入全量数据同步拦截器");
     Class<?> clazz = joinPoint.getTarget().getClass();

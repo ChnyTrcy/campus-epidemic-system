@@ -42,6 +42,9 @@ public class StudentDailyAppServiceImpl extends ServiceImpl<StudentDailyMapper, 
   @Override
   @Transactional(rollbackFor = Exception.class)
   public Result<Void> addStudentDaily(AddStudentDailyCommand command) {
+    if(command.getPromise().equals(StudentDailyEnums.PROMISE_NO.getNumber())){
+      throw new BusinessException(BusinessError.STUDENT_DAILY_PROMISE_NO_ERROR);
+    }
     Long studentId = studentCommon.getStudentID();
     List<StudentDaily> studentDailies = studentDailyMapper.selectList(
         new LambdaQueryWrapper<StudentDaily>()
@@ -53,9 +56,6 @@ public class StudentDailyAppServiceImpl extends ServiceImpl<StudentDailyMapper, 
       if (createTime.toLocalDate().isEqual(LocalDate.now())) {
         throw new BusinessException(BusinessError.STUDENT_DAILY_AGAIN_ERROR);
       }
-    }
-    if(command.getPromise().equals(StudentDailyEnums.PROMISE_NO.getNumber())){
-      throw new BusinessException(BusinessError.STUDENT_DAILY_PROMISE_NO_ERROR);
     }
     StudentDaily convert = DozerUtils.convert(command, StudentDaily.class);
     convert.setRelId(studentId);

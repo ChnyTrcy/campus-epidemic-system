@@ -2,9 +2,11 @@ package xyz.chnytrcy.campusepidemicsystem.service.app;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.AddTemperatureCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.InsertDetailCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.QueryPageIsolationDetailCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.IsolationDetail;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.AddTemperatureVO;
+import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.QueryIsolationTimeVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.QueryPageIsolationDetailVO;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
 import xyz.chnytrcy.core.utils.result.Result;
@@ -30,4 +32,14 @@ public interface IsolationDetailAppService extends IService<IsolationDetail> {
    */
   Result<BasePageVO<QueryPageIsolationDetailVO>> queryPageIsolationDetail(
       QueryPageIsolationDetailCommand command);
+
+  /**
+   * 添加每日健康打卡记录
+   */
+  Result<Void> insertDetail(InsertDetailCommand command);
+
+  /**
+   * 获取隔离开始/结束时间
+   */
+  Result<QueryIsolationTimeVO> queryIsolationTime();
 }

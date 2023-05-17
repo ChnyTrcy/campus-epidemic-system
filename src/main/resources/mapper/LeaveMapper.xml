@@ -61,7 +61,7 @@
       l.is_delete = 0 AND l.admin_id = #{adminCode}
       <choose>
         <when test="command.typeFilter == 1">
-          AND l.approval_result = 3
+          AND (l.approval_result = 0 OR l.approval_result = 3)
         </when>
         <when test="command.typeFilter == 2">
           AND l.approval_result != 0

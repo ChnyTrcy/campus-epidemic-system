@@ -23,8 +23,8 @@
       AND TIMESTAMPDIFF(DAY ,now(),hs.create_time) <![CDATA[ < ]]> 14
     UNION
     SELECT
-        l.code AS code,
         l.name AS name,
+        l.code AS code,
         s.phone AS phone
     FROM
         leave_daily l INNER JOIN student s ON s.code = l.code

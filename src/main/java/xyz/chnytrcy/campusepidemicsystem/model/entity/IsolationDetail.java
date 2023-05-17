@@ -32,9 +32,15 @@ public class IsolationDetail extends BaseEntity {
   @ApiModelProperty(value = "姓名",required = true)
   private String name;
 
-  @ApiModelProperty(value = "体温（去掉小数点，即乘10后的结果）",required = true)
+  @ApiModelProperty(value = "体温）",required = true)
   private Integer temperature;
 
   @ApiModelProperty(value = "关联隔离人员Id",required = true)
   private Long relId;
+
+  @ApiModelProperty(value = "是否有异常情况",required = true)
+  private Integer abnormalSymptoms;
+
+  @ApiModelProperty(value = "核酸情况",required = true)
+  private Integer healthCode;
 }

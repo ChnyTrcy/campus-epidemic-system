@@ -55,7 +55,8 @@ public class IsolationDetailServiceImpl extends ServiceImpl<IsolationDetailMappe
         isolationPerson.getCode(),
         isolationPerson.getName(),
         command.getTemperature(),
-        command.getId()
+        command.getId(),
+        0,0
     );
     getBaseMapper().insert(isolationDetail);
     this.checkIsDanger(command.getId());

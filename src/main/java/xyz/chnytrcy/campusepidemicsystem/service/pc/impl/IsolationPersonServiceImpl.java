@@ -301,15 +301,15 @@ public class IsolationPersonServiceImpl extends ServiceImpl<IsolationPersonMappe
   private CountPeopleDistributionDTO allIsolation(List<IsolationPerson> data){
     long now = data.stream().filter(e -> {
           int dayOfYear = LocalDateTime.now().getDayOfYear();
-          int start = e.getStartTime().getDayOfYear();
-          int end = e.getEndTime().getDayOfYear();
+          int start = e.getCreateTime().getDayOfYear();
+          int end = start + 7;
           return start <= dayOfYear && end >= dayOfYear;
         })
         .count();
     long yesterday = data.stream().filter(e -> {
       int dayOfYear = LocalDateTime.now().minusDays(AnalysisConstance.YESTERDAY).getDayOfYear();
-      int start = e.getStartTime().getDayOfYear();
-      int end = e.getEndTime().getDayOfYear();
+      int start = e.getCreateTime().getDayOfYear();
+      int end = start + 7;
       return start <= dayOfYear && end >= dayOfYear;
     }).count();
     return new CountPeopleDistributionDTO(now,yesterday);
@@ -318,11 +318,11 @@ public class IsolationPersonServiceImpl extends ServiceImpl<IsolationPersonMappe
   private CountPeopleDistributionDTO newIsolation(List<IsolationPerson> data){
     long now = data.stream().filter(e -> {
       int dayOfYear = LocalDateTime.now().getDayOfYear();
-      return e.getStartTime().getDayOfYear() == dayOfYear;
+      return e.getCreateTime().getDayOfYear() == dayOfYear;
     }).count();
     long yesterday = data.stream().filter(e -> {
       int yesterdayOfYear = LocalDateTime.now().minusDays(AnalysisConstance.YESTERDAY).getDayOfYear();
-      return e.getStartTime().getDayOfYear() == yesterdayOfYear;
+      return e.getCreateTime().getDayOfYear() == yesterdayOfYear;
     }).count();
     return new CountPeopleDistributionDTO(now,yesterday);
   }

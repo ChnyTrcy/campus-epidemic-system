@@ -29,4 +29,7 @@ public class BackSchoolCommand extends Base {
   @NotNull(message = "核酸结果不能为空")
   private String nucleicAcid;
 
+  @ApiModelProperty(value = "健康码Base64")
+  private String healthCodePicture;
+
 }

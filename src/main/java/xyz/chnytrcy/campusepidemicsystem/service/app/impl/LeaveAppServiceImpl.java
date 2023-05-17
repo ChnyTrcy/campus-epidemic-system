@@ -17,11 +17,13 @@ import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -97,6 +100,9 @@ public class LeaveAppServiceImpl extends ServiceImpl<LeaveMapper, Leave> impleme
 
   @Value("${minio.buckets.isCreate}")
   private Boolean isCreate;
+
+  @Value("${student.back.healthCode.switch}")
+  private Boolean healthSwitch;
 
   @Autowired private MinioClient minioClient;
 
@@ -199,32 +205,42 @@ public class LeaveAppServiceImpl extends ServiceImpl<LeaveMapper, Leave> impleme
 
   @Override
   @Transactional(rollbackFor = Exception.class)
-  public Result<Void> backSchool(String nucleicAcid,MultipartFile file)
+  public Result<Void> backSchool(String nucleicAcid,String healthCodePicture)
       throws IOException, ServerException, InsufficientDataException, ErrorResponseException,
       NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException,
       InternalException {
-    if(ObjectUtil.isNull(nucleicAcid) ||
-        (!nucleicAcid.equals("0") && !nucleicAcid.equals("1"))){
-      throw new BusinessException(BusinessError.NUCLEIC_ACID_ERROR);
-    }
-    if(ObjectUtil.isNull(file) || file.getSize() <= 0L){
-      throw new BusinessException(BusinessError.LEAVE_HEALTH_IMG_EMPTY_ERROR);
-    }
-    if(Integer.parseInt(nucleicAcid) == LeaveHealthEnums.NUCLEIC_ACID_POSITIVE.getCode()){
-      throw new BusinessException(BusinessError.LEAVE_NUCLEIC_ACID_POSITIVE_ERROR);
-    }
-    //检查桶是否存在
-    if(ObjectUtil.isNull(bucket)){
-      throw new BusinessException(BusinessError.MINIO_BUCKET_INIT_ERROR);
-    }
-    if(!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())){
-      if(isCreate.equals(Boolean.TRUE)){
-        minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
-      }else {
-        throw new BusinessException(BusinessError.MINIO_BUCKET_NOT_CREATE_ERROR);
+    String fileName;
+    MultipartFile file = null;
+    //检查是否开启健康码开关
+    if(healthSwitch){
+      byte[] imageData = Base64.getDecoder().decode(healthCodePicture);
+      // 将字节数组转成 MultipartFile
+      file = new MockMultipartFile("file","fileName.jpg","image/jpeg", imageData);
+      if(ObjectUtil.isNull(nucleicAcid) ||
+          (!nucleicAcid.equals("0") && !nucleicAcid.equals("1"))){
+        throw new BusinessException(BusinessError.NUCLEIC_ACID_ERROR);
       }
+      if(ObjectUtil.isNull(file) || file.getSize() <= 0L){
+        throw new BusinessException(BusinessError.LEAVE_HEALTH_IMG_EMPTY_ERROR);
+      }
+      if(Integer.parseInt(nucleicAcid) == LeaveHealthEnums.NUCLEIC_ACID_POSITIVE.getCode()){
+        throw new BusinessException(BusinessError.LEAVE_NUCLEIC_ACID_POSITIVE_ERROR);
+      }
+      //检查桶是否存在
+      if(ObjectUtil.isNull(bucket)){
+        throw new BusinessException(BusinessError.MINIO_BUCKET_INIT_ERROR);
+      }
+      if(!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())){
+        if(isCreate.equals(Boolean.TRUE)){
+          minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+        }else {
+          throw new BusinessException(BusinessError.MINIO_BUCKET_NOT_CREATE_ERROR);
+        }
+      }
+      fileName = MD5.SysMd5(file.getOriginalFilename(),file.getOriginalFilename());
+    }else {
+      fileName = "green_normal";
     }
-    String fileName = MD5.SysMd5(file.getOriginalFilename(),file.getOriginalFilename());
     String studentCode = studentCommon.getStudentCode();
     List<Leave> leaves = getBaseMapper().selectList(
         new LambdaQueryWrapper<Leave>()
@@ -241,14 +257,16 @@ public class LeaveAppServiceImpl extends ServiceImpl<LeaveMapper, Leave> impleme
         Integer.parseInt(nucleicAcid)
     );
     leaveHealthMapper.insert(leaveHealth);
-    PutObjectArgs objectArgs = PutObjectArgs
-        .builder()
-        .object(fileName)
-        .bucket(bucket)
-        .contentType(file.getContentType())
-        .stream(file.getInputStream(), file.getSize(), -1)
-        .build();
-    minioClient.putObject(objectArgs);
+    if(healthSwitch){
+      PutObjectArgs objectArgs = PutObjectArgs
+          .builder()
+          .object(fileName)
+          .bucket(bucket)
+          .contentType(file.getContentType())
+          .stream(file.getInputStream(), file.getSize(), -1)
+          .build();
+      minioClient.putObject(objectArgs);
+    }
     return ResultFactory.successResult();
   }
 

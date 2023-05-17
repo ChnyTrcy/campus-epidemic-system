@@ -160,8 +160,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
       throw new UserAuthenticationException(AuthenticationError.PC_UNALLOW_TYPE_ERROR);
     }
     if(Arrays.asList(
-        RoleEnums.ADMIN.getDesc(),
-        RoleEnums.EPIDEMIC_PREVENTION.getDesc()).contains(roleName) && type.equals(LoginTypeEnums.APP_PASSWORD)){
+        RoleEnums.ADMIN.getDesc()).contains(roleName) && type.equals(LoginTypeEnums.APP_PASSWORD)){
       throw new UserAuthenticationException(AuthenticationError.MOBILE_UNKNOWN_TYPE_ERROR);
     }
     String token = shiroService.createToken(user,type);
@@ -182,7 +181,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
   @Override
   @Transactional(rollbackFor = UserAuthenticationException.class)
   public Result changePwd(ChangePwdCommand command) {
-    if(command.getPassword().equals(command.getPasswordRepeat())){
+    if(!command.getPassword().equals(command.getPasswordRepeat())){
       throw new UserAuthenticationException(AuthenticationError.PASSWORD_NOT_SAME_ERROR);
     }
     Long userId = httpContextUtil.getUserId();

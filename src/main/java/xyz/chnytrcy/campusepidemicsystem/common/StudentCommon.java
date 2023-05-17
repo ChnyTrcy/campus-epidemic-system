@@ -62,4 +62,13 @@ public class StudentCommon {
     return student.getId();
   }
 
+  public Student getStudent(){
+    Student student = studentMapper.selectOne(new LambdaQueryWrapper<Student>()
+        .eq(Student::getCode,httpContextUtil.getUsername()));
+    if(Objects.isNull(student)){
+      throw new BusinessException(BusinessError.STUDENT_IS_NOT_EXIST_ERROR);
+    }
+    return student;
+  }
+
 }

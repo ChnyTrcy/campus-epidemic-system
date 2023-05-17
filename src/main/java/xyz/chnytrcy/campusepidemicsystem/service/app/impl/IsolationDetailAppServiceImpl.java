@@ -2,6 +2,7 @@ package xyz.chnytrcy.campusepidemicsystem.service.app.impl;
 
 import static xyz.chnytrcy.campusepidemicsystem.model.constance.IsolationDetailConstance.DEAL_DAYS;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,6 +24,7 @@ import xyz.chnytrcy.campusepidemicsystem.mapper.IsolationPersonMapper;
 import xyz.chnytrcy.campusepidemicsystem.mapper.StudentDailyMapper;
 import xyz.chnytrcy.campusepidemicsystem.mapper.StudentMapper;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.AddTemperatureCommand;
+import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.InsertDetailCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.command.app.isolationdetail.QueryPageIsolationDetailCommand;
 import xyz.chnytrcy.campusepidemicsystem.model.constance.IsolationDetailConstance;
 import xyz.chnytrcy.campusepidemicsystem.model.dto.AbnormalStudentMessageDTO;
@@ -28,12 +32,15 @@ import xyz.chnytrcy.campusepidemicsystem.model.entity.IsolationDetail;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.IsolationPerson;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.Student;
 import xyz.chnytrcy.campusepidemicsystem.model.entity.StudentDaily;
+import xyz.chnytrcy.campusepidemicsystem.model.enums.BusinessError;
 import xyz.chnytrcy.campusepidemicsystem.model.enums.entity.StudentDailyEnums;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.AddTemperatureVO;
+import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.QueryIsolationTimeVO;
 import xyz.chnytrcy.campusepidemicsystem.model.vo.app.isolationdetail.QueryPageIsolationDetailVO;
 import xyz.chnytrcy.campusepidemicsystem.service.app.IsolationDetailAppService;
 import xyz.chnytrcy.campusepidemicsystem.utils.mq.producter.StudentIsolateProducer;
 import xyz.chnytrcy.core.config.basic.model.BasePageVO;
+import xyz.chnytrcy.core.config.exception.BusinessException;
 import xyz.chnytrcy.core.utils.dozer.DozerUtils;
 import xyz.chnytrcy.core.utils.result.Result;
 import xyz.chnytrcy.core.utils.result.ResultFactory;
@@ -87,10 +94,16 @@ public class IsolationDetailAppServiceImpl extends ServiceImpl<IsolationDetailMa
         new LambdaQueryWrapper<IsolationDetail>()
             .eq(IsolationDetail::getCode, studentCode)
             .orderByDesc(IsolationDetail::getCreateTime));
+    if(CollUtil.isEmpty(list)){
+      return ResultFactory.successResult(new BasePageVO<>(null));
+    }
     PageInfo pageInfo = new PageInfo(list);
     List<Integer> collect = list.stream().map(e -> e.getCreateTime().getDayOfYear()).collect(Collectors.toList());
     List<StudentDaily> studentDailies = studentDailyMapper.selectList(
         new LambdaQueryWrapper<StudentDaily>().eq(StudentDaily::getRelId, studentID));
+    if(CollUtil.isEmpty(studentDailies)){
+      return ResultFactory.successResult(new BasePageVO<>());
+    }
     List<StudentDaily> filterStudentDailyList = studentDailies.stream()
         .filter(e -> collect.contains(e.getCreateTime().getDayOfYear()))
         .collect(Collectors.toList());
@@ -118,6 +131,48 @@ public class IsolationDetailAppServiceImpl extends ServiceImpl<IsolationDetailMa
     return ResultFactory.successResult(new BasePageVO<>(pageInfo));
   }
 
+  @Override
+  public Result<Void> insertDetail(InsertDetailCommand command) {
+    if(command.getPromise() == 1){
+      throw new BusinessException(BusinessError.DAILY_PROMISE_ERROR);
+    }
+    Student student = studentCommon.getStudent();
+    List<IsolationDetail> isolationDetails = getBaseMapper().selectList(new LambdaQueryWrapper<IsolationDetail>()
+        .eq(IsolationDetail::getRelId, student.getId())
+        .orderByDesc(IsolationDetail::getCreateTime)
+        .last("limit 1"));
+    if(CollUtil.isNotEmpty(isolationDetails)){
+      LocalDateTime createTime = isolationDetails.get(0).getCreateTime();
+      if(createTime.toLocalDate().equals(LocalDate.now())){
+        throw new BusinessException(BusinessError.ISOLATION_DAILY_AGAIN_OPEN_CARD);
+      }
+    }
+    IsolationDetail isolationDetail = new IsolationDetail();
+    isolationDetail.setRelId(student.getId());
+    isolationDetail.setCode(student.getCode());
+    isolationDetail.setName(student.getName());
+    isolationDetail.setTemperature(command.getTemperature());
+    isolationDetail.setAbnormalSymptoms(command.getAbnormalSymptoms());
+    isolationDetail.setHealthCode(command.getHealthCode());
+    getBaseMapper().insert(isolationDetail);
+    IsolationPerson isolationPerson = isolationPersonMapper.selectOne(
+        new LambdaQueryWrapper<IsolationPerson>().eq(IsolationPerson::getRelId, student.getId()));
+    checkAbnormal(student.getId(),isolationPerson);
+    return ResultFactory.successResult();
+  }
+
+  @Override
+  public Result<QueryIsolationTimeVO> queryIsolationTime() {
+    String studentCode = studentCommon.getStudentCode();
+    IsolationPerson isolationPerson = isolationPersonMapper.selectOne(
+        new LambdaQueryWrapper<IsolationPerson>()
+            .eq(IsolationPerson::getCode, studentCode)
+            .orderByDesc(IsolationPerson::getCreateTime)
+            .last("limit 1"));
+    QueryIsolationTimeVO key = DozerUtils.convert(isolationPerson, QueryIsolationTimeVO.class);
+    return ResultFactory.successResult(key);
+  }
+
   /**
    * 检查体温是否符合异常处理情况
    * @param command relId
@@ -141,12 +196,12 @@ public class IsolationDetailAppServiceImpl extends ServiceImpl<IsolationDetailMa
       }
     }
     //需要体温异常处理的情况
-    String name = list.get(0).getName();
-    String phone = studentMapper.selectOne(
-        new LambdaQueryWrapper<Student>()
-            .eq(Student::getId, isolationPerson.getRelId())).getPhone();
-    AbnormalStudentMessageDTO msg = new AbnormalStudentMessageDTO(name,phone);
-    studentIsolateProducer.abnormalMessage(msg);
+//    String name = list.get(0).getName();
+//    String phone = studentMapper.selectOne(
+//        new LambdaQueryWrapper<Student>()
+//            .eq(Student::getId, isolationPerson.getRelId())).getPhone();
+//    AbnormalStudentMessageDTO msg = new AbnormalStudentMessageDTO(name,phone);
+//    studentIsolateProducer.abnormalMessage(msg);
     return true;
   }
 }
